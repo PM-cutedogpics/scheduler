@@ -1,0 +1,28 @@
+body {
+	margin: 0px;
+}
+
+.header_format {
+	background-color: #F5F5F5;
+	height: 60px;
+}
+
+.icons_details {
+	align-items: center;
+    display: inline-flex;
+    /*border-bottom: 1px #F5F5F5z;*/
+    box-sizing: border-box;
+    flex-direction: row;
+    flex-grow: 1;
+    padding: 0 20px;
+}
+
+.logo_details {
+	height: 45px;
+    padding: 8px 8px 8px 0;
+    width: 45px;
+}
+
+.move_right {
+	margin-left: auto;
+}
