@@ -22,3 +22,10 @@
 	padding-left: 0;
     margin-bottom: 1rem;
 }
+
+label:after {
+    margin: -.2em 0 0 .2em;
+    content: "*";
+    color: #db2828;
+}
+
