@@ -28,6 +28,54 @@
 }
 
 .sched-img {
-  height: 600px;
-  width: 350px;
+  max-height: 600px;
+  max-width: 350px;
+  height: auto;
+  width: auto;
+  padding: 5px;
+}
+
+.sub-header {
+  height: 40vh;
+  width: 100%;
+  background-image: linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url(img/about-cover.png);
+  background-position: center;
+  background-size: cover;
+  text-align: center;
+  color: #fff;
+}
+
+.about-us {
+  width: 80%;
+  margin: auto;
+  padding-top: 80px;
+  padding-bottom: 50px;
+}
+
+.about-col {
+  flex-basis: 48%;
+  padding: 30px 2px;
+}
+
+.about-col img {
+  width: 100%;
+}
+
+.about-create-btn {
+  display: inline-block;
+  text-decoration: none;
+  color: #f44336;
+  border: 1px solid #f44336;
+  padding: 12px 34px;
+  font-size: 12px;
+  background: transparent;
+  position: relative;
+  cursor: pointer;
+}
+
+.about-create-btn:hover {
+  color: #fff;
+  border: 1px solid #f44336;
+  background: #f44336;
+  transition: 1s;
 }
