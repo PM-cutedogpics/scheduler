@@ -64,9 +64,10 @@
         <li><hr class="dropdown-divider"></li>
         <li ><a class="dropdown-item" href="#">Dark Mode
           <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-          <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+              <input class="form-check-input" type="checkbox" id="darkSwitch">
+              <label class="form-check-label" for="darkSwitch"></label>
           </div></a>
+          <script src="dark_mode_switch.min.js"></script></a>
         </li>
       </ul>
     </div>
@@ -76,16 +77,21 @@
       </div>
     </nav>
     <div class="container">
+      <nav aria-label="breadcrumb" class="mt-2">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item active" aria-current="page">Manage Account</li>
+        </ol>
+      </nav>
       <img src="user_icon1.jpg" class="img-thumbnail" alt="User Icon" width=200px>
       <div class="col-3 mb-3">
           <label for="formFileSm" class="form-label">Small file input example</label>
           <input class="form-control form-control-sm" id="formFileSm" type="file">
         </div>
       <fieldset disabled>
-      <form class="row g-3 mt-1">
+      <form class="row g-3">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Username</label>
-          <input type="text" class="form-control" id="inputUsername" placeholder="jerry_perez123">
+          <input type="text" class="form-control" id="inputUsername" placeholder="sendcutedogpics">
         </div>
         <div class="col-6">
           <label for="inputAddress" class="form-label">Email Address</label>

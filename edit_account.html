@@ -64,9 +64,10 @@
         <li><hr class="dropdown-divider"></li>
         <li ><a class="dropdown-item" href="#">Dark Mode
           <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-          <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+              <input class="form-check-input" type="checkbox" id="darkSwitch">
+              <label class="form-check-label" for="darkSwitch"></label>
           </div></a>
+          <script src="dark_mode_switch.min.js"></script></a>
         </li>
       </ul>
     </div>
@@ -76,10 +77,16 @@
     </div>
     </nav>
     <div class="container">
-      <form class="row g-3 mt-1">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mt-2">
+          <li class="breadcrumb-item"><a href="manage_account.html">Manage Account</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Edit Account</li>
+        </ol>
+      </nav>
+      <form class="row g-3">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Username</label>
-          <input type="text" class="form-control" id="inputUsername" value="jerry_perez123">
+          <input type="text" class="form-control" id="inputUsername" value="sendcutedogpics">
         </div>
         <div class="col-6">
           <label for="inputAddress" class="form-label">Email Address</label>

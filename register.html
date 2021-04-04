@@ -57,9 +57,10 @@
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
         <li ><a class="dropdown-item" href="#">Dark Mode
           <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-          <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+              <input class="form-check-input" type="checkbox" id="darkSwitch">
+              <label class="form-check-label" for="darkSwitch"></label>
           </div></a>
+          <script src="dark_mode_switch.min.js"></script></a>
         </li>
       </ul>
     </div>
@@ -91,13 +92,30 @@
           <input class="form-control form-control-sm" id="formFileSm" type="file">
         </div>
         <div class="col-12">
-          <button type="button" class="btn btn-primary" onclick=" relocate_home()">Submit</button>
-          <script>
-          function relocate_home()
-          {
-               location.href = "verify_email.html";
-          } 
-          </script>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Submit</button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Verify Email</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                We have sent a verification email to email address you have indicated in the registration form. Please verify your email before you can start creating a schedule. 
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="log_in()">Okay</button>
+                <script>
+                function log_in()
+                {
+                     location.href = "home_out.html";
+                } 
+                </script>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
         </div>
       </form>
     </div>

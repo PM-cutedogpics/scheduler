@@ -73,47 +73,60 @@
     </div>
     </div>
     </div>
-    </div>
-    </div>
+        </div>
+      </div>
     </nav>
     <div class="container">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mt-2">
-          <li class="breadcrumb-item"><a href="manage_account.html">Manage Account</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Change Password</li>
+      <nav aria-label="breadcrumb" class="mt-2">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item active" aria-current="page">View Account</li>
         </ol>
       </nav>
+      <img src="img\user1.jpg" class="img-thumbnail" alt="User Icon" width=200px height=200px>
+            <fieldset disabled>
       <form class="row g-3">
-        <div class="col-3">
-          <label for="oldPassword" class="form-label">Old Password</label>
-          <input type="password" class="form-control" id="inputOldPassword" placeholder="Type your current passowrd">
+        <div class="col-md-6">
+          <label for="inputEmail4" class="form-label">Username</label>
+          <input type="text" class="form-control" id="inputUsername" placeholder="ironman3000 ">
         </div>
-        <div class="col-3>
-          <label for="newPassowrd" class="form-label">New Password</label>
-          <input type="password" class="form-control" id="inputNewPassword" placeholder="Type your new passowrd">
-        </div>
-        <div class="col-3">
-          <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
-          <input type="password" class="form-control" id="inputConfirmPassword" placeholder="Confirm your new passowrd">
-        </div>
-        <div class="d-grid gap-2 d-md-block">
-          <button type="button" class="btn btn-primary" onclick=" goto_manage()">Confirm</button>
-          <button type="button" class="btn btn-primary" onclick=" goto_manage()">Cancel</button>
-          <script>
-          function goto_manage()
-          {
-               location.href = "manage_account.html";
-          } 
-          </script> 
+        <div class="col-6">
+          <label for="inputAddress" class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="inputAddress" placeholder="nottherealtonystark@gmail.com">
         </div>
         <div class="col-12">
-          
-        </div>
-        <div class="col-12">
-          
-        </div>
+          <label for="inputAddress2" class="form-label">Description</label>
+          <input type="text" class="form-control" id="inputAddress2" placeholder="I'm rich">
         </div>
       </form>
+    </fieldset>
+    <div class="row mt-4">
+      <div class="col-2">
+        <div class="list-group flex_force" id="list-tab" role="tablist">
+          <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="view_account1.html" role="tab" aria-controls="home">Posts</a>
+          <a class="list-group-item list-group-item-action active" id="list-profile-list" data-toggle="list" href="view_account1_comments.html" role="tab" aria-controls="profile">Comments</a>
+        </div>
+      </div>
+      <div class="col-8">
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list"></div>
+        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list"></div>
+        </div>
+      </div>
+    </div>
+    <section>
+    <div class="col mt-4">
+       <ul class="list-group list-group-flush" style="overflow:auto">
+          <li class="list-group-item">
+              <div class="container p-0">
+                  <p><b>ironman3000 </b><span>Nice schedule!</span></p>
+              </div>
+          </li>
+        </ul>
+              </div>
+          </div>
+        </div>
+      </div>
+    </section>
     </div>
     <footer class="footer">
       <div class="container">
