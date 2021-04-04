@@ -33,10 +33,10 @@
               <a class="nav-link" href="home_in.html">HOME</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="index.html">ABOUT</a>
+              <a class="nav-link" href="about_in.html">ABOUT</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="index.html">CONTACT US</a>
+              <a class="nav-link" href="contact_in.html">CONTACT US</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="log_in.html">LOG IN</a>
@@ -73,15 +73,15 @@
       <form class="row g-3 mt-1">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Username <required>*</required></label>
-          <input type="text" class="form-control" id="inputUsername">
+          <input type="text" class="form-control" id="inputUsername" required>
         </div>
         <div class="col-md-6">
           <label for="inputPassword4" class="form-label">Password <required>*</required></label>
-          <input type="password" class="form-control" id="inputPassword4">
+          <input type="password" class="form-control" id="inputPassword4" required>
         </div>
         <div class="col-6">
           <label for="inputAddress" class="form-label">Email Address <required>*</required></label>
-          <input type="email" class="form-control" id="inputAddress" placeholder="scheduler@gmail.com">
+          <input type="email" class="form-control" id="inputAddress" placeholder="scheduler@gmail.com" required> 
         </div>
         <div class="col-12">
           <label for="inputAddress2" class="form-label">Description</label>
@@ -108,7 +108,7 @@
                 <script>
                 function log_in()
                 {
-                     location.href = "home_out.html";
+                     location.href = "home_in.html";
                 } 
                 </script>
               </div>
