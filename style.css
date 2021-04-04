@@ -27,8 +27,6 @@
 }
 
 .sched-img {
-<<<<<<< Updated upstream
-=======
   height: 600px;
   width: 350px;
 }
@@ -114,7 +112,6 @@
 
 .flex_force {
   flex-direction: row!important;
->>>>>>> Stashed changes
   max-height: 600px;
   max-width: 350px;
   height: auto;
