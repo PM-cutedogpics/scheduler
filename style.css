@@ -98,3 +98,7 @@
   background: #f44336;
   transition: 1s;
 }
+
+.search-sheader {
+  height: 10vh;
+}
