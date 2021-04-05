@@ -268,13 +268,13 @@
 
 .link-unstyled {
   text-decoration: none;
-  color: black;
+  color: #151111;
   cursor: pointer;
 }
 
 .link-unstyled:hover {
   text-decoration: underline;
-  color: black;
+  color: #0e0e0e;
   cursor: pointer;
 
 #btnSearch, #btnClear{
