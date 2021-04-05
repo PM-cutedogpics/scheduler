@@ -192,9 +192,15 @@
                                 </button>
                             </div>
                             <div class="p-0">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="button" autocomplete="off">
-                                    <span class="align-middle">Edit</span>
+                                <button type="button" class="btn btn-secondary" onclick="create_sched()" autocomplete="off">
+                                    <span class="align-middle">Edit Schedule</span>
                                 </button>
+                                <script>
+                                function change_password()
+                                {
+                                     location.href = "create.html";
+                                } 
+                                </script>
                             </div>
                             <div class="p-0">
                                 <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#scheduleModal1">

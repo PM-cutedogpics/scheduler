@@ -1,11 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/">
     <link rel="stylesheet" href="style.css">
@@ -13,6 +12,9 @@
     <title>Scheduler | Home</title>
   </head>
   <body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top" position="fixed">
       <div class="container">
         <a class="navbar-brand" href="home_in.html">
@@ -77,7 +79,54 @@
         </div>
       </div>
     </nav>
-    <div class="container mt-4">
+    <div class="wrapper d-flex align-items-stretch">
+    <nav class="sidebar">
+        <div class="p-4 pt-5">
+            Class List<br>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+              STALGCM - MT 9:15-10:45
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+              CSAPDEV - MW 14:30-16:00
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+              CSARCH - TH 12:45-14:15
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+              GETEAMS - M 15:30-17:30
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+              GERPHIS - WH 9:15-10:45
+            </label>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-lg btn-block mt-5 w-100"">Add Class to List</button>
+          <button type="button" class="btn btn-primary btn-lg btn-block mt-1 w-100"">Delete Class from List</button>
+          <div class="roww">
+          <input class="btn btn-primary btn-lg mt-1 mr-1 w-50"" type="button" value="Save">
+          <input class="btn btn-primary btn-lg mt-1 width=20px type="button" value="Cancel">
+          </div>
+          <button type="button" class="btn btn-primary btn-lg btn-block mt-1 w-100"">Download Schedule</button>
+
+        </div>
+    </nav>
+    <div id="content" class="p-4 p-md-5">
+    
+    <!-- <div class="container mt-4"> -->
       <div class="row">
         <!-- Row 1 -->
         <div class="col-1">    </div>
@@ -235,52 +284,15 @@
       </div>
     </div>
     </div>
-    
-    <footer class="bottom_nav">
-      <div class="container mt-3">
-        <div class="row">
-          <div class="col">
-        <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-        <label class="form-check-label" for="flexCheckIndeterminate">
-          <button type="button" class="btn btn-secondary" data-bs-container="footer" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="Right popover">
-            Popover on right
-          </button>
-          <script src="popper.min.js"></script></a>
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-        <label class="form-check-label" for="flexCheckIndeterminate">
-          CCAPDEV
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-        <label class="form-check-label" for="flexCheckIndeterminate">
-          CCPROG5
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-        <label class="form-check-label" for="flexCheckIndeterminate">
-          LCENWRD
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-        <label class="form-check-label" for="flexCheckIndeterminate">
-          GETEAMS
-        </label>
-      </div>
-      </div>
-      </div>
-      </div>
-    </footer>
+  </div>
+  
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
   </body>
 </html>
