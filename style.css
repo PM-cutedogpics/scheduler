@@ -263,3 +263,19 @@
 #btnClear{
     display: inline-block;
 }
+
+.modal-title {
+  margin-right: 10px;
+}
+
+.blue {
+  background-color: #031f3c;
+}
+
+.orange {
+  background-color: #461802;
+}
+
+.purple {
+  background-color: #480450;
+}
