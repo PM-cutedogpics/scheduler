@@ -27,8 +27,15 @@
 }
 
 .sched-img {
-  height: 600px;
-  width: 350px;
+  height: auto;
+  width: auto;
+  max-height: 600px;
+  max-width: 350px;
+}
+
+[id^=schedcard-] {
+  max-width: 380px;
+  width: auto;
 }
 
 .custom-control-label {
@@ -231,4 +238,16 @@
 *, *::before, *::after {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+.link-unstyled {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.link-unstyled:hover {
+  text-decoration: underline;
+  color: black;
+  cursor: pointer;
 }
