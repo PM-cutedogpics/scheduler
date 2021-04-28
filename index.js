@@ -13,7 +13,7 @@ hostname = process.env.HOSTNAME;
 port = process.env.PORT;
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("./public"));
+app.use(express.static("public"));
 
 app.use("/", routes);
 

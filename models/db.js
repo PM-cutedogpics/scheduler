@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("./UserModel.js");
+const Post = require("../models/PostModel.js");
 const dotenv = require("dotenv");
 
 dotenv.config();
