@@ -13,9 +13,13 @@ hostname = process.env.HOSTNAME;
 port = process.env.PORT;
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("./public"));
+app.use(express.static("public"));
 
 app.use("/", routes);
+
+app.get('/manage_account', function (req, res){
+	res.render('manage_account');
+})
 
 app.use((req, res) => {
 	res.render("error");
