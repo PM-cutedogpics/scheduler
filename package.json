@@ -1,0 +1,25 @@
+{
+  "name": "2021t2-g14",
+  "version": "1.0.0",
+  "description": "Scheduler web application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DLSU-CCAPDEV/2021T2-G14.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DLSU-CCAPDEV/2021T2-G14/issues"
+  },
+  "homepage": "https://github.com/DLSU-CCAPDEV/2021T2-G14#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "hbs": "^4.1.2",
+    "mongoose": "^5.12.6"
+  }
+}
