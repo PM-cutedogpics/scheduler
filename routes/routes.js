@@ -44,9 +44,48 @@ app.get("/log_in", function (req, res) {
 	res.render("log_in");
 });
 
+<<<<<<< Updated upstream
 app.get("/manage_account", function (req, res) {
 	res.render("manage_account");
 });
+=======
+app.post('/log_in', function (req, res){
+	var username = req.body.username;
+	var password = req.body.password;
+
+	var User = {
+		username: username,
+		password: password
+	}
+
+	db.findOne('Users',User);
+})
+
+app.get('/register', function (req,res){
+	res.render('register');
+})
+
+app.post('/register', function (req, res) {
+    var username = req.body.username;
+    var password = req.body.password;
+    var email = req.body.email;
+    var desc = req.body.desc;
+
+    var User = {
+    	username: username,
+    	password: password,
+    	email: email,
+    	desc: desc
+    }
+
+    db.insertOne('Users', User);
+
+})
+
+app.get('/manage_account', function (req, res){
+	res.render('manage_account');
+})
+>>>>>>> Stashed changes
 
 app.get("/my_schedules", function (req, res) {
 	res.render("my_schedules");
