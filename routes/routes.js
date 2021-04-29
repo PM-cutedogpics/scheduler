@@ -13,6 +13,7 @@ app.get("/home", (req, res) => {
 	for (var i = 0; i < 5; i++) {
 		var post = {
 			schedcard: "schedcard-" + (i + 1),
+			schedid: "A1B2" + (i + 1),
 			postImg: "/img/example" + (i + 1) + ".jpg",
 		};
 		posts.push(post);
@@ -21,7 +22,16 @@ app.get("/home", (req, res) => {
 	}
 	console.log(posts.length);
 	res.render("home", posts);
-	console.log(posts.length);
+});
+
+app.get("/viewpost/:postid", (req, res) => {
+	var query = { postid: req.params.posid };
+	var post = {
+		schedcard: "schedcard-1",
+		schedid: "A1B21",
+		postImg: "/img/example1.jpg",
+	};
+	res.render("viewpost", post);
 });
 
 module.exports = app;
