@@ -21,18 +21,22 @@
             <div class="col">
                 <div class="card" style="max-height: 300px;">
                     <div class="card-body">
-                        <h3 class="card-title">Year 1 Term 1 Schedule</h3>
-                        <h6 class="sched-author">posted by <span><b><a href="view_account5.html" class="link-unstyled">sendcutedogpics </a></b></span></h6>
-                        <p class="card-text">This is my first schedule. Please like and comment!</p>
+                        <h3 class="card-title">{{schedTitle}}</h3>
+                        <h6 class="sched-author">posted by <span><b><a href="/account?username={{schedAuthor}}" class="link-unstyled">{{schedAuthor}}</a></b></span></h6>
+                        <p class="card-text">{{schedDesc}}</p>
                     </div>
                 </div>
                 <div class="card" style="max-height: 400px;">
                     <ul class="list-group list-group-flush" style="overflow:auto">
-                        <li class="list-group-item">
-                            <div class="container p-0">
-                                <p><b><a href="view_account1.html" class="link-unstyled">ironman3000 </a></b><span>Nice schedule!</span></p>
-                            </div>
-                        </li>
+                        {{#each comments}}
+                            {{#if cAuthor}}
+                                <li class="list-group-item">
+                                    <div class="container p-0">
+                                        <p><b><a href="/account?username={{cAuthor}}" class="link-unstyled">{{cAuthor}} </a></b><span>{{cDesc}}</span></p>
+                                    </div>
+                                </li>
+                            {{/if}}
+                        {{/each}}
                     </ul>
                 </div>
                 <div class="card-body p-2 align-content-center">
@@ -42,13 +46,13 @@
                                 <button type="button" class="upvote-btn btn btn-outline-danger" data-bs-toggle="button" autocomplete="off">
                                     <i class="fas fa-arrow-up"></i>
                                 </button>
-                                <p class="upqty">333</p>
+                                <p class="upqty">{{upqty}}</p>
                             </div>
                             <div class="upvote-div">
                                 <button type="button" class="upvote-btn btn btn-outline-danger" data-bs-toggle="button" autocomplete="off">
                                     <i class="fas fa-arrow-down"></i>
                                 </button>
-                                <p class="downqty">23</p>
+                                <p class="downqty">{{downqty}}</p>
                             </div>
                         </div>
                         <div class="form-floating">
