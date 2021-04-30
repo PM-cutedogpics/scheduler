@@ -29,6 +29,8 @@
 .sched-img {
 	height: auto;
 	width: auto;
+	min-height: 600px;
+	min-width: 350px;
 	max-height: 600px;
 	max-width: 350px;
 }
@@ -337,5 +339,5 @@
 }
 
 .comment-btn {
-	margin-left : 5px;
+	margin-left: 5px;
 }

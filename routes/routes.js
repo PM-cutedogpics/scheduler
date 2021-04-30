@@ -66,6 +66,8 @@ app.get("/view_account", function (req, res) {
 
 app.get("/home", (req, res) => {
 	var posts = [];
+	console.log("Home Page");
+	// get all the posts from the database
 	for (var i = 0; i < 5; i++) {
 		var post = {
 			schedcard: "schedcard-" + (i + 1),
@@ -73,6 +75,7 @@ app.get("/home", (req, res) => {
 			postImg: "/img/example" + (i + 1) + ".jpg",
 		};
 		posts.push(post);
+
 		console.log(posts[i].schedcard);
 		console.log(posts[i].postImg);
 	}
@@ -82,6 +85,7 @@ app.get("/home", (req, res) => {
 
 app.get("/viewpost/:postid", (req, res) => {
 	var query = { postid: req.params.posid };
+	// find the post from the database with comments
 	var post = {
 		schedcard: "schedcard-1",
 		schedid: "A1B21",
@@ -121,4 +125,24 @@ app.get("/viewpost/:postid", (req, res) => {
 	res.render("viewpost", post);
 });
 
+app.get("/searchResults", (req, res) => {
+	var searchquery = {
+		query: req.query.q,
+		posts: [],
+	};
+	console.log("Search Results for: " + searchquery.query);
+	// query the posts that have the following keyword (QUERY)
+
+	var post = {
+		schedcard: "schedcard-1",
+		schedid: "A1B21",
+		postImg: "/img/example1.jpg",
+	};
+	searchquery.posts.push(post);
+	console.log(searchquery.posts[0].schedcard);
+	console.log(searchquery.posts[0].postImg);
+
+	console.log(searchquery.posts.length);
+	res.render("searchResults", searchquery);
+});
 module.exports = app;
