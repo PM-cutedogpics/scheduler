@@ -1,16 +1,19 @@
 function changeSchedule(checkboxElem) {
+	console.log(checkboxElem);
 	// Searching for ID in element
-	var idName = checkboxElem.id;
-	var id = "L1" + idName.substring(1);
-
+	// var idName = checkboxElem.id;
+	var id = "L1" + checkboxElem.substring(1);
+	console.log(id);
 	var label = document.getElementById(id).innerHTML;
-	var timeFrame = label.substring(label.length - 24, label.length);
+	var timeFrame = label.substring(label.length - 11, label.length);
 	var low = parseInt(timeFrame.substring(0, 2));
 	var high = parseInt(timeFrame.substring(6, 8));
+	console.log(label);
+	console.log(timeFrame);
 	if (timeFrame.substring(9, 11) == "00")
 		high = high - 1;
 	// Finding days
-	var label_cnt = 25;
+	var label_cnt = 10;
 	var dates = [];
 	do {
 		var date_label = label.substring(label_cnt, label_cnt + 1);
@@ -18,14 +21,15 @@ function changeSchedule(checkboxElem) {
 			dates.push(date_label);
 		label_cnt = label_cnt + 1;
 	} while (date_label != ' ');
-	var dateFrame = label.substring(25, 27);
-	var subjectName = label.substring(15, 22);
+	var subjectName = label.substring(0, 7);
+	console.log(dates)
+	console.log(subjectName);
 	// Filling up the schedule
-	if (checkboxElem.checked) {
+	if (document.getElementById(checkboxElem).checked) {
 		for (var i = low; i <= high; i++){
 			for (var j = 0; j < dates.length; j++){
-				// console.log(gridID);
 				var gridID = dates[j] + i;
+				console.log("add: " + gridID);
 				var name = document.getElementById(gridID);
 				name.innerHTML = name.innerHTML + " " + subjectName;
 			}
@@ -35,12 +39,59 @@ function changeSchedule(checkboxElem) {
 		for (var i = low; i <= high; i++){
 			for (var j = 0; j < dates.length; j++){
 				var gridID = dates[j] + i;
+				console.log("remove: " + gridID);
 				var name = document.getElementById(gridID);
 				name.innerHTML = name.innerHTML.replace(subjectName, "");
 			}
 		}
 	}
 }
+
+function addToClassList(){
+	var addList = document.getElementsByName("add");
+	console.log(addList);
+	var checked = [];
+	for (var i = 0; i < addList.length; i++)
+		if (document.getElementById(addList[i].id).checked) 
+        	checked.push(addList[i].id);
+	console.log(checked);
+
+	for (var i = 0; i < checked.length; i++){
+		// Creating elements for the new classes
+		var button = document.createElement('input')
+		button.className = "form-check-input";
+		button.type = "checkbox";
+		button.id = 'M' + checked[i].substring(1, checked[i].length);
+		console.log(button.id);
+		button.addEventListener("change", function(){
+			changeSchedule(button.id);
+		});
+		// Adding Checkboxes to Class List
+		var classLabel = document.createElement('label')
+		classLabel.className = 'form-check-label';
+		classLabel.id = 'L1' + checked[i].substring(1, checked[i].length);
+		var labelID = 'L2' + checked[i].substring(1, checked[i].length);
+		var newInnerHTML = document.getElementById(labelID).innerHTML;
+		classLabel.innerHTML =  newInnerHTML;
+		console.log(button);
+		console.log(classLabel);
+		// Assigning New Classes to Class List
+		var div1 = document.createElement("div");
+		var div2 = document.createElement("div");
+		var li = document.createElement("li");
+		var classList = document.getElementById("classList");
+		div1.className = 'container p-0';	
+		div2.className = 'form-check';
+		li.className = 'list-group-item';
+		classList.appendChild(li);
+		li.appendChild(div2);
+		div2.appendChild(div1);
+		div1.appendChild(button);
+		div1.appendChild(classLabel);
+	}
+}
+
+
 
 // $("input[type='checkbox']").each(function(){
 //   var name = $(this).attr('name'); // grab name of original
