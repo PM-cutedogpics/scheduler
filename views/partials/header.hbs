@@ -42,9 +42,9 @@
             </li>
         {{/if}}
   <li class="nav-item">
-    <form class="d-flex">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-      <a href="/search_result" class="search-btn">Search</a>
+    <form class="d-flex" id="search" method="get" action="/searchResults">
+      <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
+      <input type="submit" class="search-btn" id="search-submit" value="Search">
     </form>
   </li>
       </ul>
@@ -61,6 +61,7 @@
       <li><hr class="dropdown-divider"></li>
       {{/if}}
       <li ><a class="dropdown-item" href="#">Dark Mode
+      <li><a class="dropdown-item">Dark Mode
         <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" id="darkSwitch">
             <label class="form-check-label" for="darkSwitch"></label>
