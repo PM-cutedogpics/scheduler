@@ -23,6 +23,6 @@ app.use((req, res) => {
 
 db.connect();
 
-app.listen(port, () => {
-	console.log("app listening at port: " + port);
+app.listen(port, hostname, () => {
+	console.log("server running at: " + "http://" + hostname + ":" + port);
 });

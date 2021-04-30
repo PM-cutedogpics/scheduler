@@ -20,10 +20,11 @@
             {{#if schedcard}}
                 <div class="col">
                     <div class="card" id="{{schedcard}}">
+                        <a href="/viewpost/{{schedid}}" class="post-title card-title">{{schedTitle}}</a>
                         <a href="/viewpost/{{schedid}}" type="button" class="btn p-0" id="{{schedid}}">
                             <img class="sched-img card-img-top" src="{{postImg}}">
                         </a>
-                        <div class="card-body p-2 align-content-center">
+                        {{!-- <div class="card-body p-2 align-content-center">
                             <div class="d-flex justify-content-between">
                                 <div class="p-0">
                                     <button type="button" class="upvote-btn btn btn-outline-danger" data-bs-toggle="button" autocomplete="off">
@@ -39,7 +40,7 @@
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             {{/if}}

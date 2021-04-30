@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
   <div class="container">
-    <a class="navbar-brand" href="/home_in">
+    <a class="navbar-brand" href="/home">
       <img src="../img/logo_icon_light.png" alt="Scheduler Icon" class="brand_logo_details">
     </a>
     <button 
@@ -32,9 +32,9 @@
           <a class="nav-link" href="/create">CREATE</a>
         </li>
   <li class="nav-item">
-    <form class="d-flex">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-      <a href="/search_result" class="search-btn">Search</a>
+    <form class="d-flex" id="search" method="get" action="/searchResults">
+      <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
+      <input type="submit" class="search-btn" id="search-submit" value="Search">
     </form>
   </li>
       </ul>
