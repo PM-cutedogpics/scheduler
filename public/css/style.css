@@ -274,6 +274,7 @@
 }
 
 .link-unstyled {
+	font-weight: bold;
 	text-decoration: none;
 	color: #151111;
 	cursor: pointer;
