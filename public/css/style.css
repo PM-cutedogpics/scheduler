@@ -33,6 +33,7 @@
 	min-width: 350px;
 	max-height: 600px;
 	max-width: 350px;
+	padding: 5px;
 }
 
 [id^="schedcard-"] {
@@ -343,4 +344,19 @@
 
 .comment-btn {
 	margin-left: 5px;
+}
+
+.post-title {
+	text-align: center;
+	padding: 5px;
+	padding-top: 10px;
+	text-decoration: none;
+	font-size: larger;
+	font-weight: bold;
+	color: black;
+}
+
+.post-title:hover {
+	color: red;
+	cursor: pointer;
 }
