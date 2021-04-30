@@ -1,7 +1,7 @@
 function changeSchedule(checkboxElem) {
 	// Searching for ID in element
 	var idName = checkboxElem.id;
-	var id = 'L' + idName.substring(1);
+	var id = "L1" + idName.substring(1);
 
 	var label = document.getElementById(id).innerHTML;
 	var timeFrame = label.substring(label.length - 24, label.length);
