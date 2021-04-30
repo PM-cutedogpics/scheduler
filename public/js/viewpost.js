@@ -122,4 +122,38 @@ $(document).ready(() => {
 			console.log("downvotes = " + downvotes);
 		}
 	});
+
+	$("#comment-btn").click(() => {
+		if ($("#comment-form").val().length > 0) {
+			console.log("COMMENTING");
+			
+			// TODO: get from DB
+			// get the author from the session and 
+			// check whether user is logged in before commenting
+			var comment = {
+				cAuthor: "sendcutedogpics",
+				cDesc: $("#comment-form").val(),
+			};
+			console.log(comment.cDesc);
+			var listItem = document.createElement("div");
+			listItem.classList.add("list-group-item");
+			var commentContainer = document.createElement("div");
+			commentContainer.classList.add("container");
+			commentContainer.classList.add("p-0");
+			var authorLink = document.createElement("a");
+			authorLink.classList.add("link-unstyled");
+			var link = "/account?username=" + comment.cAuthor;
+			authorLink.href = link;
+			authorLink.innerHTML = comment.cAuthor + " ";
+			var commentSpan = document.createElement("span");
+			commentSpan.innerHTML = comment.cDesc;
+			var commentP = document.createElement("p");
+			commentP.appendChild(authorLink);
+			commentP.appendChild(commentSpan);
+			commentContainer.appendChild(commentP);
+			listItem.appendChild(commentContainer);
+			document.getElementById("comment-list").appendChild(listItem);
+			$("#comment-form").val("");
+		}
+	});
 });
