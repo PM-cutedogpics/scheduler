@@ -18,32 +18,32 @@
         <div class="p-4 pt-5">
             Class List<br>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
-            <label class="form-check-label" for="flexCheckDefault">
+            <input class="form-check-input" type="checkbox" id="MSTALGCM" checked onchange="changeSchedule(this)">
+            <label class="form-check-label" for="flexCheckDefault" id="LSTALGCM">
               STALGCM - MT 09:15-10:45
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" >
-            <label class="form-check-label" for="flexCheckDefault">
+            <input class="form-check-input" type="checkbox" id="MCSAPDEV" onchange="changeSchedule(this)">
+            <label class="form-check-label" for="flexCheckDefault" id="LCSAPDEV">
               CSAPDEV - MW 14:30-16:00
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-            <label class="form-check-label" for="flexCheckDefault">
-              CSARCH - TH 12:45-14:15
+            <input class="form-check-input" type="checkbox" id="MCSARCH1" onchange="changeSchedule(this)">
+            <label class="form-check-label" for="flexCheckDefault" id="LCSARCH1">
+              CSARCH1 - TH 12:45-14:15
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
-            <label class="form-check-label" for="flexCheckDefault">
+            <input class="form-check-input" type="checkbox" id="MGETEAMS" checked onchange="changeSchedule(this)">
+            <label class="form-check-label" for="flexCheckDefault" id="LGETEAMS">
               GETEAMS - M 15:30-17:30
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
-            <label class="form-check-label" for="flexCheckDefault">
+            <input class="form-check-input" type="checkbox" id="MGERPHIS" checked onchange="changeSchedule(this)">
+            <label class="form-check-label" for="flexCheckDefault" id="LGERPHIS">
               GERPHIS - WH 09:15-10:45
             </label>
           </div>
@@ -128,7 +128,7 @@
                         <li class="list-group-item">
                           <div class="container p-0">
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <input class="form-check-input" type="checkbox" id="ASTALGCM">
                             <label class="form-check-label" for="flexCheckDefault">
                               STALGCM - MT 09:15-10:45
                             </label>
@@ -137,7 +137,7 @@
                         <li class="list-group-item">
                           <div class="container p-0">
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <input class="form-check-input" type="checkbox" id="flexCheckDefault">
                             <label class="form-check-label" for="flexCheckDefault">
                               CSAPDEV - MW 14:30-16:00
                             </label>
@@ -216,8 +216,6 @@
       </div>
     </nav>
     <div id="content" class="p-4 p-md-5">
-    
-    <!-- <div class="container mt-4"> -->
       <div class="row">
         <!-- Row 1 -->
         <div class="col-1">    </div>
@@ -227,12 +225,10 @@
         <div class="col border border-dark">Thursday</div>
         <div class="col border border-dark">Friday</div>
         <div class="col border border-dark">Saturday</div>
-        <div class="col border border-dark">Sunday</div>
       </div>
       <div class="row">
         <!-- Row 2 -->
         <div class="col-1 border border-dark">07</div>
-        <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
@@ -249,27 +245,24 @@
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
         </div>
       <div class="row">
         <!-- Row 4 -->
         <div class="col-1 border border-dark">09</div>
-        <div class="col border border-dark blue">STALGCM</div>
-        <div class="col border border-dark blue">STALGCM</div>
-        <div class="col border border-dark purple">GERPHIS</div>
-        <div class="col border border-dark purple">GERPHIS</div>
-        <div class="col border border-dark"></div>
+        <div class="col border border-dark" id="M9">STALGCM</div>
+        <div class="col border border-dark" id="T9">STALGCM</div>
+        <div class="col border border-dark" id="W9">GERPHIS</div>
+        <div class="col border border-dark" id="H9">GERPHIS</div>
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
         </div>
       <div class="row">
         <!-- Row 5 -->
         <div class="col-1 border border-dark">10</div>
-        <div class="col border border-dark blue">STALGCM</div>
-        <div class="col border border-dark blue">STALGCM</div>
-        <div class="col border border-dark purple">GERPHIS</div>
-        <div class="col border border-dark purple">GERPHIS</div>
-        <div class="col border border-dark"></div>
+        <div class="col border border-dark" id="M10">STALGCM</div>
+        <div class="col border border-dark" id="T10">STALGCM</div>
+        <div class="col border border-dark" id="W10">GERPHIS</div>
+        <div class="col border border-dark" id="H10">GERPHIS</div>
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
         </div>
@@ -282,68 +275,61 @@
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
         </div>
       <div class="row">
         <!-- Row 7 -->
         <div class="col-1 border border-dark">12</div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
+        <div class="col border border-dark" id="M12"></div>
+        <div class="col border border-dark" id="T12"></div>
+        <div class="col border border-dark" id="W12"></div>
+        <div class="col border border-dark" id="H12"></div>
+        <div class="col border border-dark" id="F12"></div>
+        <div class="col border border-dark" id="S12"></div>
         </div>
       <div class="row">
         <!-- Row 8 -->
         <div class="col-1 border border-dark">13</div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
+        <div class="col border border-dark" id="M13"></div>
+        <div class="col border border-dark" id="T13"></div>
+        <div class="col border border-dark" id="W13"></div>
+        <div class="col border border-dark" id="H13"></div>
+        <div class="col border border-dark" id="F13"></div>
+        <div class="col border border-dark" id="S13"></div>
         </div>
       <div class="row">
         <!-- Row 9 -->
         <div class="col-1 border border-dark">14</div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
+        <div class="col border border-dark" id="M14"></div>
+        <div class="col border border-dark" id="T14"></div>
+        <div class="col border border-dark" id="W14"></div>
+        <div class="col border border-dark" id="H14"></div>
+        <div class="col border border-dark" id="F14"></div>
+        <div class="col border border-dark" id="S14"></div>
         </div>
       <div class="row">
         <!-- Row 10 -->
         <div class="col-1 border border-dark">15</div>
-        <div class="col border border-dark orange">GETEAMS</div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
+        <div class="col border border-dark" id="M15">GETEAMS</div>
+        <div class="col border border-dark" id="T15"></div>
+        <div class="col border border-dark" id="W15"></div>
+        <div class="col border border-dark" id="H15"></div>
+        <div class="col border border-dark" id="F15"></div>
+        <div class="col border border-dark" id="S15"></div>
         </div>
       <div class="row">
         <!-- Row 11 -->
         <div class="col-1 border border-dark">16</div>
-        <div class="col border border-dark orange">GETEAMS</div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
+        <div class="col border border-dark" id="M16">GETEAMS</div>
+        <div class="col border border-dark" id="T16"></div>
+        <div class="col border border-dark" id="W16"></div>
+        <div class="col border border-dark" id="H16"></div>
+        <div class="col border border-dark" id="F16"></div>
+        <div class="col border border-dark" id="S16"></div>
         </div>
       <div class="row">
         <!-- Row 12 -->
         <div class="col-1 border border-dark">17</div>
-        <div class="col border border-dark orange">GETEAMS</div>
-        <div class="col border border-dark"></div>
+        <div class="col border border-dark" id="M17">GETEAMS</div>
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
@@ -359,12 +345,30 @@
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
-        <div class="col border border-dark"></div>
         </div>
       <div class="row">
         <!-- Row 14 -->
         <div class="col-1 border border-dark">19</div>
         <div class="col border border-dark"></div>
+        <div class="col border border-dark"></div>
+        <div class="col border border-dark"></div>
+        <div class="col border border-dark"></div>
+        <div class="col border border-dark"></div>
+        <div class="col border border-dark"></div>
+        </div>
+      <div class="row">
+        <!-- Row 14 -->
+        <div class="col-1 border border-dark">20</div>
+        <div class="col border border-dark"></div>
+        <div class="col border border-dark"></div>
+        <div class="col border border-dark"></div>
+        <div class="col border border-dark"></div>
+        <div class="col border border-dark"></div>
+        <div class="col border border-dark"></div>
+        </div>
+      <div class="row">
+        <!-- Row 14 -->
+        <div class="col-1 border border-dark">21</div>
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
         <div class="col border border-dark"></div>
@@ -383,6 +387,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <!--toast-->
+    <script type="text/javascript" src="/js/schedule.js"></script>
     <script>
       var option = 
       {
