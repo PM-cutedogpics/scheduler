@@ -117,7 +117,7 @@ app.get("/home", (req, res) => {
 });
 
 app.get("/viewpost/:postid", (req, res) => {
-	var query = { postid: req.params.posid };
+	var query = { postid: req.params.postid };
 	// find the post from the database with comments
 	var post = {
 		schedcard: "schedcard-1",
