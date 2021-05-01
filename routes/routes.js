@@ -4,7 +4,7 @@ const db = require("../models/db");
 const User = require("../models/UserModel.js");
 const app = express();
 const bcrypt = require('bcrypt');
-const validation = require('../helpers/validation.js');
+// const validation = require('../helpers/validation.js');
 
 // TODO: add in routes
 app.get("/about_out", function (req, res) {

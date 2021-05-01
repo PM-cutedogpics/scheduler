@@ -3,6 +3,7 @@ const hbs = require("hbs");
 const dotenv = require("dotenv");
 const routes = require("./routes/routes.js");
 const mongoose = require('mongoose');
+const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const db = require("./models/db.js");
 

@@ -13,7 +13,7 @@ function changeSchedule(checkboxElem) {
 	if (timeFrame.substring(9, 11) == "00")
 		high = high - 1;
 	// Finding days
-	var label_cnt = 10;
+	var label_cnt = 8;
 	var dates = [];
 	do {
 		var date_label = label.substring(label_cnt, label_cnt + 1);
