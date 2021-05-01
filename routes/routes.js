@@ -4,43 +4,58 @@ const User = require("../models/UserModel.js");
 const Posts = require("../models/PostModel.js");
 const app = express();
 const bcrypt = require("bcrypt");
-// const validation = require('../helpers/validation.js');
+const validationResult = require('express-validator');
+const saltRounds = 10;
 
 // TODO: add in routes
-app.get("/about_out", function (req, res) {
-	res.render("about_out");
-});
+app.get("/about", function (req, res) {
+	if (req.session.username) {
+		var details = {
+			flag: true,
+		};
+	}
+	else {
+		var details = {
+			flag: false,
+		};
+	}
 
-app.get("/about_in", function (req, res) {
-	res.render("about_in");
+	res.render("about", details);
 });
 
 app.get("/change_password", function (req, res) {
-	res.render("change_password");
+	var details = {
+			flag: true,
+		};
+	res.render("change_password", details);
 });
 
-app.get("/contact_out", function (req, res) {
-	res.render("contact_out");
-});
-
-app.get("/contact_in", function (req, res) {
-	res.render("contact_in");
+app.get("/contact", function (req, res) {
+	if (req.session.username) {
+		var details = {
+			flag: true,
+		};
+	}
+	else {
+		var details = {
+			flag: false,
+		};
+	}
+	res.render("contact", details);
 });
 
 app.get("/create", function (req, res) {
-	res.render("create");
+	var details = {
+			flag: true,
+		};
+	res.render("create", details);
 });
 
 app.get("/edit_account", function (req, res) {
-	res.render("edit_account");
-});
-
-app.get("/home_out", function (req, res) {
-	res.render("home_out");
-});
-
-app.get("/home_in", function (req, res) {
-	res.render("home_in");
+	var details = {
+			flag: true,
+		};
+	res.render("edit_account", details);
 });
 
 app.get("/log_in", function (req, res) {
@@ -91,6 +106,7 @@ app.post("/log_in", function (req, res) {
         */
 	db.findOne(User, { username: username }, "", function (result) {
 		// if a user with `username` equal to `username` exists
+		console.log(result);
 		if (result) {
 			var user = {
 				username: result.username,
@@ -155,7 +171,7 @@ app.post("/log_in", function (req, res) {
                 */
 			var details = {
 				flag: false,
-				error: `ID Number and/or Password is incorrect.`,
+				ERROR: `ID Number and/or Password is incorrect.`,
 			};
 
 			/*
@@ -196,53 +212,6 @@ app.get("/register", function (req, res) {
 });
 
 app.post("/register", function (req, res) {
-	// checks if there are validation errors
-	var errors = validationResult(req);
-	// if there are validation errors
-	if (!errors.isEmpty()) {
-		// get the array of errors
-		errors = errors.errors;
-
-		var details = {};
-
-		// checks if a user is logged-in by checking the session data
-		if (req.session.username) {
-			/*
-                    sets `details.flag` to true
-                    to display the profile and logout tabs in the nav bar
-                    sets the value of `details.name` to `req.session.name`
-                    to display the name of the logged-in user
-                    in the profile tab of the nav bar
-                    sets the value of `details.uidNum` to `req.session.idNum`
-                    to provide the link the profile of the logged-in user
-                    in the profile tab of the nav bar
-                    these values are rendered in `../views/partials/header.hbs`
-                */
-			details.flag = true;
-			details.username = req.session.username;
-		}
-		// else if a user is not yet logged-in
-		/*
-                    sets `details.flag` to false
-                    to hide the profile and logout tabs in the nav bar
-                */
-		else details.flag = false;
-		/*
-                for each error, store the error inside the object `details`
-                the field is equal to the parameter + `Error`
-                the value is equal to `msg`
-                as defined in the validation middlewares
-                for example, if there is an error for parameter `fName`:
-                store the value to the field `fNameError`
-            */
-		for (i = 0; i < errors.length; i++)
-			details[errors[i].param + "Error"] = errors[i].msg;
-		/*
-                render `../views/signup.hbs`
-                display the errors defined in the object `details`
-            */
-		res.render("register", details);
-	} else {
 		/*
                 when submitting forms using HTTP POST method
                 the values in the input fields are stored in `req.body` object
@@ -260,7 +229,7 @@ app.post("/register", function (req, res) {
                 the hashed password is stored in variable `hash`
                 in the callback function
             */
-		bcrypt.hash(pw, saltRounds, function (err, hash) {
+		bcrypt.hash(password, saltRounds, function (err, hash) {
 			var user = {
 				username: username,
 				email: email,
@@ -272,8 +241,8 @@ app.post("/register", function (req, res) {
                     defined in the `database` object in `../models/db.js`
                     this function adds a document to collection `users`
                 */
-			db.insertOne(User, user, function (flag) {
-				if (flag) {
+			db.insertOne(User, user, (result) => {
+				if (result) {
 					/*
                             upon adding a user to the database,
                             redirects the client to `/success` using HTTP GET,
@@ -282,31 +251,38 @@ app.post("/register", function (req, res) {
                             which calls getSuccess() method
                             defined in `./successController.js`
                         */
-					res.redirect("log_in");
+					res.render("log_in");
 				}
 			});
 		});
-	}
 });
 
 app.get("/manage_account", function (req, res) {
-	res.render("manage_account");
-});
-
-app.get("/manage_account", function (req, res) {
-	res.render("manage_account");
+	var details = {
+			flag: true,
+		};
+	res.render("manage_account", details);
 });
 
 app.get("/my_schedules", function (req, res) {
-	res.render("my_schedules");
+	var details = {
+			flag: true,
+		};
+	res.render("my_schedules", details);
 });
 
 app.get("/search_result", function (req, res) {
-	res.render("search_result");
+	var details = {
+			flag: true,
+		};
+	res.render("search_result", details);
 });
 
 app.get("/view_account", function (req, res) {
-	res.render("view_account");
+	var details = {
+			flag: true,
+		};
+	res.render("view_account" details);
 });
 
 app.get("/home", (req, res) => {

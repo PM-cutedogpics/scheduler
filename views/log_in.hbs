@@ -8,14 +8,14 @@
     <title>Scheduler</title>
   </head>
   <body>
-    {{> header flag=flag name=name}}
+    {{> header flag=flag}}
     <div class="container">
-      <form class="row g-3 align-items-center mt-1 mb-1" method="POST" action="/register">
+      <form class="row g-3 align-items-center mt-1 mb-1" method="POST" action="/log_in">
         <div class="col-1">
           <label for="inputPassword6" class="col-form-label field">Username</label>
         </div>
         <div class="col-auto">
-          <input type="text" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" name="username">
+          <input type="text" id="inputPassword5" class="form-control" aria-describedby="passwordHelpInline" name="username">
         </div>
         <div class="row g-3 align-items-center mb-2">
           <div class="col-1">
@@ -26,8 +26,8 @@
           </div>
         </div>
         <div class="row g-3 align-items-center mb-2">
-          <div class="col-1">
-            <p id="error" class="error">{{error}}</p>
+          <div class="col-6">
+            <p id="ERROR" class="ERROR">{{ERROR}}</p>
           </div>
         </div>
         <div class="form-check">
@@ -36,7 +36,7 @@
             Remember me
           </label>
         </div>
-        <button type="button" class="btn btn-primary mt-2" value="Submit" id="submit">Sign In</button>
+        <button type="submit" class="btn btn-primary mt-2" value="Submit" id="submit">Sign In</button>
       
       </form>
     </div>
