@@ -361,3 +361,8 @@
 	color: red;
 	cursor: pointer;
 }
+
+#no-results {
+	text-align: center;
+	padding: 10px;
+}

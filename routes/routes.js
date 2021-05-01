@@ -1,9 +1,9 @@
-const { query } = require("express");
 const express = require("express");
 const db = require("../models/db");
 const User = require("../models/UserModel.js");
+const Posts = require("../models/PostModel.js");
 const app = express();
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 // const validation = require('../helpers/validation.js');
 
 // TODO: add in routes
@@ -44,38 +44,36 @@ app.get("/home_in", function (req, res) {
 });
 
 app.get("/log_in", function (req, res) {
-	  if(req.session.username) {
-
-            /*
+	if (req.session.username) {
+		/*
                 redirects the client to `/profile` using HTTP GET,
                 defined in `../routes/routes.js`
                 passing values using URL
                 which calls getProfile() method
                 defined in `./profileController.js`
             */
-            res.redirect('/home/' + req.session.username);
-        }
-        // else if a user is not yet logged-in
-        else {
-
-            /*
+		res.redirect("/home/" + req.session.username);
+	}
+	// else if a user is not yet logged-in
+	else {
+		/*
                 sets `details.flag` to false
                 to hide the profile and logout tabs in the nav bar
             */
-            var details = {
-                flag: false
-            };
+		var details = {
+			flag: false,
+		};
 
-            // render `../views/login.hbs`
-            res.render('log_in', details);
-        }
+		// render `../views/login.hbs`
+		res.render("log_in", details);
+	}
 });
 
 app.get("/manage_account", function (req, res) {
 	res.render("manage_account");
 });
 
-app.post('/log_in', function (req, res){
+app.post("/log_in", function (req, res) {
 	/*
             when submitting forms using HTTP POST method
             the values in the input fields are stored in `req.body` object
@@ -83,34 +81,34 @@ app.post('/log_in', function (req, res){
             Example: the value entered in <input type="text" name="username">
             can be retrieved using `req.body.idNum`
         */
-        var username = req.body.username;
-        var password = req.body.password;
-        /*
+	var username = req.body.username;
+	var password = req.body.password;
+	/*
             calls the function findOne()
             defined in the `database` object in `../models/db.js`
             this function finds a document from collection `users`
             where `username` is equal to `username`
         */
-        db.findOne(User, {username: username}, '', function (result) {
-            // if a user with `username` equal to `username` exists
-            if(result) {
-                var user = {
-                    username: result.username,
-                    desc: result.desc,
-                    email: result.email
-                };
-                /*
+	db.findOne(User, { username: username }, "", function (result) {
+		// if a user with `username` equal to `username` exists
+		if (result) {
+			var user = {
+				username: result.username,
+				desc: result.desc,
+				email: result.email,
+			};
+			/*
                     use compare() method of module `bcrypt`
                     to check if the password entered by the user
                     is equal to the hashed password in the database
                 */
-                bcrypt.compare(password, result.password, function(err, equal) {
-                    /*
+			bcrypt.compare(password, result.password, function (err, equal) {
+				/*
                         if the entered password
                         match the hashed password from the database
                     */
-                    if(equal) {
-                        /*
+				if (equal) {
+					/*
                             stores `user.username` to `req.session.username`
                             stores `user.fName` to `req.session.name`
                             these values are stored to the `req.session` object
@@ -118,8 +116,8 @@ app.post('/log_in', function (req, res){
                             these values will be removed
                             if the user logs-out from the web application
                         */
-                        req.session.username = user.username;
-                        /*
+					req.session.username = user.username;
+					/*
                             redirects the client to `/profile/idNum`
                             where `username` is equal
                             to the `username` entered by the user
@@ -127,55 +125,53 @@ app.post('/log_in', function (req, res){
                             which calls getProfile() method
                             defined in `./profileController.js`
                         */
-                        res.redirect('/home/' + user.username);
-                    }
-                    /*
+					res.redirect("/home/" + user.username);
+				} else {
+					/*
                         else if the entered password
                         does not match the hashed password from the database
                     */
-                    else {
-                        /*
+					/*
                             sets `details.flag` to false
                             to hide the profile and logout tabs in the nav bar
                         */
-                        var details = {
-                            flag: false,
-                            error: `ID Number and/or Password is incorrect.`
-                        };
-                        /*
+					var details = {
+						flag: false,
+						error: `ID Number and/or Password is incorrect.`,
+					};
+					/*
                             render `../views/login.hbs`
                             display the errors
                         */
-                        res.render('log_in', details);
-                    }
-                });
-            }
-            // else if a user with `idNum` equal to `idNum` does not exist
-            else {
-
-                /*
+					res.render("log_in", details);
+				}
+			});
+		}
+		// else if a user with `idNum` equal to `idNum` does not exist
+		else {
+			/*
                     sets `details.flag` to false
                     to hide the profile and logout tabs in the nav bar
                 */
-                var details = {
-                    flag: false,
-                    error: `ID Number and/or Password is incorrect.`
-                };
+			var details = {
+				flag: false,
+				error: `ID Number and/or Password is incorrect.`,
+			};
 
-                /*
+			/*
                     render `../views/login.hbs`
                     display the errors
                 */
-                res.render('log_in', details);
-            }
-        });
-})
+			res.render("log_in", details);
+		}
+	});
+});
 
-app.get('/register', function (req,res){
-	 var details = {};
-        // checks if a user is logged-in by checking the session data
-        if(req.session.username) {
-            /*
+app.get("/register", function (req, res) {
+	var details = {};
+	// checks if a user is logged-in by checking the session data
+	if (req.session.username) {
+		/*
                 sets `details.flag` to true
                 to display the profile and logout tabs in the nav bar
                 sets the value of `details.name` to `req.session.name`
@@ -186,34 +182,32 @@ app.get('/register', function (req,res){
                 in the profile tab of the nav bar
                 these values are rendered in `../views/partials/header.hbs`
             */
-            details.flag = true;
-            details.username = req.session.username;
-        }
-        // else if a user is not yet logged-in
-        else
-            /*
+		details.flag = true;
+		details.username = req.session.username;
+	}
+	// else if a user is not yet logged-in
+	/*
                 sets `details.flag` to false
                 to hide the profile and logout tabs in the nav bar
             */
-            details.flag = false;
-        // render `../views/signup.hbs`
-        res.render('register', details);
+	else details.flag = false;
+	// render `../views/signup.hbs`
+	res.render("register", details);
+});
 
-})
+app.post("/register", function (req, res) {
+	// checks if there are validation errors
+	var errors = validationResult(req);
+	// if there are validation errors
+	if (!errors.isEmpty()) {
+		// get the array of errors
+		errors = errors.errors;
 
-app.post('/register', function (req, res) {
-    // checks if there are validation errors
-        var errors = validationResult(req);
-        // if there are validation errors
-        if (!errors.isEmpty()) {
-            // get the array of errors
-            errors = errors.errors;
+		var details = {};
 
-            var details = {};
-
-            // checks if a user is logged-in by checking the session data
-            if(req.session.username) {
-                /*
+		// checks if a user is logged-in by checking the session data
+		if (req.session.username) {
+			/*
                     sets `details.flag` to true
                     to display the profile and logout tabs in the nav bar
                     sets the value of `details.name` to `req.session.name`
@@ -224,17 +218,16 @@ app.post('/register', function (req, res) {
                     in the profile tab of the nav bar
                     these values are rendered in `../views/partials/header.hbs`
                 */
-                details.flag = true;
-                details.username = req.session.username;
-            }
-            // else if a user is not yet logged-in
-            else
-                /*
+			details.flag = true;
+			details.username = req.session.username;
+		}
+		// else if a user is not yet logged-in
+		/*
                     sets `details.flag` to false
                     to hide the profile and logout tabs in the nav bar
                 */
-                details.flag = false;
-            /*
+		else details.flag = false;
+		/*
                 for each error, store the error inside the object `details`
                 the field is equal to the parameter + `Error`
                 the value is equal to `msg`
@@ -242,47 +235,46 @@ app.post('/register', function (req, res) {
                 for example, if there is an error for parameter `fName`:
                 store the value to the field `fNameError`
             */
-            for(i = 0; i < errors.length; i++)
-                details[errors[i].param + 'Error'] = errors[i].msg;
-            /*
+		for (i = 0; i < errors.length; i++)
+			details[errors[i].param + "Error"] = errors[i].msg;
+		/*
                 render `../views/signup.hbs`
                 display the errors defined in the object `details`
             */
-            res.render('register', details);
-        }
-        else {
-            /*
+		res.render("register", details);
+	} else {
+		/*
                 when submitting forms using HTTP POST method
                 the values in the input fields are stored in `req.body` object
                 each <input> element is identified using its `name` attribute
                 Example: the value entered in <input type="text" name="fName">
                 can be retrieved using `req.body.fName`
             */
-            var username = req.body.username;
-            var email = req.body.email;
-            var desc = req.body.desc;
-            var password = req.body.password;
-            /*
+		var username = req.body.username;
+		var email = req.body.email;
+		var desc = req.body.desc;
+		var password = req.body.password;
+		/*
                 use hash() method of module `bcrypt`
                 to hash the password entered by the user
                 the hashed password is stored in variable `hash`
                 in the callback function
             */
-            bcrypt.hash(pw, saltRounds, function(err, hash) {
-                var user = {
-                    username: username,
-                    email: email,
-                    desc: desc,
-                    password: hash
-                }
-                /*
+		bcrypt.hash(pw, saltRounds, function (err, hash) {
+			var user = {
+				username: username,
+				email: email,
+				desc: desc,
+				password: hash,
+			};
+			/*
                     calls the function insertOne()
                     defined in the `database` object in `../models/db.js`
                     this function adds a document to collection `users`
                 */
-                db.insertOne(User, user, function(flag) {
-                    if(flag) {
-                        /*
+			db.insertOne(User, user, function (flag) {
+				if (flag) {
+					/*
                             upon adding a user to the database,
                             redirects the client to `/success` using HTTP GET,
                             defined in `../routes/routes.js`
@@ -290,16 +282,16 @@ app.post('/register', function (req, res) {
                             which calls getSuccess() method
                             defined in `./successController.js`
                         */
-                        res.redirect('log_in');
-                    }
-                });
-            });
-        }
-})
+					res.redirect("log_in");
+				}
+			});
+		});
+	}
+});
 
-app.get('/manage_account', function (req, res){
-	res.render('manage_account');
-})
+app.get("/manage_account", function (req, res) {
+	res.render("manage_account");
+});
 
 app.get("/manage_account", function (req, res) {
 	res.render("manage_account");
@@ -318,72 +310,164 @@ app.get("/view_account", function (req, res) {
 });
 
 app.get("/home", (req, res) => {
-	var titles = [
-		"Year 1 Term 1 Schedule",
-		"best sched ever",
-		"DL only",
-		"panget profs ko",
-		"please copy my sched",
-	];
-	var posts = [];
 	console.log("Home Page");
-	// get all the posts from the database
-	for (var i = 0; i < 5; i++) {
-		var post = {
-			schedcard: "schedcard-" + (i + 1),
-			schedTitle: titles[i],
-			schedid: "A1B2" + (i + 1),
-			postImg: "/img/example" + (i + 1) + ".jpg",
-		};
-		posts.push(post);
 
-		console.log(posts[i].schedcard);
-		console.log(posts[i].postImg);
-	}
-	console.log(posts.length);
-	res.render("home", posts);
+	// HARDCODE add to db
+	// var posts = [];
+	// var titles = [
+	// 	"Year 1 Term 1 Schedule",
+	// 	"best sched ever",
+	// 	"DL only",
+	// 	"panget profs ko",
+	// 	"please copy my sched",
+	// ];
+
+	// var authors = [
+	// 	"sendcutdogpics",
+	// 	"ironman3000",
+	// 	"thorodinson",
+	// 	"blackwidow69",
+	// 	"captamerica",
+	// ];
+
+	// var descs = [
+	// 	"This is my first scehdule.",
+	// 	"i love my schedule",
+	// 	"we can be friends",
+	// 	"ew",
+	// 	"who has the same sched???",
+	// ];
+
+	// for (var i = 0; i < 5; i++) {
+	// 	var post = {
+	// 		schedcard: "schedcard-" + (i + 1),
+	// 		schedTitle: titles[i],
+	// 		schedid: "A1B2" + (i + 1),
+	// 		postImg: "/img/example" + (i + 1) + ".jpg",
+	// 		schedAuthor: authors[i],
+	// 		schedDesc: descs[i],
+	// 		upqty: 0,
+	// 		downqty: 0,
+	// 	};
+
+	// 	db.insertOne(Posts, post, (flag) => {
+	// 		if (flag) {
+	// 			console.log("added a post to db");
+	// 		}
+	// 	});
+
+	// 	posts.push(post);
+	// 	console.log(posts[i].schedcard);
+	// 	console.log(posts[i].postImg);
+	// }
+
+	// get all the posts from the database
+	var postshome = "schedcard schedTitle schedid postImg";
+	db.findMany(Posts, {}, postshome, (result) => {
+		if (result != null) {
+			console.log("loading home");
+			console.log(result);
+			res.render("home", result);
+		} else console.log("error with db");
+	});
+
+	// console.log(posts.length);
+	// res.render("home", posts);
 });
 
 app.get("/viewpost/:postid", (req, res) => {
-	var query = { postid: req.params.postid };
+	var query = { schedid: req.params.postid };
+	console.log(query);
 	// find the post from the database with comments
-	var post = {
-		schedcard: "schedcard-1",
-		schedid: "A1B21",
-		postImg: "/img/example1.jpg",
-		schedTitle: "Year 1 Term 1 Schedule",
-		schedAuthor: "sendcutedogpics",
-		schedDesc: "This is my first schedule. Please like and comment!",
-		upqty: 300,
-		downqty: 10,
-		comments: [
-			{
-				cAuthor: "ironman3000",
-				cDesc: "nice sched",
-			},
+	var postdetails =
+		"schedcard schedid postImg schedTitle schedAuthor schedDesc upqty downqty";
+	db.findOne(Posts, query, postdetails, (result) => {
+		// TODO: ADD COMMENTS
+		if (result != null) {
+			console.log("redirecting to selected post");
+			console.log(result);
+			var post = {
+				schedcard: result.schedcard,
+				schedid: result.schedid,
+				postImg: result.postImg,
+				schedTitle: result.schedTitle,
+				schedAuthor: result.schedAuthor,
+				schedDesc: result.schedDesc,
+				upqty: result.upqty,
+				downqty: result.downqty,
+				// TEMPORARY COMMENTS
+				comments: [
+					{
+						cAuthor: "ironman3000",
+						cDesc: "nice sched",
+					},
 
-			{
-				cAuthor: "thorodinson",
-				cDesc: "We should be friends :)",
-			},
+					{
+						cAuthor: "thorodinson",
+						cDesc: "We should be friends :)",
+					},
 
-			{
-				cAuthor: "blackwidow",
-				cDesc: "We should be friends :)",
-			},
+					{
+						cAuthor: "blackwidow",
+						cDesc: "We should be friends :)",
+					},
 
-			{
-				cAuthor: "spongebobsquarepants",
-				cDesc: "We should be friends :)",
-			},
+					{
+						cAuthor: "spongebobsquarepants",
+						cDesc: "We should be friends :)",
+					},
 
-			{
-				cAuthor: "miketysonnnnnnnn",
-				cDesc: "We should be friends :)",
-			},
-		],
-	};
-	res.render("viewpost", post);
+					{
+						cAuthor: "miketysonnnnnnnn",
+						cDesc: "We should be friends :)",
+					},
+				],
+			};
+			res.render("viewpost", post);
+		} else {
+			res.render("error");
+			console.log("post not found");
+		}
+	});
+
+	// HARDCODED PROTOTYPE
+	// var post = {
+	// 	schedcard: "schedcard-1",
+	// 	schedid: "A1B21",
+	// 	postImg: "/img/example1.jpg",
+	// 	schedTitle: "Year 1 Term 1 Schedule",
+	// 	schedAuthor: "sendcutedogpics",
+	// 	schedDesc: "This is my first schedule. Please like and comment!",
+	// 	upqty: 300,
+	// 	downqty: 10,
+	// 	comments: [
+	// 		{
+	// 			cAuthor: "ironman3000",
+	// 			cDesc: "nice sched",
+	// 		},
+
+	// 		{
+	// 			cAuthor: "thorodinson",
+	// 			cDesc: "We should be friends :)",
+	// 		},
+
+	// 		{
+	// 			cAuthor: "blackwidow",
+	// 			cDesc: "We should be friends :)",
+	// 		},
+
+	// 		{
+	// 			cAuthor: "spongebobsquarepants",
+	// 			cDesc: "We should be friends :)",
+	// 		},
+
+	// 		{
+	// 			cAuthor: "miketysonnnnnnnn",
+	// 			cDesc: "We should be friends :)",
+	// 		},
+	// 	],
+	// };
+	// res.render("viewpost", post);
 });
 
 app.get("/searchResults", (req, res) => {
@@ -396,18 +480,41 @@ app.get("/searchResults", (req, res) => {
 		};
 		console.log("Search Results for: " + searchquery.query);
 		// query the posts that have the following keyword (QUERY)
+		// find from db
+		var postres = "schedcard schedTitle schedid postImg";
+		// find by username or title
+		var byuser = { schedAuthor: { $regex: req.query.q, $options: "i" } };
+		var bytitle = { schedTitle: { $regex: req.query.q, $options: "i" } };
+		var filter = { $or: [byuser, bytitle] };
+		db.findMany(Posts, filter, postres, (result) => {
+			if (result != null) {
+				console.log("got from users or titles");
+				console.log(result);
+				// add them to the list
+				result.forEach((post) => {
+					searchquery.posts.push(post);
+				});
+				res.render("searchResults", searchquery);
+				console.log("found posts from search");
+			} else {
+				res.render("emptyResults", searchquery);
+				console.log("no posts found with query");
+				console.log("none was found from users");
+			}
+		});
 
-		var post = {
-			schedcard: "schedcard-1",
-			schedid: "A1B21",
-			postImg: "/img/example1.jpg",
-		};
-		searchquery.posts.push(post);
-		console.log(searchquery.posts[0].schedcard);
-		console.log(searchquery.posts[0].postImg);
+		// HARDCODED PROTOTYPE
+		// var post = {
+		// 	schedcard: "schedcard-1",
+		// 	schedid: "A1B21",
+		// 	postImg: "/img/example1.jpg",
+		// };
+		// searchquery.posts.push(post);
+		// console.log(searchquery.posts[0].schedcard);
+		// console.log(searchquery.posts[0].postImg);
 
-		console.log(searchquery.posts.length);
-		res.render("searchResults", searchquery);
+		// console.log(searchquery.posts.length);
+		// res.render("searchResults", searchquery);
 	}
 });
 module.exports = app;
