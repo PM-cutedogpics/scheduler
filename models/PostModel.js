@@ -1,25 +1,38 @@
 var mongoose = require("mongoose");
 
-var PostSchema = new mongoose.Schema({
-	pTitle: {
+var PostsSchema = new mongoose.Schema({
+	schedcard: {
 		type: String,
 		required: true,
 	},
-	pImg: {
-		data: Buffer,
-		contentType: String,
-	},
-	pAuthor: {
-		type: Number,
+	schedid: {
+		type: String,
 		required: true,
 	},
-	pDesc: {
+	postImg: {
+		type: String,
+		required: true,
+	},
+	schedTitle: {
+		type: String,
+		required: true,
+	},
+	schedAuthor: {
+		type: String,
+		required: true,
+	},
+	schedDesc: {
 		type: String,
 	},
-	pLikes: {
+	upqty: {
 		type: Number,
 		required: true,
 	},
+	downqty: {
+		type: Number,
+		required: true,
+	},
+	// comment element and comments db needed
 });
 
-module.exports = mongoose.model("Post", PostSchema);
+module.exports = mongoose.model("Posts", PostsSchema);

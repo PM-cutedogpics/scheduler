@@ -2,8 +2,9 @@ const express = require("express");
 const hbs = require("hbs");
 const dotenv = require("dotenv");
 const routes = require("./routes/routes.js");
-const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo')(session);
+const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
 const db = require("./models/db.js");
 
 const app = express();
@@ -17,13 +18,14 @@ port = process.env.PORT;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-app.use(session({
-    'secret': 'ccapdev-session',
-    'resave': false,
-    'saveUninitialized': false,
-    store: new MongoStore({mongooseConnection: mongoose.connection})
-}));
-
+app.use(
+	session({
+		secret: "ccapdev-session",
+		resave: false,
+		saveUninitialized: false,
+		store: new MongoStore({ mongooseConnection: mongoose.connection }),
+	})
+);
 
 app.use("/", routes);
 
@@ -34,5 +36,7 @@ app.use((req, res) => {
 db.connect();
 
 app.listen(port, hostname, () => {
-	console.log("server running at: " + "http://" + hostname + ":" + port);
+	console.log(
+		"server running at: " + "http://" + hostname + ":" + port + "/home"
+	);
 });
