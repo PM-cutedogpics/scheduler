@@ -66,7 +66,7 @@ app.get("/log_in", function (req, res) {
                 which calls getProfile() method
                 defined in `./profileController.js`
             */
-        var details = {
+		var details = {
 			flag: true,
 		};
 		res.redirect("/home", details);
@@ -144,10 +144,10 @@ app.post("/log_in", function (req, res) {
                             which calls getProfile() method
                             defined in `./profileController.js`
                         */
-                    var details = {
+					var details = {
 						flag: true,
 					};
-					res.redirect("/home", details);
+					res.redirect("/home");
 				} else {
 					/*
                         else if the entered password
@@ -259,34 +259,31 @@ app.post("/register", function (req, res) {
                             which calls getSuccess() method
                             defined in `./successController.js`
                         */
-                var details = {
-					flag: true,
-				};
-				res.redirect("/home", details);
+				req.session.username = user.username;
+				res.redirect("/home");
 			} else console.log("ERROR");
 		});
 	});
 });
 
-app.get("/checkID", function (req, res){
+app.get("/checkID", function (req, res) {
 	var username = req.query.username;
 
-    db.findOne(User, {username: username}, 'username', function (result) {
-        res.send(result);
-    });
-})
+	db.findOne(User, { username: username }, "username", function (result) {
+		res.send(result);
+	});
+});
 
-app.get("/logout", function (req,res){
-	 req.session.destroy(function(err) {
-        if(err) throw err;
+app.get("/logout", function (req, res) {
+	req.session.destroy(function (err) {
+		if (err) throw err;
 
-        var details = {
+		var details = {
 			flag: false,
 		};
-        res.redirect('/home',details);
-    });
-
-})
+		res.redirect("/home", details);
+	});
+});
 
 app.get("/manage_account", function (req, res) {
 	var details = {
@@ -373,15 +370,36 @@ app.get("/home", (req, res) => {
 	// 	console.log(posts[i].postImg);
 	// }
 
-	// get all the posts from the database
-	var postshome = "schedcard schedTitle schedid postImg";
-	db.findMany(Posts, {}, postshome, (result) => {
-		if (result != null) {
-			console.log("loading home");
-			console.log(result);
-			res.render("home", result);
-		} else console.log("error with db");
-	});
+	console.log(req.session.username);
+	if (req.session.username) {
+		// get all the posts from the database
+		var postshome = "schedcard schedTitle schedid postImg";
+		db.findMany(Posts, {}, postshome, (result) => {
+			if (result != null) {
+				console.log("loading home");
+				console.log(result);
+				var details = {
+					flag: true,
+					result: result,
+				};
+				res.render("home", details);
+			} else console.log("error with db");
+		});
+	} else {
+		// get all the posts from the database
+		var postshome = "schedcard schedTitle schedid postImg";
+		db.findMany(Posts, {}, postshome, (result) => {
+			if (result != null) {
+				console.log("loading home");
+				console.log(result);
+				var details = {
+					flag: false,
+					result: result,
+				};
+				res.render("home", details);
+			} else console.log("error with db");
+		});
+	}
 
 	// console.log(posts.length);
 	// res.render("home", posts);
