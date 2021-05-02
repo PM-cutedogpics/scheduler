@@ -259,7 +259,10 @@ app.post("/register", function (req, res) {
                             which calls getSuccess() method
                             defined in `./successController.js`
                         */
-				res.redirect("/log_in");
+                var details = {
+					flag: true,
+				};
+				res.redirect("/home", details);
 			} else console.log("ERROR");
 		});
 	});
@@ -271,6 +274,18 @@ app.get("/checkID", function (req, res){
     db.findOne(User, {username: username}, 'username', function (result) {
         res.send(result);
     });
+})
+
+app.get("/logout", function (req,res){
+	 req.session.destroy(function(err) {
+        if(err) throw err;
+
+        var details = {
+			flag: false,
+		};
+        res.redirect('/home',details);
+    });
+
 })
 
 app.get("/manage_account", function (req, res) {
