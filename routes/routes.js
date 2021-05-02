@@ -446,7 +446,7 @@ app.get("/searchResults", (req, res) => {
 		var bytitle = { schedTitle: { $regex: req.query.q, $options: "i" } };
 		var filter = { $or: [byuser, bytitle] };
 		db.findMany(Posts, filter, postres, (result) => {
-			if (result != null) {
+			if (result.length > 0) {
 				console.log("got from users or titles");
 				console.log(result);
 				// add them to the list
