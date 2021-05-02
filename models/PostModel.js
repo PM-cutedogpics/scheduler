@@ -32,7 +32,6 @@ var PostsSchema = new mongoose.Schema({
 		type: Number,
 		required: true,
 	},
-	// comment element and comments db needed
 });
 
 module.exports = mongoose.model("Posts", PostsSchema);

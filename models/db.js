@@ -73,7 +73,7 @@ const database = {
 			on a single document based on the model `model`
 			filtered by the object `filter`
 		*/
-		updateOne: function(model, filter, update) {
+		updateOne: function(model, filter, update, callback) {
 			model.updateOne(filter, update, function(error, result) {
 				if(error) return callback(false);
 				console.log('Document modified: ' + result.nModified);
@@ -86,7 +86,7 @@ const database = {
 			on multiple documents based on the model `model`
 			filtered using the object `filter`
 		*/
-		updateMany: function(model, filter, update) {
+		updateMany: function(model, filter, update, callback) {
 			model.updateMany(filter, update, function(error, result) {
 				if(error) return callback(false);
 				console.log('Documents modified: ' + result.nModified);

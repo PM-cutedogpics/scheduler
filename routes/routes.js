@@ -2,45 +2,59 @@ const express = require("express");
 const db = require("../models/db");
 const User = require("../models/UserModel.js");
 const Posts = require("../models/PostModel.js");
+const Comments = require("../models/CommentModel.js");
 const app = express();
 const bcrypt = require("bcrypt");
-// const validation = require('../helpers/validation.js');
+const validationResult = require("express-validator");
+const saltRounds = 10;
 
 // TODO: add in routes
-app.get("/about_out", function (req, res) {
-	res.render("about_out");
-});
+app.get("/about", function (req, res) {
+	if (req.session.username) {
+		var details = {
+			flag: true,
+		};
+	} else {
+		var details = {
+			flag: false,
+		};
+	}
 
-app.get("/about_in", function (req, res) {
-	res.render("about_in");
+	res.render("about", details);
 });
 
 app.get("/change_password", function (req, res) {
-	res.render("change_password");
+	var details = {
+		flag: true,
+	};
+	res.render("change_password", details);
 });
 
-app.get("/contact_out", function (req, res) {
-	res.render("contact_out");
-});
-
-app.get("/contact_in", function (req, res) {
-	res.render("contact_in");
+app.get("/contact", function (req, res) {
+	if (req.session.username) {
+		var details = {
+			flag: true,
+		};
+	} else {
+		var details = {
+			flag: false,
+		};
+	}
+	res.render("contact", details);
 });
 
 app.get("/create", function (req, res) {
-	res.render("create");
+	var details = {
+		flag: true,
+	};
+	res.render("create", details);
 });
 
 app.get("/edit_account", function (req, res) {
-	res.render("edit_account");
-});
-
-app.get("/home_out", function (req, res) {
-	res.render("home_out");
-});
-
-app.get("/home_in", function (req, res) {
-	res.render("home_in");
+	var details = {
+		flag: true,
+	};
+	res.render("edit_account", details);
 });
 
 app.get("/log_in", function (req, res) {
@@ -92,6 +106,7 @@ app.post("/log_in", function (req, res) {
         */
 	db.findOne(User, { username: username }, "", function (result) {
 		// if a user with `username` equal to `username` exists
+		console.log(result);
 		if (result) {
 			var user = {
 				username: result.username,
@@ -157,7 +172,7 @@ app.post("/log_in", function (req, res) {
                 */
 			var details = {
 				flag: false,
-				error: `ID Number and/or Password is incorrect.`,
+				ERROR: `ID Number and/or Password is incorrect.`,
 			};
 			console.log("that");
 			/*
@@ -198,85 +213,38 @@ app.get("/register", function (req, res) {
 });
 
 app.post("/register", function (req, res) {
-	// checks if there are validation errors
-	var errors = validationResult(req);
-	// if there are validation errors
-	if (!errors.isEmpty()) {
-		// get the array of errors
-		errors = errors.errors;
-
-		var details = {};
-
-		// checks if a user is logged-in by checking the session data
-		if (req.session.username) {
-			/*
-                    sets `details.flag` to true
-                    to display the profile and logout tabs in the nav bar
-                    sets the value of `details.name` to `req.session.name`
-                    to display the name of the logged-in user
-                    in the profile tab of the nav bar
-                    sets the value of `details.uidNum` to `req.session.idNum`
-                    to provide the link the profile of the logged-in user
-                    in the profile tab of the nav bar
-                    these values are rendered in `../views/partials/header.hbs`
-                */
-			details.flag = true;
-			details.username = req.session.username;
-		}
-		// else if a user is not yet logged-in
-		/*
-                    sets `details.flag` to false
-                    to hide the profile and logout tabs in the nav bar
-                */
-		else details.flag = false;
-		/*
-                for each error, store the error inside the object `details`
-                the field is equal to the parameter + `Error`
-                the value is equal to `msg`
-                as defined in the validation middlewares
-                for example, if there is an error for parameter `fName`:
-                store the value to the field `fNameError`
-            */
-		for (i = 0; i < errors.length; i++)
-			details[errors[i].param + "Error"] = errors[i].msg;
-		/*
-                render `../views/signup.hbs`
-                display the errors defined in the object `details`
-            */
-		res.render("register", details);
-	} else {
-		/*
+	/*
                 when submitting forms using HTTP POST method
                 the values in the input fields are stored in `req.body` object
                 each <input> element is identified using its `name` attribute
                 Example: the value entered in <input type="text" name="fName">
                 can be retrieved using `req.body.fName`
             */
-		var username = req.body.username;
-		var email = req.body.email;
-		var desc = req.body.desc;
-		var password = req.body.password;
-		/*
+	var username = req.body.username;
+	var email = req.body.email;
+	var desc = req.body.desc;
+	var password = req.body.password;
+	/*
                 use hash() method of module `bcrypt`
                 to hash the password entered by the user
                 the hashed password is stored in variable `hash`
                 in the callback function
             */
-		bcrypt.hash(pw, saltRounds, function (err, hash) {
-			var user = {
-				username: username,
-				email: email,
-				desc: desc,
-				password: hash,
-			};
-			/*
+	bcrypt.hash(password, saltRounds, function (err, hash) {
+		var user = {
+			username: username,
+			email: email,
+			desc: desc,
+			password: hash,
+		};
+		/*
                     calls the function insertOne()
                     defined in the `database` object in `../models/db.js`
                     this function adds a document to collection `users`
                 */
-			db.insertOne(User, user, function (flag) {
-				if (flag) {
-					/*
+		db.insertOne(User, user, (result) => {
+			if (result) {
+				/*
                             upon adding a user to the database,
                             redirects the client to `/success` using HTTP GET,
                             defined in `../routes/routes.js`
@@ -284,31 +252,38 @@ app.post("/register", function (req, res) {
                             which calls getSuccess() method
                             defined in `./successController.js`
                         */
-					res.redirect("log_in");
-				}
-			});
+				res.render("log_in");
+			}
 		});
-	}
+	});
 });
 
 app.get("/manage_account", function (req, res) {
-	res.render("manage_account");
-});
-
-app.get("/manage_account", function (req, res) {
-	res.render("manage_account");
+	var details = {
+		flag: true,
+	};
+	res.render("manage_account", details);
 });
 
 app.get("/my_schedules", function (req, res) {
-	res.render("my_schedules");
+	var details = {
+		flag: true,
+	};
+	res.render("my_schedules", details);
 });
 
 app.get("/search_result", function (req, res) {
-	res.render("search_result");
+	var details = {
+		flag: true,
+	};
+	res.render("search_result", details);
 });
 
 app.get("/view_account", function (req, res) {
-	res.render("view_account");
+	var details = {
+		flag: true,
+	};
+	res.render("view_account", details);
 });
 
 app.get("/home", (req, res) => {
@@ -397,34 +372,18 @@ app.get("/viewpost/:postid", (req, res) => {
 				schedDesc: result.schedDesc,
 				upqty: result.upqty,
 				downqty: result.downqty,
-				// TEMPORARY COMMENTS
-				comments: [
-					{
-						cAuthor: "ironman3000",
-						cDesc: "nice sched",
-					},
-
-					{
-						cAuthor: "thorodinson",
-						cDesc: "We should be friends :)",
-					},
-
-					{
-						cAuthor: "blackwidow",
-						cDesc: "We should be friends :)",
-					},
-
-					{
-						cAuthor: "spongebobsquarepants",
-						cDesc: "We should be friends :)",
-					},
-
-					{
-						cAuthor: "miketysonnnnnnnn",
-						cDesc: "We should be friends :)",
-					},
-				],
+				comments: [],
 			};
+
+			var commentdetails = "schedid commentid cAuthor cDesc";
+			db.findMany(Comments, query, commentdetails, (result) => {
+				if (result != null) {
+					result.forEach((comment) => {
+						post.comments.push(comment);
+					});
+				}
+			});
+
 			res.render("viewpost", post);
 		} else {
 			res.render("error");
@@ -489,7 +448,7 @@ app.get("/searchResults", (req, res) => {
 		var bytitle = { schedTitle: { $regex: req.query.q, $options: "i" } };
 		var filter = { $or: [byuser, bytitle] };
 		db.findMany(Posts, filter, postres, (result) => {
-			if (result != null) {
+			if (result.length > 0) {
 				console.log("got from users or titles");
 				console.log(result);
 				// add them to the list
@@ -519,4 +478,225 @@ app.get("/searchResults", (req, res) => {
 		// res.render("searchResults", searchquery);
 	}
 });
+
+app.get("/upvoteInc", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("increasing upvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { upqty: 1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid upqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
+app.get("/upvoteDec", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("decreasing upvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { upqty: -1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid upqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
+app.get("/downDecupInc", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("decreasing downvote by 1 & increasing upvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { upqty: 1, downqty: -1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid upqty downqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
+app.get("/downvoteInc", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("increasing downvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { downqty: 1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid downqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
+app.get("/downvoteDec", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("decreasing downvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { downqty: -1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid downqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
+app.get("/upDecdownInc", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("decreasing upvote by 1 & increasing downvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { downqty: 1, upqty: -1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid upqty downqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
+app.get("/addComment", (req, res) => {
+	var comment = {
+		schedid: req.query.schedid,
+		commentid: req.query.commentid,
+		cAuthor: req.query.cAuthor,
+		cDesc: req.query.cDesc,
+	};
+
+	console.log("adding comment to db");
+	db.insertOne(Comments, comment, (result) => {
+		res.send(result);
+	});
+});
+
+app.get("/my_posts/:username", (req, res) => {
+	var query = { username: req.params.username };
+	console.log(query);
+	// find the post from the database with comments
+	var postshome = "schedcard schedTitle schedid postImg";
+	db.findMany(Posts, query, postshome, (result) => {
+		if (result != null) {
+			console.log("loading my posts");
+			console.log(result);
+			res.render("home", result);
+		} else console.log("error with db");
+	});
+});
+
 module.exports = app;

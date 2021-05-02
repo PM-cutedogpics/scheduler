@@ -22,7 +22,9 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "express-validator": "^6.10.1",
     "hbs": "^4.1.2",
-    "mongoose": "^5.12.6"
+    "mongoose": "^5.12.6",
+    "validation-result": "^1.0.0"
   }
 }

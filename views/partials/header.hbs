@@ -29,6 +29,10 @@
         <li class="nav-item">
           <a class="nav-link" href="/my_schedules">MY SCHEDULES</a>
         </li>
+        {{!-- TODO: GET USERNAME FROM SESSION --}}
+        <li>
+          <a class="nav-link" href="/my_posts/{{username}}">MY POSTS</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="/create">CREATE</a>
         </li>
@@ -61,7 +65,6 @@
       <li><hr class="dropdown-divider"></li>
       {{/if}}
       <li ><a class="dropdown-item" href="#">Dark Mode
-      <li><a class="dropdown-item">Dark Mode
         <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" id="darkSwitch">
             <label class="form-check-label" for="darkSwitch"></label>
