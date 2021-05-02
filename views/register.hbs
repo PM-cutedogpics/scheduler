@@ -13,27 +13,26 @@
       <form class="row g-3 mt-1" method="POST" action="/register">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Username <required>*</required></label>
-          <input type="text" class="form-control" id="inputUsername" name="username" required>
-          <p id="usernameError" class="error">{{usernameError}}</p>
+          <input type="text" class="form-control" id="username" name="username" required>
         </div>
         <div class="col-md-6">
           <label for="inputPassword4" class="form-label">Password <required>*</required></label>
-          <input type="password" class="form-control" id="inputPassword4" name="password" required>
-          <p id="passwordError" class="error">{{passwordError}}</p>
+          <input type="password" class="form-control" id="password" name="password" required>
         </div>
         <div class="col-6">
           <label for="inputAddress" class="form-label">Email Address <required>*</required></label>
-          <input type="email" class="form-control" id="inputAddress" placeholder="scheduler@gmail.com" name="email" required> 
-          <p id="emailError" class="error">{{emailError}}</p>
+          <input type="email" class="form-control" id="email" placeholder="scheduler@gmail.com" name="email" required> 
         </div>
         <div class="col-12">
           <label for="inputAddress2" class="form-label">Description</label>
-          <input type="text" class="form-control" id="inputAddress2" placeholder="I'm a busy person" name="desc">
-          <p id="descError" class="error">{{descError}}</p>
+          <input type="text" class="form-control" id="desc" placeholder="I'm a busy person" name="desc">
         </div>
         <div class="col-3 mb-3">
           <label for="formFileSm" class="form-label">Small file input example</label>
           <input class="form-control form-control-sm" id="formFileSm" type="file" name="dp">
+        </div>
+        <div class="col-6">
+          <p id="usernameError" class="error">{{usernameError}}</p>
         </div>
         <div class="col-12">
           <button type="submit" class="btn btn-primary" id="submit" value="Submit">Submit</button>
