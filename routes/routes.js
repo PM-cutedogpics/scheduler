@@ -66,10 +66,7 @@ app.get("/log_in", function (req, res) {
                 which calls getProfile() method
                 defined in `./profileController.js`
             */
-        var details = {
-			flag: true,
-		};
-		res.redirect("/home", details);
+		res.redirect("home");
 	}
 	// else if a user is not yet logged-in
 	else {
@@ -144,10 +141,7 @@ app.post("/log_in", function (req, res) {
                             which calls getProfile() method
                             defined in `./profileController.js`
                         */
-                    var details = {
-						flag: true,
-					};
-					res.redirect("/home", details);
+					res.redirect("home");
 				} else {
 					/*
                         else if the entered password
@@ -259,10 +253,7 @@ app.post("/register", function (req, res) {
                             which calls getSuccess() method
                             defined in `./successController.js`
                         */
-                var details = {
-					flag: true,
-				};
-				res.redirect("/home", details);
+				res.redirect("home");
 			} else console.log("ERROR");
 		});
 	});
@@ -283,7 +274,7 @@ app.get("/logout", function (req,res){
         var details = {
 			flag: false,
 		};
-        res.redirect('/home',details);
+        res.redirect('home',details);
     });
 
 })
