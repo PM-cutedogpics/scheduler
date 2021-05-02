@@ -9,15 +9,18 @@ $(document).ready(() => {
 			$("#upvote").addClass("activated");
 			$("#upvote").css("color", "red");
 
-			// TODO: add to the db
-			var postid = $(".sched-img").attr("alt");
-			console.log("postid = " + postid);
+			var schedid = $(".sched-img").attr("alt");
+			console.log("schedid = " + schedid);
 			// add an upvote to the counter
-			var upvotes = parseInt($("#upqty").text()) + 1;
-			$("#upqty").text(upvotes);
+			// var upvotes = parseInt($("#upqty").text()) + 1;
 
-			console.log("upvote on downvote off");
-			console.log("upvotes = " + upvotes);
+			$.get("/upvoteInc", { schedid: schedid }, (result) => {
+				if (result.schedid == schedid) {
+					console.log("upvote on downvote off");
+					console.log("upvotes = " + result.upqty);
+					$("#upqty").text(result.upqty.toString());
+				}
+			});
 		} else if (
 			$("#upvote").hasClass("activated") &&
 			!$("#downvote").hasClass("activated")
@@ -26,15 +29,19 @@ $(document).ready(() => {
 			$("#upvote").removeClass("activated");
 			$("#upvote").css("color", "#000");
 
-			// TODO: subtract from the db
-			var postid = $(".sched-img").attr("alt");
-			console.log("postid = " + postid);
+			var schedid = $(".sched-img").attr("alt");
+			console.log("schedid = " + schedid);
 			// subtract an upvote from the counter
-			var upvotes = parseInt($("#upqty").text()) - 1;
-			$("#upqty").text(upvotes);
+			// var upvotes = parseInt($("#upqty").text()) - 1;
+			// $("#upqty").text(upvotes);
 
-			console.log("upvote off downvote off");
-			console.log("upvotes = " + upvotes);
+			$.get("/upvoteDec", { schedid: schedid }, (result) => {
+				if (result.schedid == schedid) {
+					console.log("upvote off downvote off");
+					console.log("upvotes = " + result.upqty);
+					$("#upqty").text(result.upqty.toString());
+				}
+			});
 		} else if (
 			!$("#upvote").hasClass("activated") &&
 			$("#downvote").hasClass("activated")
@@ -47,19 +54,25 @@ $(document).ready(() => {
 			// activated and red
 			$("#upvote").addClass("activated");
 			$("#upvote").css("color", "red");
-			// TODO: get postid to access in the db
-			var postid = $(".sched-img").attr("alt");
-			console.log("postid = " + postid);
-			// decrease downvote counter
-			var downvotes = parseInt($("#downqty").text()) - 1;
-			$("#downqty").text(downvotes);
-			// increase upvote counter
-			var upvotes = parseInt($("#upqty").text()) + 1;
-			$("#upqty").text(upvotes);
 
-			console.log("upvote on downvote off (2)");
-			console.log("upvotes = " + upvotes);
-			console.log("downvotes = " + downvotes);
+			var schedid = $(".sched-img").attr("alt");
+			console.log("schedid = " + schedid);
+			// decrease downvote counter
+			// var downvotes = parseInt($("#downqty").text()) - 1;
+			// $("#downqty").text(downvotes);
+			// // increase upvote counter
+			// var upvotes = parseInt($("#upqty").text()) + 1;
+			// $("#upqty").text(upvotes);
+
+			$.get("/downDecupInc", { schedid: schedid }, (result) => {
+				if (result.schedid == schedid) {
+					console.log("upvote on downvote off (2)");
+					console.log("upvotes = " + result.upqty);
+					console.log("downvotes = " + result.downqty);
+					$("#downqty").text(result.downqty.toString());
+					$("#upqty").text(result.upqty.toString());
+				}
+			});
 		}
 	});
 
@@ -72,15 +85,20 @@ $(document).ready(() => {
 			// DOWNVOTE activated and blue
 			$("#downvote").addClass("activated");
 			$("#downvote").css("color", "blue");
-			// TODO: get postid to access in the db
-			var postid = $(".sched-img").attr("alt");
-			console.log("postid = " + postid);
-			// add downvote counter
-			var downvotes = parseInt($("#downqty").text()) + 1;
-			$("#downqty").text(downvotes);
 
-			console.log("downvote on upvote off");
-			console.log("downvotes = " + downvotes);
+			var schedid = $(".sched-img").attr("alt");
+			console.log("schedid = " + schedid);
+			// add downvote counter
+			// var downvotes = parseInt($("#downqty").text()) + 1;
+			// $("#downqty").text(downvotes);
+
+			$.get("/downvoteInc", { schedid: schedid }, (result) => {
+				if (result.schedid == schedid) {
+					console.log("downvote on upvote off");
+					console.log("downvotes = " + result.downqty);
+					$("#downqty").text(result.downqty.toString());
+				}
+			});
 		} else if (
 			!$("#upvote").hasClass("activated") &&
 			$("#downvote").hasClass("activated")
@@ -88,15 +106,20 @@ $(document).ready(() => {
 			// DOWNVOTE remove activated and change to black
 			$("#downvote").removeClass("activated");
 			$("#downvote").css("color", "#000");
-			// TODO: get postid to access in the db
-			var postid = $(".sched-img").attr("alt");
-			console.log("postid = " + postid);
-			// subtract downvote counter
-			var downvotes = parseInt($("#downqty").text()) - 1;
-			$("#downqty").text(downvotes);
 
-			console.log("upvote off downvote off");
-			console.log("downvotes = " + downvotes);
+			var schedid = $(".sched-img").attr("alt");
+			console.log("schedid = " + schedid);
+			// subtract downvote counter
+			// var downvotes = parseInt($("#downqty").text()) - 1;
+			// $("#downqty").text(downvotes);
+
+			$.get("/downvoteDec", { schedid: schedid }, (result) => {
+				if (result.schedid == schedid) {
+					console.log("upvote off downvote off");
+					console.log("downvotes = " + result.downqty);
+					$("#downqty").text(result.downqty.toString());
+				}
+			});
 		} else if (
 			$("#upvote").hasClass("activated") &&
 			!$("#downvote").hasClass("activated")
@@ -107,19 +130,25 @@ $(document).ready(() => {
 			// toggle downvote to activated and change to blue
 			$("#downvote").addClass("activated");
 			$("#downvote").css("color", "blue");
-			// TODO: get postid to access in the db
-			var postid = $(".sched-img").attr("alt");
-			console.log("postid = " + postid);
+			// TODO: get schedid to access in the db
+			var schedid = $(".sched-img").attr("alt");
+			console.log("schedid = " + schedid);
 			// subtract from upvote counter
-			var upvotes = parseInt($("#upqty").text()) - 1;
-			$("#upqty").text(upvotes);
-			// add to downvote counter
-			var downvotes = parseInt($("#downqty").text()) + 1;
-			$("#downqty").text(downvotes);
+			// var upvotes = parseInt($("#upqty").text()) - 1;
+			// $("#upqty").text(upvotes);
+			// // add to downvote counter
+			// var downvotes = parseInt($("#downqty").text()) + 1;
+			// $("#downqty").text(downvotes);
 
-			console.log("upvote off downvote on (2)");
-			console.log("upvotes = " + upvotes);
-			console.log("downvotes = " + downvotes);
+			$.get("/upDecdownInc", { schedid: schedid }, (result) => {
+				if (result.schedid == schedid) {
+					console.log("upvote off downvote on (2)");
+					console.log("upvotes = " + result.upqty);
+					console.log("downvotes = " + result.downqty);
+					$("#upqty").text(result.upqty.toString());
+					$("#downqty").text(result.downqty.toString());
+				}
+			});
 		}
 	});
 

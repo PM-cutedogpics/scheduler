@@ -491,4 +491,197 @@ app.get("/searchResults", (req, res) => {
 		// res.render("searchResults", searchquery);
 	}
 });
+
+app.get("/upvoteInc", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("increasing upvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { upqty: 1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid upqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
+app.get("/upvoteDec", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("decreasing upvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { upqty: -1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid upqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
+app.get("/downDecupInc", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("decreasing downvote by 1 & increasing upvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { upqty: 1, downqty: -1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid upqty downqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
+app.get("/downvoteInc", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("increasing downvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { downqty: 1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid downqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
+app.get("/downvoteDec", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("decreasing downvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { downqty: -1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid downqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
+app.get("/upDecdownInc", (req, res) => {
+	var schedid = req.query.schedid;
+	console.log("decreasing upvote by 1 & increasing downvote by 1");
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{ $inc: { downqty: 1, upqty: -1 } },
+		(result) => {
+			if (result) {
+				console.log("returning updated schedule");
+				db.findOne(
+					Posts,
+					{ schedid: schedid },
+					"schedid upqty downqty",
+					function (result) {
+						if (result != null) {
+							console.log("RESULTS\n" + result);
+							res.send(result);
+						} else {
+							console.log("error");
+							res.send(null);
+						}
+					}
+				);
+			} else {
+				console.log("error updating upvote count");
+				res.send(null);
+			}
+		}
+	);
+});
+
 module.exports = app;
