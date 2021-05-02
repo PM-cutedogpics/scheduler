@@ -66,7 +66,7 @@ app.get("/log_in", function (req, res) {
                 which calls getProfile() method
                 defined in `./profileController.js`
             */
-		res.redirect("/home/" + req.session.username);
+		res.redirect("/home");
 	}
 	// else if a user is not yet logged-in
 	else {
@@ -140,7 +140,7 @@ app.post("/log_in", function (req, res) {
                             which calls getProfile() method
                             defined in `./profileController.js`
                         */
-					res.redirect("/home/" + user.username);
+					res.redirect("/home");
 				} else {
 					/*
                         else if the entered password
@@ -222,6 +222,7 @@ app.post("/register", function (req, res) {
 	var email = req.body.email;
 	var desc = req.body.desc;
 	var password = req.body.password;
+	console.log("HELLO I AM REGISTERING");
 	/*
                 use hash() method of module `bcrypt`
                 to hash the password entered by the user
@@ -235,6 +236,8 @@ app.post("/register", function (req, res) {
 			desc: desc,
 			password: hash,
 		};
+
+		console.log(user);
 		/*
                     calls the function insertOne()
                     defined in the `database` object in `../models/db.js`
@@ -250,8 +253,8 @@ app.post("/register", function (req, res) {
                             which calls getSuccess() method
                             defined in `./successController.js`
                         */
-				res.render("log_in");
-			}
+				res.redirect("/log_in");
+			} else console.log("ERROR");
 		});
 	});
 });
@@ -284,6 +287,11 @@ app.get("/view_account", function (req, res) {
 	res.render("view_account", details);
 });
 
+/*
+	opens the home page of the web app
+	gets all the posts from the database and displays them 
+
+*/
 app.get("/home", (req, res) => {
 	console.log("Home Page");
 
@@ -350,6 +358,11 @@ app.get("/home", (req, res) => {
 	// res.render("home", posts);
 });
 
+/*
+	when a post has been clicked
+	View a post of a certain post
+	opens a new page of the post with upvotes, downvotes, and comments 
+*/
 app.get("/viewpost/:postid", (req, res) => {
 	var query = { schedid: req.params.postid };
 	console.log(query);
@@ -357,7 +370,6 @@ app.get("/viewpost/:postid", (req, res) => {
 	var postdetails =
 		"schedcard schedid postImg schedTitle schedAuthor schedDesc upqty downqty";
 	db.findOne(Posts, query, postdetails, (result) => {
-		// TODO: ADD COMMENTS
 		if (result != null) {
 			console.log("redirecting to selected post");
 			console.log(result);
@@ -429,6 +441,11 @@ app.get("/viewpost/:postid", (req, res) => {
 	// res.render("viewpost", post);
 });
 
+/*
+	Shows the search result from the search form in the header
+	retrieves 0 to many posts
+	if there are 0 matching posts, it says none has been found
+*/
 app.get("/searchResults", (req, res) => {
 	if (req.query.q <= 0) {
 		res.redirect("/home");
@@ -477,6 +494,10 @@ app.get("/searchResults", (req, res) => {
 	}
 });
 
+/*
+	when the upvote button has been clicked but the downvote is not active
+	increase the number of upvotes
+*/
 app.get("/upvoteInc", (req, res) => {
 	var schedid = req.query.schedid;
 	console.log("increasing upvote by 1");
@@ -509,6 +530,10 @@ app.get("/upvoteInc", (req, res) => {
 	);
 });
 
+/*
+	when upvote has been clicked and it is active
+	reduce the amount of upvotes
+*/
 app.get("/upvoteDec", (req, res) => {
 	var schedid = req.query.schedid;
 	console.log("decreasing upvote by 1");
@@ -541,6 +566,10 @@ app.get("/upvoteDec", (req, res) => {
 	);
 });
 
+/*
+	when upvote is clicked and downvote is active
+	reduce downvote by 1 and add 1 to upvote
+*/
 app.get("/downDecupInc", (req, res) => {
 	var schedid = req.query.schedid;
 	console.log("decreasing downvote by 1 & increasing upvote by 1");
@@ -573,6 +602,10 @@ app.get("/downDecupInc", (req, res) => {
 	);
 });
 
+/*
+	when downvote is clicked and upvote is not active
+	increase downvote by 1
+*/
 app.get("/downvoteInc", (req, res) => {
 	var schedid = req.query.schedid;
 	console.log("increasing downvote by 1");
@@ -605,6 +638,10 @@ app.get("/downvoteInc", (req, res) => {
 	);
 });
 
+/*
+	when downvote is clicked and it is active
+	decrease downvote by one 
+*/
 app.get("/downvoteDec", (req, res) => {
 	var schedid = req.query.schedid;
 	console.log("decreasing downvote by 1");
@@ -637,6 +674,10 @@ app.get("/downvoteDec", (req, res) => {
 	);
 });
 
+/*
+	when downvote is clicked and upvote is active
+	reduce upvote by 1 and increase downvote by 1
+*/
 app.get("/upDecdownInc", (req, res) => {
 	var schedid = req.query.schedid;
 	console.log("decreasing upvote by 1 & increasing downvote by 1");
@@ -669,6 +710,9 @@ app.get("/upDecdownInc", (req, res) => {
 	);
 });
 
+/*
+	when you submit a comment, it is added to the database
+*/
 app.get("/addComment", (req, res) => {
 	var comment = {
 		schedid: req.query.schedid,
@@ -683,10 +727,14 @@ app.get("/addComment", (req, res) => {
 	});
 });
 
-app.get("/my_posts/:username", (req, res) => {
-	var query = { username: req.params.username };
+/*
+	redirects to my posts to see the current user's posts with imgs
+*/
+app.get("/my_posts", (req, res) => {
+	// GET USERNAME FROM DATABASE
+	var query = { username: req.session.username };
 	console.log(query);
-	// find the post from the database with comments
+	// find the post using the username from the database with comments
 	var postshome = "schedcard schedTitle schedid postImg";
 	db.findMany(Posts, query, postshome, (result) => {
 		if (result != null) {
