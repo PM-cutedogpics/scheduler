@@ -81,6 +81,7 @@ app.post("/log_in", function (req, res) {
             Example: the value entered in <input type="text" name="username">
             can be retrieved using `req.body.idNum`
         */
+    console.log("here")
 	var username = req.body.username;
 	var password = req.body.password;
 	/*
@@ -139,6 +140,7 @@ app.post("/log_in", function (req, res) {
 						flag: false,
 						error: `ID Number and/or Password is incorrect.`,
 					};
+					console.log("this");
 					/*
                             render `../views/login.hbs`
                             display the errors
@@ -157,7 +159,7 @@ app.post("/log_in", function (req, res) {
 				flag: false,
 				error: `ID Number and/or Password is incorrect.`,
 			};
-
+			console.log("that");
 			/*
                     render `../views/login.hbs`
                     display the errors

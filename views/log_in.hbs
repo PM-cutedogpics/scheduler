@@ -10,19 +10,19 @@
   <body>
     {{> header flag=flag name=name}}
     <div class="container">
-      <form class="row g-3 align-items-center mt-1 mb-1" method="POST" action="/register">
+      <form class="row g-3 align-items-center mt-1 mb-1" method="POST" action="/log_in">
         <div class="col-1">
           <label for="inputPassword6" class="col-form-label field">Username</label>
         </div>
         <div class="col-auto">
-          <input type="text" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" name="username">
+          <input type="text" id="inputUsername" class="form-control" aria-describedby="passwordHelpInline" name="username">
         </div>
         <div class="row g-3 align-items-center mb-2">
           <div class="col-1">
             <label for="inputPassword6" class="col-form-label">Password </label>
           </div>
           <div class="col-auto">
-            <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" name="password">
+            <input type="password" id="inputPassword" class="form-control" aria-describedby="passwordHelpInline" name="password">
           </div>
         </div>
         <div class="row g-3 align-items-center mb-2">
