@@ -66,7 +66,10 @@ app.get("/log_in", function (req, res) {
                 which calls getProfile() method
                 defined in `./profileController.js`
             */
-		res.redirect("/home");
+        var details = {
+			flag: true,
+		};
+		res.redirect("/home", details);
 	}
 	// else if a user is not yet logged-in
 	else {
@@ -141,7 +144,10 @@ app.post("/log_in", function (req, res) {
                             which calls getProfile() method
                             defined in `./profileController.js`
                         */
-					res.redirect("/home");
+                    var details = {
+						flag: true,
+					};
+					res.redirect("/home", details);
 				} else {
 					/*
                         else if the entered password
@@ -224,7 +230,6 @@ app.post("/register", function (req, res) {
 	var email = req.body.email;
 	var desc = req.body.desc;
 	var password = req.body.password;
-	console.log("HELLO I AM REGISTERING");
 	/*
                 use hash() method of module `bcrypt`
                 to hash the password entered by the user
@@ -238,8 +243,7 @@ app.post("/register", function (req, res) {
 			desc: desc,
 			password: hash,
 		};
-
-		console.log(user);
+		
 		/*
                     calls the function insertOne()
                     defined in the `database` object in `../models/db.js`
