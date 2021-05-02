@@ -243,7 +243,7 @@ app.post("/register", function (req, res) {
 			desc: desc,
 			password: hash,
 		};
-		
+
 		/*
                     calls the function insertOne()
                     defined in the `database` object in `../models/db.js`
@@ -264,6 +264,14 @@ app.post("/register", function (req, res) {
 		});
 	});
 });
+
+app.get("/checkID", function (req, res){
+	var username = req.query.username;
+
+    db.findOne(User, {username: username}, 'username', function (result) {
+        res.send(result);
+    });
+})
 
 app.get("/manage_account", function (req, res) {
 	var details = {
