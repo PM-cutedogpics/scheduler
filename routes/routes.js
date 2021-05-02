@@ -2,6 +2,7 @@ const express = require("express");
 const db = require("../models/db");
 const User = require("../models/UserModel.js");
 const Posts = require("../models/PostModel.js");
+const Comments = require("../models/CommentModel.js");
 const app = express();
 const bcrypt = require("bcrypt");
 const validationResult = require("express-validator");
@@ -369,34 +370,18 @@ app.get("/viewpost/:postid", (req, res) => {
 				schedDesc: result.schedDesc,
 				upqty: result.upqty,
 				downqty: result.downqty,
-				// TEMPORARY COMMENTS
-				comments: [
-					{
-						cAuthor: "ironman3000",
-						cDesc: "nice sched",
-					},
-
-					{
-						cAuthor: "thorodinson",
-						cDesc: "We should be friends :)",
-					},
-
-					{
-						cAuthor: "blackwidow",
-						cDesc: "We should be friends :)",
-					},
-
-					{
-						cAuthor: "spongebobsquarepants",
-						cDesc: "We should be friends :)",
-					},
-
-					{
-						cAuthor: "miketysonnnnnnnn",
-						cDesc: "We should be friends :)",
-					},
-				],
+				comments: [],
 			};
+
+			var commentdetails = "schedid commentid cAuthor cDesc";
+			db.findMany(Comments, query, commentdetails, (result) => {
+				if (result != null) {
+					result.forEach((comment) => {
+						post.comments.push(comment);
+					});
+				}
+			});
+
 			res.render("viewpost", post);
 		} else {
 			res.render("error");
@@ -682,6 +667,20 @@ app.get("/upDecdownInc", (req, res) => {
 			}
 		}
 	);
+});
+
+app.get("/addComment", (req, res) => {
+	var comment = {
+		schedid: req.query.schedid,
+		commentid: req.query.commentid,
+		cAuthor: req.query.cAuthor,
+		cDesc: req.query.cDesc,
+	};
+
+	console.log("adding comment to db");
+	db.insertOne(Comments, comment, (result) => {
+		res.send(result);
+	});
 });
 
 module.exports = app;
