@@ -4,7 +4,7 @@ const User = require("../models/UserModel.js");
 const Posts = require("../models/PostModel.js");
 const app = express();
 const bcrypt = require("bcrypt");
-const validationResult = require('express-validator');
+const validationResult = require("express-validator");
 const saltRounds = 10;
 
 // TODO: add in routes
@@ -13,8 +13,7 @@ app.get("/about", function (req, res) {
 		var details = {
 			flag: true,
 		};
-	}
-	else {
+	} else {
 		var details = {
 			flag: false,
 		};
@@ -25,8 +24,8 @@ app.get("/about", function (req, res) {
 
 app.get("/change_password", function (req, res) {
 	var details = {
-			flag: true,
-		};
+		flag: true,
+	};
 	res.render("change_password", details);
 });
 
@@ -35,8 +34,7 @@ app.get("/contact", function (req, res) {
 		var details = {
 			flag: true,
 		};
-	}
-	else {
+	} else {
 		var details = {
 			flag: false,
 		};
@@ -46,15 +44,15 @@ app.get("/contact", function (req, res) {
 
 app.get("/create", function (req, res) {
 	var details = {
-			flag: true,
-		};
+		flag: true,
+	};
 	res.render("create", details);
 });
 
 app.get("/edit_account", function (req, res) {
 	var details = {
-			flag: true,
-		};
+		flag: true,
+	};
 	res.render("edit_account", details);
 });
 
@@ -212,38 +210,38 @@ app.get("/register", function (req, res) {
 });
 
 app.post("/register", function (req, res) {
-		/*
+	/*
                 when submitting forms using HTTP POST method
                 the values in the input fields are stored in `req.body` object
                 each <input> element is identified using its `name` attribute
                 Example: the value entered in <input type="text" name="fName">
                 can be retrieved using `req.body.fName`
             */
-		var username = req.body.username;
-		var email = req.body.email;
-		var desc = req.body.desc;
-		var password = req.body.password;
-		/*
+	var username = req.body.username;
+	var email = req.body.email;
+	var desc = req.body.desc;
+	var password = req.body.password;
+	/*
                 use hash() method of module `bcrypt`
                 to hash the password entered by the user
                 the hashed password is stored in variable `hash`
                 in the callback function
             */
-		bcrypt.hash(password, saltRounds, function (err, hash) {
-			var user = {
-				username: username,
-				email: email,
-				desc: desc,
-				password: hash,
-			};
-			/*
+	bcrypt.hash(password, saltRounds, function (err, hash) {
+		var user = {
+			username: username,
+			email: email,
+			desc: desc,
+			password: hash,
+		};
+		/*
                     calls the function insertOne()
                     defined in the `database` object in `../models/db.js`
                     this function adds a document to collection `users`
                 */
-			db.insertOne(User, user, (result) => {
-				if (result) {
-					/*
+		db.insertOne(User, user, (result) => {
+			if (result) {
+				/*
                             upon adding a user to the database,
                             redirects the client to `/success` using HTTP GET,
                             defined in `../routes/routes.js`
@@ -251,38 +249,38 @@ app.post("/register", function (req, res) {
                             which calls getSuccess() method
                             defined in `./successController.js`
                         */
-					res.render("log_in");
-				}
-			});
+				res.render("log_in");
+			}
 		});
+	});
 });
 
 app.get("/manage_account", function (req, res) {
 	var details = {
-			flag: true,
-		};
+		flag: true,
+	};
 	res.render("manage_account", details);
 });
 
 app.get("/my_schedules", function (req, res) {
 	var details = {
-			flag: true,
-		};
+		flag: true,
+	};
 	res.render("my_schedules", details);
 });
 
 app.get("/search_result", function (req, res) {
 	var details = {
-			flag: true,
-		};
+		flag: true,
+	};
 	res.render("search_result", details);
 });
 
 app.get("/view_account", function (req, res) {
 	var details = {
-			flag: true,
-		};
-	res.render("view_account" details);
+		flag: true,
+	};
+	res.render("view_account", details);
 });
 
 app.get("/home", (req, res) => {

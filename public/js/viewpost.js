@@ -126,9 +126,9 @@ $(document).ready(() => {
 	$("#comment-btn").click(() => {
 		if ($("#comment-form").val().length > 0) {
 			console.log("COMMENTING");
-			
+
 			// TODO: get from DB
-			// get the author from the session and 
+			// get the author from the session and
 			// check whether user is logged in before commenting
 			var comment = {
 				cAuthor: "sendcutedogpics",
