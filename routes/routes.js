@@ -683,4 +683,18 @@ app.get("/addComment", (req, res) => {
 	});
 });
 
+app.get("/my_posts/:username", (req, res) => {
+	var query = { username: req.params.username };
+	console.log(query);
+	// find the post from the database with comments
+	var postshome = "schedcard schedTitle schedid postImg";
+	db.findMany(Posts, query, postshome, (result) => {
+		if (result != null) {
+			console.log("loading my posts");
+			console.log(result);
+			res.render("home", result);
+		} else console.log("error with db");
+	});
+});
+
 module.exports = app;
