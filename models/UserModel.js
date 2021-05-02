@@ -1,5 +1,3 @@
-// TODO: change contents of table
-
 var mongoose = require("mongoose");
 
 var UserSchema = new mongoose.Schema({
@@ -19,6 +17,7 @@ var UserSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	// TODO: ADD PROFILE IMAGE
 });
 
 module.exports = mongoose.model("User", UserSchema);

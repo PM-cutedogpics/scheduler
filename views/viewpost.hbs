@@ -42,7 +42,8 @@
                 </div>
                 <div class="card-body p-2 align-content-center">
                     <div class="d-flex justify-content-between">
-                        <div class="updown-div">
+                        {{#if loggedUser}}
+                        <div class="updown-div" id="{{loggedUser}}">
                             <div class="upvote-div">
                                 <button type="button" class="upvote-btn" id="upvote">
                                     <i class="fas fa-arrow-up"></i>
@@ -63,6 +64,12 @@
                                 Comment
                             </button>
                         </div>
+                        {{else}}
+                        <div class="plslog-div">
+                            <a class="plslogin" href="/log_in">Please log in to interact with other users</a>
+                        </div>
+                        
+                        {{/if}}
                     </div>
                 </div>
             </div>

@@ -161,50 +161,46 @@ $(document).ready(() => {
 			// get the author from the session and
 			// check whether user is logged in before commenting
 			var schedid = $(".sched-img").attr("alt");
-			var comment = {
-				commentid: schedid + "*C" + "", // generate commentid
-				cAuthor: "sendcutedogpics", // get from session
-				cDesc: $("#comment-form").val(),
-			};
 
 			$.get(
 				"/addComment",
 				{
 					schedid: schedid,
 					commentid: schedid + "*C" + "", // generate commentid
-					cAuthor: "sendcutedogpics", // get from session
 					cDesc: $("#comment-form").val(),
 				},
 				(result) => {
-					if (result) {
-						console.log("added comment to database");
-					} else {
-						console.log("error adding comment to database");
-					}
+					var comment = {
+						schedid: result.schedid,
+						commentid: result.commentid,
+						cAuthor: result.cAuthor,
+						cDesc: result.cDesc,
+					};
+					console.log(comment.cDesc);
+					var listItem = document.createElement("div");
+					listItem.classList.add("list-group-item");
+					listItem.id = comment.commentid;
+					var commentContainer = document.createElement("div");
+					commentContainer.classList.add("container");
+					commentContainer.classList.add("p-0");
+					var authorLink = document.createElement("a");
+					authorLink.classList.add("link-unstyled");
+					var link = "/account?username=" + comment.cAuthor;
+					authorLink.href = link;
+					authorLink.innerHTML = comment.cAuthor + " ";
+					var commentSpan = document.createElement("span");
+					commentSpan.innerHTML = comment.cDesc;
+					var commentP = document.createElement("p");
+					commentP.appendChild(authorLink);
+					commentP.appendChild(commentSpan);
+					commentContainer.appendChild(commentP);
+					listItem.appendChild(commentContainer);
+					document
+						.getElementById("comment-list")
+						.appendChild(listItem);
+					$("#comment-form").val("");
 				}
 			);
-
-			console.log(comment.cDesc);
-			var listItem = document.createElement("div");
-			listItem.classList.add("list-group-item");
-			listItem.id = comment.commentid;
-			var commentContainer = document.createElement("div");
-			commentContainer.classList.add("container");
-			commentContainer.classList.add("p-0");
-			var authorLink = document.createElement("a");
-			authorLink.classList.add("link-unstyled");
-			var link = "/account?username=" + comment.cAuthor;
-			authorLink.href = link;
-			authorLink.innerHTML = comment.cAuthor + " ";
-			var commentSpan = document.createElement("span");
-			commentSpan.innerHTML = comment.cDesc;
-			var commentP = document.createElement("p");
-			commentP.appendChild(authorLink);
-			commentP.appendChild(commentSpan);
-			commentContainer.appendChild(commentP);
-			listItem.appendChild(commentContainer);
-			document.getElementById("comment-list").appendChild(listItem);
-			$("#comment-form").val("");
 		}
 	});
 });

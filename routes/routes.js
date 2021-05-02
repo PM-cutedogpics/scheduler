@@ -95,7 +95,7 @@ app.post("/log_in", function (req, res) {
             Example: the value entered in <input type="text" name="username">
             can be retrieved using `req.body.idNum`
         */
-    console.log("here")
+	console.log("here");
 	var username = req.body.username;
 	var password = req.body.password;
 	/*
@@ -366,6 +366,8 @@ app.get("/home", (req, res) => {
 	opens a new page of the post with upvotes, downvotes, and comments 
 */
 app.get("/viewpost/:postid", (req, res) => {
+	var user = req.session.username;
+	console.log("in session: " + user);
 	var query = { schedid: req.params.postid };
 	console.log(query);
 	// find the post from the database with comments
@@ -376,6 +378,7 @@ app.get("/viewpost/:postid", (req, res) => {
 			console.log("redirecting to selected post");
 			console.log(result);
 			var post = {
+				loggedUser: user,
 				schedcard: result.schedcard,
 				schedid: result.schedid,
 				postImg: result.postImg,
@@ -719,13 +722,34 @@ app.get("/addComment", (req, res) => {
 	var comment = {
 		schedid: req.query.schedid,
 		commentid: req.query.commentid,
-		cAuthor: req.query.cAuthor,
+		cAuthor: req.session.username,
 		cDesc: req.query.cDesc,
 	};
 
 	console.log("adding comment to db");
 	db.insertOne(Comments, comment, (result) => {
-		res.send(result);
+		if (result) {
+			console.log("added comment to database");
+
+			db.findOne(
+				Comments,
+				{
+					schedid: comment.schedid,
+					commentid: comment.commentid,
+					cAuthor: comment.cAuthor,
+					cDesc: comment.cDesc,
+				},
+				"schedid commentid cAuthor cDesc",
+				(result) => {
+					if (result != null) {
+						console.log("found comment");
+						res.send(result);
+					} else console.log("comment added not found");
+				}
+			);
+		} else {
+			console.log("error adding comment to database");
+		}
 	});
 });
 
