@@ -66,10 +66,8 @@ app.get("/log_in", function (req, res) {
                 which calls getProfile() method
                 defined in `./profileController.js`
             */
-		var details = {
-			flag: true,
-		};
-		res.redirect("/home", details);
+		res.redirect("home");
+
 	}
 	// else if a user is not yet logged-in
 	else {
@@ -144,10 +142,7 @@ app.post("/log_in", function (req, res) {
                             which calls getProfile() method
                             defined in `./profileController.js`
                         */
-					var details = {
-						flag: true,
-					};
-					res.redirect("/home");
+					res.redirect("home");
 				} else {
 					/*
                         else if the entered password
@@ -277,11 +272,7 @@ app.get("/checkID", function (req, res) {
 app.get("/logout", function (req, res) {
 	req.session.destroy(function (err) {
 		if (err) throw err;
-
-		var details = {
-			flag: false,
-		};
-		res.redirect("/home", details);
+		res.redirect("home");
 	});
 });
 
