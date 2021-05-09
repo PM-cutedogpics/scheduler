@@ -15,6 +15,7 @@
   </head>
   <body>
     {{> header}}
+    <div hidden id="currUser">{{loggedUser}}</div>
         <div class="post-template row justify-content-md-center">
             <div class="col-md-auto">
                 <img src="{{postImg}}" class="sched-img card-img-top" alt="{{schedid}}" id="{{schedid}}">
@@ -33,7 +34,11 @@
                             {{#if cAuthor}}
                                 <li class="list-group-item" id="{{commentid}}">
                                     <div class="container p-0">
-                                        <p><a href="/account?username={{cAuthor}}" class="link-unstyled">{{cAuthor}} </a><span>{{cDesc}}</span></p>
+                                        <p><a href="/account?username={{cAuthor}}" class="link-unstyled">{{cAuthor}} </a><span>{{cDesc}}</span>
+                                        {{#inSession ../loggedUser cAuthor }}
+                                            <span><button type="submit" class="delete-comment">Delete</button></span>
+                                        {{/inSession}}   
+                                        </p>                         
                                     </div>
                                 </li>
                             {{/if}}
@@ -75,6 +80,7 @@
             </div>
         </div>
     {{> footer}}
+    
     
     <!-- Script for navbar -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

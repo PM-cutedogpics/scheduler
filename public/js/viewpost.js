@@ -191,8 +191,12 @@ $(document).ready(() => {
 					var commentSpan = document.createElement("span");
 					commentSpan.innerHTML = comment.cDesc;
 					var commentP = document.createElement("p");
+					var delbtn = document.createElement("button");
+					delbtn.innerText = "Delete";
+					delbtn.classList.add("delete-comment");
 					commentP.appendChild(authorLink);
 					commentP.appendChild(commentSpan);
+					commentP.appendChild(delbtn);
 					commentContainer.appendChild(commentP);
 					listItem.appendChild(commentContainer);
 					document

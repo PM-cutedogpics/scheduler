@@ -10,7 +10,11 @@ const db = require("./models/db.js");
 const app = express();
 app.set("view engine", "hbs");
 hbs.registerPartials(__dirname + "/views/partials");
-
+hbs.registerHelper("inSession", (loggedUser, cAuthor, options) => {
+	console.log(cAuthor);
+	console.log(loggedUser);
+	if (cAuthor == loggedUser) return options.fn(this);
+});
 dotenv.config();
 hostname = process.env.HOSTNAME;
 port = process.env.PORT;
