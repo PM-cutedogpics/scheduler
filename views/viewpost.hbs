@@ -32,11 +32,11 @@
                     <ul class="list-group list-group-flush" id="comment-list" style="overflow:auto">
                         {{#each comments}}
                             {{#if cAuthor}}
-                                <li class="list-group-item" id="{{commentid}}">
+                                <li class="list-group-item" id="C-{{_id}}">
                                     <div class="container p-0">
                                         <p><a href="/account?username={{cAuthor}}" class="link-unstyled">{{cAuthor}} </a><span>{{cDesc}}</span>
                                         {{#inSession ../loggedUser cAuthor }}
-                                            <span><button type="submit" class="delete-comment">Delete</button></span>
+                                           <button id="{{../_id}}" type="submit" class="delete-comment">Delete</button>
                                         {{/inSession}}   
                                         </p>                         
                                     </div>

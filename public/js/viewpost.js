@@ -166,20 +166,19 @@ $(document).ready(() => {
 				"/addComment",
 				{
 					schedid: schedid,
-					commentid: schedid + "*C" + "", // generate commentid
 					cDesc: $("#comment-form").val(),
 				},
 				(result) => {
 					var comment = {
 						schedid: result.schedid,
-						commentid: result.commentid,
+						commentid: result._id,
 						cAuthor: result.cAuthor,
 						cDesc: result.cDesc,
 					};
 					console.log(comment.cDesc);
-					var listItem = document.createElement("div");
+					var listItem = document.createElement("li");
 					listItem.classList.add("list-group-item");
-					listItem.id = comment.commentid;
+					listItem.id = "C-" + comment.commentid.toString();
 					var commentContainer = document.createElement("div");
 					commentContainer.classList.add("container");
 					commentContainer.classList.add("p-0");
@@ -193,7 +192,9 @@ $(document).ready(() => {
 					var commentP = document.createElement("p");
 					var delbtn = document.createElement("button");
 					delbtn.innerText = "Delete";
+					delbtn.type = "submit";
 					delbtn.classList.add("delete-comment");
+					delbtn.id = comment.commentid.toString();
 					commentP.appendChild(authorLink);
 					commentP.appendChild(commentSpan);
 					commentP.appendChild(delbtn);
@@ -206,5 +207,20 @@ $(document).ready(() => {
 				}
 			);
 		}
+	});
+
+	// $(".delete-comment").click(() => {
+
+	// 	console.log("DELETE BUTTON CLICKED");
+	// 	var commentid = $(this).text();
+	// 	console.log(commentid);
+	// 	console.log("deleting comment");
+	// });
+
+	$("#comment-list").on("click", ".delete-comment", function () {
+		var commentid = $(this).attr("id");
+		console.log(commentid);
+		$.get("/deletecomment", { commentid: commentid });
+		$("#C-" + commentid).remove();
 	});
 });

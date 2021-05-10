@@ -67,7 +67,6 @@ app.get("/log_in", function (req, res) {
                 defined in `./profileController.js`
             */
 		res.redirect("home");
-
 	}
 	// else if a user is not yet logged-in
 	else {
@@ -426,9 +425,10 @@ app.get("/viewpost/:postid", (req, res) => {
 				comments: [],
 			};
 
-			var commentdetails = "schedid commentid cAuthor cDesc";
+			var commentdetails = "schedid cAuthor cDesc";
 			db.findMany(Comments, query, commentdetails, (result) => {
 				if (result != null) {
+					console.log(result);
 					result.forEach((comment) => {
 						post.comments.push(comment);
 					});
@@ -786,6 +786,15 @@ app.get("/addComment", (req, res) => {
 		} else {
 			console.log("error adding comment to database");
 		}
+	});
+});
+
+app.get("/deletecomment", (req, res) => {
+	var commentid = req.query.commentid;
+	console.log("deleting comment from database");
+	db.deleteOne(Comments, { _id: commentid }, (result) => {
+		if (result) console.log("SUCCESS deleting comment");
+		else console.log("FAILED deleting comment");
 	});
 });
 

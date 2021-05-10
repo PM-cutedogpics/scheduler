@@ -5,10 +5,6 @@ var CommentsSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	commentid: {
-		type: String,
-		required: true,
-	},
 	cAuthor: {
 		type: String,
 		required: true,
