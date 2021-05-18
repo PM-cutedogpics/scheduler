@@ -1,3 +1,7 @@
+body {
+	min-width: 500px;
+}
+
 .brand_logo_details {
 	height: 50px;
 	width: 50px;
@@ -26,14 +30,23 @@
 	color: rgba(255, 255, 255, 0.08) !important;
 }
 
+.home-body {
+	min-width: 420px;
+}
+
+.sched-homepage {
+	margin: 5% 10%;
+	align-items: center;
+}
+
 .sched-img {
-	height: auto;
-	width: auto;
-	min-height: 600px;
-	min-width: 350px;
 	max-height: 600px;
 	max-width: 350px;
 	padding: 5px;
+}
+
+.card-title {
+	font-size: 5%;
 }
 
 [id^="schedcard-"] {
@@ -312,12 +325,16 @@
 }
 
 .post-template {
+	margin: 10px;
 	padding: 50px;
+	align-content: center;
 }
 
 .updown-div {
 	display: inline-flex;
 	flex-direction: row;
+	margin: 5px 10px;
+	margin-right: 100px;
 }
 
 .upvote-btn,
@@ -345,6 +362,27 @@
 
 .comment-btn {
 	margin-left: 5px;
+	margin-top: 5px;
+	height: 50px;
+}
+
+.comment-content {
+	margin-left: 1%;
+	padding: 5px;
+}
+
+.comment-details {
+	float: left;
+	width: 95%;
+}
+
+.del-div-btn {
+	float: left;
+	width: 5%;
+}
+
+.vp-title {
+	font-size: 150%;
 }
 
 .post-title {
@@ -352,7 +390,7 @@
 	padding: 5px;
 	padding-top: 10px;
 	text-decoration: none;
-	font-size: larger;
+	font-size: 110%;
 	font-weight: bold;
 	color: black;
 }
@@ -360,6 +398,16 @@
 .post-title:hover {
 	color: red;
 	cursor: pointer;
+}
+
+.commentform {
+	margin-right: 5px;
+	padding: 5px;
+}
+
+#comment-form {
+	width: 20em;
+	height: 50px;
 }
 
 #no-results {
@@ -373,3 +421,20 @@
 	font-size: large;
 	font-weight: bold;
 }
+
+[data-theme="dark"] .post-title {
+	color: #d7dadc;
+}
+
+[data-theme="dark"] .post-title:hover {
+	color: #f44336;
+}
+
+[data-theme="dark"] .sauthor {
+	color: #d7dadc;
+}
+
+[data-theme="dark"] .sauthor:hover {
+	color: #f44336;
+}
+
