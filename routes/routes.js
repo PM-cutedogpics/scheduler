@@ -5,6 +5,7 @@ const Posts = require("../models/PostModel.js");
 const Comments = require("../models/CommentModel.js");
 const defaultclasses = require("../models/DefaultClassModel.js");
 const Schedules = require("../models/ScheduleModel.js");
+const Classes = require("../models/ClassesModel.js");
 const app = express();
 const bcrypt = require("bcrypt");
 const validationResult = require("express-validator");
@@ -112,6 +113,18 @@ app.get("/updateScheduleName", (req, res) => {
 			}
 		}
 	);
+});
+
+app.get("/saveSchedule", (req, res) => {
+	console.log("Saving schedule and classes to db");
+	console.log(req.query.details);
+	// console.log(req.query.details.username);
+	db.insertMany(Classes, req.query.details, function (result) {
+        if (result){
+        	res.send(result);
+        }
+        else console.log("Error inserting classes into database");
+    });
 });
 
 app.get("/edit_account", function (req, res) {

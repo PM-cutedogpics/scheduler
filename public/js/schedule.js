@@ -466,7 +466,50 @@ $('#cancelCreate').click(function () {
     $('#endTime').val('12:00');
 });
 
-
+$('#saveSchedule').click(function () {
+	var scheduleName = $("#scheduleName").val();
+	var currentUser = $("#currentUser").html();
+	console.log(currentUser);
+	console.log(scheduleName);
+	var includeList = document.getElementsByName("include");
+	console.log(includeList);
+	var addList = document.getElementsByName("add");
+	console.log(addList);
+	var details = [];
+	for (var i = 0; i < includeList.length; i++){
+		var classDetails = {};
+		classDetails.schedName = scheduleName;
+		classDetails.username = currentUser;
+		classDetails.category = "include";
+		classDetails.classId = includeList[i].id.substring(1,5);
+		classDetails.className = document.getElementById("L1" + 
+		includeList[i].id.substring(1)).innerHTML.substring(0,7);
+		if (document.getElementById(includeList[i].id).checked)
+			classDetails.checked = true;
+		else classDetails.checked = false;
+		details.push(classDetails);
+	}
+	for (var j = 0; j < addList.length; j++, i++){
+		var classDetails = {};
+		classDetails.schedName = scheduleName;
+		classDetails.username = currentUser;
+		classDetails.category = "add";
+		classDetails.classId = addList[j].id.substring(1,5);
+		classDetails.className = document.getElementById("L2" + 
+		addList[j].id.substring(1)).innerHTML.substring(0,7);
+		if (document.getElementById(addList[j].id).checked)
+			classDetails.checked = true;
+		else classDetails.checked = false;
+		details.push(classDetails);
+	}
+	console.log(details);
+	console.log(details[0]);
+	$.get("/saveSchedule", { details: details }, (result) => {
+		if (result != null)
+			console.log("Success saving into database");
+		else console.log("Failed saving into database")
+    });
+});
 var option = {
 	animation : true,
 	delay : 10000
