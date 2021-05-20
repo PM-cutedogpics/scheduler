@@ -350,10 +350,21 @@ app.get("/manage_account", function (req, res) {
 });
 
 app.get("/my_schedules", function (req, res) {
-	var details = {
-		flag: true,
-	};
-	res.render("my_schedules", details);
+	var currUser = req.session.username;
+	var postDetails =
+		"schedcard schedid postImg schedTitle schedAuthor schedDesc upqty downqty";
+	db.findMany(Posts, { schedAuthor: currUser }, postDetails, (result) => {
+		if (result != null) {
+			console.log("loading my schedules");
+			var details = {
+				flag: true,
+				result: result,
+			};
+			res.render("my_schedules", details);
+		} else {
+			console.log("error loading my schedules");
+		}
+	});
 });
 
 app.get("/search_result", function (req, res) {
@@ -501,8 +512,10 @@ app.get("/viewpost/:postid", (req, res) => {
 					});
 				}
 			});
-
-			res.render("viewpost", post);
+			var details;
+			if (req.session.username) details = { flag: true, post: post };
+			else details = { flag: false, post: post };
+			res.render("viewpost", details);
 		} else {
 			res.render("error");
 			console.log("post not found");
@@ -881,6 +894,48 @@ app.get("/my_posts", (req, res) => {
 			res.render("home", result);
 		} else console.log("error with db");
 	});
+});
+
+app.get("/editpost/:schedid", (req, res) => {
+	var schedid = req.params.schedid;
+	var scheddet = "postImg schedTitle schedid schedAuthor schedDesc";
+	db.findOne(Posts, { schedid: schedid }, scheddet, (result) => {
+		if (result != null) {
+			var details = {
+				flag: true,
+				post: result,
+			};
+			res.render("edit_post", details);
+		} else console.log("error editing post");
+	});
+});
+
+app.get("/deletepost/:schedid", (req, res) => {
+	var schedid = req.params.schedid;
+	db.deleteOne(Posts, { schedid: schedid }, (result) => {
+		if (result) {
+			res.redirect("/my_schedules");
+		} else console.log("error removing post");
+	});
+});
+
+app.post("/save_edits", (req, res) => {
+	var schedid = req.body.schedid;
+	console.log(schedid);
+	db.updateOne(
+		Posts,
+		{ schedid: schedid },
+		{
+			$set: {
+				schedTitle: req.body.schedTitle,
+				schedDesc: req.body.schedDesc,
+			},
+		},
+		(error) => {
+			if (!error) console.log("failed to update");
+			else res.redirect("/my_schedules");
+		}
+	);
 });
 
 module.exports = app;

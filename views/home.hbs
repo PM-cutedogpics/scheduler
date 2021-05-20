@@ -12,13 +12,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
     <title>Scheduler | Home</title>
   </head>
-  <body>
+  <body class="home-body">
     {{> header flag=flag}}
-    <div class="sched-homepage">
-        <div class="row g-3 my-5 mx-5 row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
+    <div class="container sched-homepage ">
+        <div class="row gy-5">
           {{#each result}}
             {{#if schedcard}}
-                <div class="col">
+                <div class="col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center">
                     <div class="card" id="{{schedcard}}">
                         <a href="/viewpost/{{schedid}}" class="post-title card-title">{{schedTitle}}</a>
                         <a href="/viewpost/{{schedid}}" type="button" class="btn p-0" id="{{schedid}}">
