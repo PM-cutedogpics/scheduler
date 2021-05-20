@@ -3,11 +3,12 @@ const db = require("../models/db");
 const User = require("../models/UserModel.js");
 const Posts = require("../models/PostModel.js");
 const Comments = require("../models/CommentModel.js");
+const defaultclasses = require("../models/DefaultClassModel.js");
+const Schedules = require("../models/ScheduleModel.js");
 const app = express();
 const bcrypt = require("bcrypt");
 const validationResult = require("express-validator");
 const saltRounds = 10;
-
 // TODO: add in routes
 app.get("/about", function (req, res) {
 	if (req.session.username) {
@@ -44,10 +45,73 @@ app.get("/contact", function (req, res) {
 });
 
 app.get("/create", function (req, res) {
-	var details = {
-		flag: true,
-	};
-	res.render("create", details);
+	if (req.session.username) {
+		var query = {
+			flag: true,
+			username: req.session.username
+		};
+
+		db.findMany(defaultclasses, {}, "classId className", function (result) {
+	        if (result != null) {
+	            console.log("Loading default classes from DB");
+	            var classList = [];
+	            for (var j = 0; j < result.length; j++) {
+	            	    classList.push({
+	                    classId: result[j].classId,                    
+	                    fullName: result[j].className,
+	                    className: result[j].className.substring(0, 7),
+	                });
+	            }
+	            query.classList = classList;
+	            console.log(query);
+	            
+	            res.render("create", query);
+	        } else console.log("Error finding default classes");
+		});
+	}
+	else {
+		res.redirect("home");
+	}
+});
+
+app.get("/getScheduleName", (req, res) => {
+	console.log("Checking schedule name from db");
+	console.log(req.query.scheduleName);
+	console.log(req.query.username);
+	db.findOne(Schedules, { schedName: req.query.scheduleName,  
+	username: req.query.username }, 'schedName username', function (result) {
+        res.send(result);
+    });
+});
+
+app.get("/addScheduleName", (req, res) => {
+	console.log("Adding schedule name to db");
+	console.log(req.query.scheduleName);
+	console.log(req.query.username);
+	db.insertOne(Schedules, { schedName: req.query.scheduleName, username: req.query.username}, 
+	function (result) {
+        res.send(result);
+    });
+});
+
+app.get("/updateScheduleName", (req, res) => {
+	console.log("Updating schedule name");
+	console.log("Finding " + req.query.oldScheduleName);
+	console.log("Changing to " + req.query.newScheduleName)
+	db.updateOne(
+		Schedules,
+		{ schedName: req.query.oldScheduleName, username: req.query.username},
+		{ schedName: req.query.newScheduleName},
+		(result) => {
+			if (result) {
+				console.log("Updated schedule name in db");
+				res.send(result);
+			} else {
+				res.send(null);
+				console.log("Failed to upload schedule in db");
+			}
+		}
+	);
 });
 
 app.get("/edit_account", function (req, res) {
@@ -84,7 +148,10 @@ app.get("/log_in", function (req, res) {
 });
 
 app.get("/manage_account", function (req, res) {
-	res.render("manage_account");
+	var details = {
+		flag: true,
+	};
+	res.render("manage_account", details);
 });
 
 app.post("/log_in", function (req, res) {

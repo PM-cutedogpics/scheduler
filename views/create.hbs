@@ -8,112 +8,78 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/">
     <link rel="stylesheet" href="/css/style.css">
-    <title>Scheduler | Home</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <title>Scheduler | Create Schedule</title>
   </head>
   <body>
-    {{> header flag=flag}}
+    {{> header flag=flag username=username}}
+    <div hidden id="currUser">{{username}}</div>
     <div class="wrapper d-flex align-items-stretch">
+      <div id="newSchedule" class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Schedule Name</h5>
+            </div>
+            <div class="modal-body">
+              <form class="mb-3">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Name Your Schedule" id="newScheduleName">
+                </div>
+                <div id="errorNewSchedule" class="form-text"></div>
+                <button type="submit" class="btn btn-primary mt-2" id="createNewSchedule" data-bs-dismiss="modal" disabled>Create</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     <nav class="sidebar">
       <div class="p-3 pt-3">
-        <h2>Schedule Name</h2>
-        <h3>Class List</h3><br>
-          <div class="card" style="max-height: 450px;">
+        <form>
+          <div class="form-group mb-2">
+            <input type="text" class="form-control" id="scheduleName" aria-describedby="emailHelp" value="">
+          </div>
+        </form>
+        <h3>Class List</h3>
+          <div class="card" style="max-height: 410px;">
             <ul class="list-group list-group-flush" style="overflow:auto">
-              <li class="list-group-item" id="LI1STALGCM">
-                <div class="container p-0">
-                  <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="MSTALGCM" checked onchange="changeSchedule(this.id)">
-              <label class="form-check-label"  id="L1STALGCM">STALGCM MT 09:15-10:45</label>
-            </div></div>
-          </li>
-          <li class="list-group-item" id="LI1CSAPDEV">
-            <div class="container p-0">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="MCSAPDEV" onchange="changeSchedule(this.id)">
-            <label class="form-check-label" for="flexCheckDefault" id="L1CSAPDEV">CSAPDEV MW 14:30-16:00</label>
-          </div></div>
-          </li>
-          <li class="list-group-item" id="LI1CSARCH1">
-                <div class="container p-0">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="MCSARCH1" onchange="changeSchedule(this.id)">
-            <label class="form-check-label" for="flexCheckDefault" id="L1CSARCH1">CSARCH1 TH 12:45-14:15</label>
-          </div></div>
-          </li>
-          <li class="list-group-item" id="LI1GETEAMS">
-                <div class="container p-0">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="MGETEAMS" checked onchange="changeSchedule(this.id)">
-            <label class="form-check-label" for="flexCheckDefault" id="L1GETEAMS">GETEAMS M 15:30-17:30</label>
-          </div></div>
-          </li>
-          <li class="list-group-item" id="LI1GERPHIS">
-                <div class="container p-0">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="MGERPHIS" checked onchange="changeSchedule(this.id)">
-            <label class="form-check-label" for="flexCheckDefault" id="L1GERPHIS">GERPHIS WH 09:15-10:45</label>
-          </div></div>
-          </li>
+              <!-- Magical stuff -->
           <div id="classList">
             </div>
              </ul>
               
             <!-- </div> -->
-          <div class="row">
+          <div class="row gx-1">
             <div class="col">
-          <button type="button" class="btn btn-primary btn-lg mt-1 w-100" data-bs-toggle="modal" data-bs-target="#addClass">Add</button>
-          <div class="modal fade" id="addClass" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <button type="button" class="btn btn-primary btn-lg mt-1 w-100" data-bs-toggle="modal" data-bs-target="#addClass">Add</button>
+            <div class="modal fade" id="addClass" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="addClassLabel">Choose a Class</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <div class="card" style="max-height: 400px;">
                       <ul class="list-group list-group-flush" style="overflow:auto">
-                        <li class="list-group-item" id="LI2CSADPRG">
-                          <div class="container p-0">
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="add" id="ACSADPRG">
-                            <label class="form-check-label" for="flexCheckDefault" id="L2CSADPRG">CSADPRG TH 16:15-17:45</label>
-                          </div></div>
-                        </li>
-                        <li class="list-group-item" id="LI2GEDANCE">
-                          <div class="container p-0">
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="add" id="AGEDANCE">
-                            <label class="form-check-label" for="flexCheckDefault" id="L2GEDANCE">GEDANCE T 07:30-09:30</label>
-                          </div></div>
-                        </li>
-                        <li class="list-group-item" id="LI2LCLSTWO">
-                          <div class="container p-0">
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="add" id="ALCLSTWO">
-                            <label class="form-check-label" for="flexCheckDefault" id="L2LCLSTWO">LCLSTWO W 07:30-09:30</label>
-                          </div></div>
-                        </li>
-                        <li class="list-group-item" id="LI2CSMATH2">
-                          <div class="container p-0">
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="add" id="ACSMATH2">
-                            <label class="form-check-label" for="flexCheckDefault" id="L2CSMATH2">CSMATH2 MW 16:15-17:45</label>
-                          </div></div>
-                        </li>
-                        <li class="list-group-item"id="LI2CCDSALG">
-                          <div class="container p-0">
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="add" id="ACCDSALG">
-                            <label class="form-check-label" for="flexCheckDefault" id="L2CCDSALG">CCDSALG TH 07:30-09:00</label>
-                          </div></div>
-                        </li>
+                        {{#each classList}}
+                          {{#if className}}
+                            <li class="list-group-item" id="LI2{{classId}}">
+                              <div class="container p-0">
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="add" id="A{{classId}}">
+                                <label class="form-check-label" for="flexCheckDefault" id="L2{{classId}}">{{fullName}}</label>
+                              </div></div>
+                            </li>
+                          {{/if}}
+                        {{/each}}
+                        <!-- more magical stuff from db  -->
                         <div id="addClassList">
                         </div>
                       </ul>
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick=cancelAdd()>Cancel</button>
                   <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick=addToClassList()>Add</button>
                 </div>
               </div>
@@ -126,54 +92,19 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="addClassLabel">Choose a Class</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h5 class="modal-title" id="deleteClassLabel">Choose a Class</h5>
                 </div>
                 <div class="modal-body">
                   <div class="card" style="max-height: 400px;">
                       <ul class="list-group list-group-flush" style="overflow:auto" id="deleteClassList">
-                        <li class="list-group-item" id="LI3STALGCM">
-                          <div class="container p-0">
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="delete" id="DSTALGCM">
-                            <label class="form-check-label" for="flexCheckDefault" id="L3STALGCM">STALGCM MT 09:15-10:45</label>
-                          </div></div>
-                        </li>
-                        <li class="list-group-item" id="LI3CSAPDEV">
-                          <div class="container p-0">
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="delete" id="DCSAPDEV">
-                            <label class="form-check-label" for="flexCheckDefault" id="L3CSAPDEV">CSAPDEV MW 14:30-16:00</label>
-                          </div></div>
-                        </li>
-                        <li class="list-group-item" id="LI3CSARCH1">
-                          <div class="container p-0">
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="delete" id="DCSARCH1">
-                            <label class="form-check-label" for="flexCheckDefault" id="L3CSARCH1">CSARCH1 TH 12:45-14:15</label>
-                          </div></div>
-                        </li>
-                        <li class="list-group-item" id="LI3GETEAMS">
-                          <div class="container p-0">
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="delete" id="DGETEAMS">
-                            <label class="form-check-label" for="flexCheckDefault" id="L3GETEAMS">GETEAMS M 15:30-17:30</label>
-                          </div></div>
-                        </li>
-                        <li class="list-group-item" id="LI3GERPHIS">
-                          <div class="container p-0">
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="delete" id="DGERPHIS">
-                            <label class="form-check-label" for="flexCheckDefault" id="L3GERPHIS">GERPHIS WH 09:15-10:45</label>
-                          </div></div>
-                        </li>
+                        <!-- magical stuff from db -->
                         <div id="delClassList">
                         </div>
                       </ul>
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick=cancelDelete()>Cancel</button>
                   <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick=deleteFromClassList()>Delete</button>
                 </div>
               </div>
@@ -181,25 +112,98 @@
           </div>
         </div>
       </div>
-          <div class="row">
+          <div class="row gx-1">
             <div class="col">
-            <button type="button" class="btn btn-primary btn-lg mt-1 w-100" onclick="save_schedule()">Save</button>
-            <script>
-            function save_schedule(){
-                 location.href = "/my_schedules";
-            } 
-          </script>
-          </div>
-          <div class="col">
-            <button type="button" class="btn btn-primary btn-lg mt-1 w-100" onclick="save_schedule()">Cancel</button>
-            <script>
-            function cancel_schedule(){
-                 location.href = "/my_schedules";
-            } 
-          </script>
+            <button type="button" class="btn btn-primary btn-lg mt-1 w-100 show-modal" data-bs-toggle="modal" data-bs-target="#createClass">Create</button>
+          <div class="modal fade" data-backdrop="static" id="createClass" tabindex="-1" role="dialog"aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel">Create your own Class</h5>
+                </div>
+                <div class="modal-body">
+                  <div class="card" style="max-height: 320px;">
+                      <ul class="list-group list-group-flush" style="overflow:auto" id="createClassList">
+                        <li class="list-group-item" id="">
+                          <form>
+                            <label for="classCode" class="form-label">Class Code</label>
+                            <input type="text" class="form-control" id="classCodeValue" aria-describedby="emailHelp" maxlength="7" minlength="7">
+                            <div id="classCodeHelp" class="form-text">Must be 7 letters long</div>
+                          </form>
+                          <label for="classDates" class="form-label mt-2">Class Date/s</label>
+                          <div id="createCodeHelp" class="form-text">Choose at least one day</div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="create" id="Monday">
+                            <label class="form-check-label" for="flexCheckDefault">
+                              Monday
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="create" id="Tuesday">
+                            <label class="form-check-label" for="flexCheckDefault">
+                              Tuesday
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="create" id="Wednesday">
+                            <label class="form-check-label" for="flexCheckDefault">
+                              Wednesday
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="create" id="Thursday">
+                            <label class="form-check-label" for="flexCheckDefault">
+                              Thursday
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="create" id="Friday">
+                            <label class="form-check-label" for="flexCheckDefault">
+                              Friday
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="create" id="Saturday">
+                            <label class="form-check-label" for="flexCheckDefault">
+                              Saturday
+                            </label>
+                          </div>
+                          <div class="row gx-1 mt-2">
+                            <label for="classCode" class="form-label">Time Frame</label>
+                            <div id="createCodeHelp" class="form-text">Must be within 07:00-22:00</div>
+                          </div>
+                          <div class="row gx-1">
+                          <div class="col">
+                              <label class="form-check-label" for="flexCheckDefault">
+                                Start Time
+                              </label>
+                              <input id="startTime" type="text" class="timepicker" name="datetime" placeholder="Time*" required/>
+                          </div>
+                          <div class="col">
+                              <label class="form-check-label" for="flexCheckDefault">
+                                End Time
+                              </label>
+                              <input id="endTime" type="text" class ="timepicker" name="datetime" placeholder="Time*" required/>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                    <div id="errorNewClass" class="form-text"></div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelCreate">Cancel</button>
+                  <button type="button" class="btn btn-primary"  id="creatingClass">Create</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <button class="btn btn-primary btn-lg btn-block mt-1 w-100 btn-success" onclick="Toasty()">Download Schedule</button>
+          <div class="col">
+            <button id="save" type="button" class="btn btn-primary btn-lg mt-1 w-100">Save</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block mt-1 w-100 btn-success" onclick="saveCanvas()">Download Schedule</button>
            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5"> 
             <div id="EpicToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
@@ -214,8 +218,8 @@
         </div>
       </div>
     </nav>
-    <div id="container">
     <div id="content" class="p-4 p-md-5">
+      <div id="capture" class="p-4 mr-5">
       <div class="row">
         <!-- Row 1 -->
         <div class="col-1"></div>
@@ -249,20 +253,20 @@
       <div class="row">
         <!-- Row 4 -->
         <div class="col-1 border border-dark">09</div>
-        <div class="col border border-dark" id="M9">STALGCM</div>
-        <div class="col border border-dark" id="T9">STALGCM</div>
-        <div class="col border border-dark" id="W9">GERPHIS</div>
-        <div class="col border border-dark" id="H9">GERPHIS</div>
+        <div class="col border border-dark" id="M9"></div>
+        <div class="col border border-dark" id="T9"></div>
+        <div class="col border border-dark" id="W9"></div>
+        <div class="col border border-dark" id="H9"></div>
         <div class="col border border-dark" id="F9"></div>
         <div class="col border border-dark" id="S9"></div>
         </div>
       <div class="row">
         <!-- Row 5 -->
         <div class="col-1 border border-dark">10</div>
-        <div class="col border border-dark" id="M10">STALGCM</div>
-        <div class="col border border-dark" id="T10">STALGCM</div>
-        <div class="col border border-dark" id="W10">GERPHIS</div>
-        <div class="col border border-dark" id="H10">GERPHIS</div>
+        <div class="col border border-dark" id="M10"></div>
+        <div class="col border border-dark" id="T10"></div>
+        <div class="col border border-dark" id="W10"></div>
+        <div class="col border border-dark" id="H10"></div>
         <div class="col border border-dark" id="F10"></div>
         <div class="col border border-dark" id="S10"></div>
         </div>
@@ -309,7 +313,7 @@
       <div class="row">
         <!-- Row 10 -->
         <div class="col-1 border border-dark">15</div>
-        <div class="col border border-dark" id="M15">GETEAMS</div>
+        <div class="col border border-dark" id="M15"></div>
         <div class="col border border-dark" id="T15"></div>
         <div class="col border border-dark" id="W15"></div>
         <div class="col border border-dark" id="H15"></div>
@@ -319,7 +323,7 @@
       <div class="row">
         <!-- Row 11 -->
         <div class="col-1 border border-dark">16</div>
-        <div class="col border border-dark" id="M16">GETEAMS</div>
+        <div class="col border border-dark" id="M16"></div>
         <div class="col border border-dark" id="T16"></div>
         <div class="col border border-dark" id="W16"></div>
         <div class="col border border-dark" id="H16"></div>
@@ -329,7 +333,7 @@
       <div class="row">
         <!-- Row 12 -->
         <div class="col-1 border border-dark">17</div>
-        <div class="col border border-dark" id="M17">GETEAMS</div>
+        <div class="col border border-dark" id="M17"></div>
         <div class="col border border-dark" id="T17"></div>
         <div class="col border border-dark" id="W17"></div>
         <div class="col border border-dark" id="H17"></div>
@@ -376,7 +380,6 @@
         <div class="col border border-dark" id="F21"></div>
         <div class="col border border-dark" id="S21"></div>
         </div>
-      </div>
     </div>
     </div>
   </div>
@@ -388,19 +391,7 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <!--toast-->
     <script type="text/javascript" src="/js/schedule.js"></script>
-    <script>
-      var option = 
-      {
-          animation : true,
-          delay : 10000
-      };
-      
-      function Toasty( )
-      {
-          var toastHTMLElement = document.getElementById( 'EpicToast' );
-          var toastElement = new bootstrap.Toast( toastHTMLElement, option );
-          toastElement.show( );
-      }
-    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <script type="text/javascript" src="/js/html2canvas.min.js"></script>
   </body>
 </html>

@@ -373,3 +373,7 @@
 	font-size: large;
 	font-weight: bold;
 }
+
+.ui-timepicker-container {
+ 	z-index: 3500 !important;
+}

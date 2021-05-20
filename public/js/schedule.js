@@ -1,5 +1,6 @@
+// Updates the scheduler based on what the user checks/unchecks
 function changeSchedule(checkboxElem) {
-	console.log(checkboxElem);
+	// console.log(checkboxElem);
 	// Searching for ID in element
 	var id = "L1" + checkboxElem.substring(1);
 	console.log(id);
@@ -7,7 +8,7 @@ function changeSchedule(checkboxElem) {
 	var timeFrame = label.substring(label.length - 11, label.length);
 	var low = parseInt(timeFrame.substring(0, 2));
 	var high = parseInt(timeFrame.substring(6, 8));
-	console.log(label);
+	// console.log(label);
 	if (timeFrame.substring(9, 11) == "00")
 		high = high - 1;
 	// Finding days
@@ -20,13 +21,13 @@ function changeSchedule(checkboxElem) {
 		label_cnt = label_cnt + 1;
 	} while (date_label != ' ');
 	var subjectName = label.substring(0, 7);
-	console.log(dates);
+	// console.log(dates);
 	// Filling up the schedule
 	if (document.getElementById(checkboxElem).checked) {
 		for (var i = low; i <= high; i++){
 			for (var j = 0; j < dates.length; j++){
 				var gridID = dates[j] + i;
-				console.log("add: " + gridID);
+				// console.log("add: " + gridID);
 				var name = document.getElementById(gridID);
 				name.innerHTML = name.innerHTML + " " + subjectName;
 			}
@@ -36,7 +37,7 @@ function changeSchedule(checkboxElem) {
 		for (var i = low; i <= high; i++){
 			for (var j = 0; j < dates.length; j++){
 				var gridID = dates[j] + i;
-				console.log("remove: " + gridID);
+				// console.log("remove: " + gridID);
 				var name = document.getElementById(gridID);
 				name.innerHTML = name.innerHTML.replace(subjectName, "");
 			}
@@ -59,13 +60,14 @@ function addToClassList(){
 		button.className = "form-check-input";
 		button.type = "checkbox";
 		button.id = 'M' + checked[i].substring(1, checked[i].length);
-		button.name = 'add';
+		button.name = 'include';
 		button.addEventListener("change", callAdd, false);
 		// Adding Checkboxes to Class List
 		var classLabel = document.createElement('label')
 		classLabel.className = 'form-check-label';
 		classLabel.id = 'L1' + checked[i].substring(1, checked[i].length);
 		var labelID = 'L2' + checked[i].substring(1, checked[i].length);
+		console.log(labelID);
 		classLabel.innerHTML = document.getElementById(labelID).innerHTML;
 		// Assigning New Classes to Class List
 		var div1 = document.createElement("div");
@@ -117,6 +119,17 @@ function addToClassList(){
 	}
 }
 
+function cancelAdd(){
+	var addList = document.getElementsByName("add");
+	console.log(addList);
+	var checked = [];
+	for (var i = 0; i < addList.length; i++)
+		if (document.getElementById(addList[i].id).checked) {
+			var addListId = addList[i].id;
+        	$("#"+addListId).prop('checked', false);
+		}
+}
+
 function callAdd(){
 	changeSchedule(this.id);
 }
@@ -153,7 +166,7 @@ function deleteFromClassList(){
 		div1.className = 'container p-0';	
 		div2.className = 'form-check';
 		li.className = 'list-group-item';
-		li.id = 'L1' + checked[i].substring(1, checked[i].length);
+		li.id = 'LI2' + checked[i].substring(1, checked[i].length);
 		classList.appendChild(li);
 		li.appendChild(div2);
 		div2.appendChild(div1);
@@ -187,178 +200,281 @@ function deleteFromClassList(){
 			}
 		}
 		// Removing added classes from the Add List
-		console.log('LI1' + checked[i].substring(1, checked[i].length));
+		console.log('LI1' + checked[i].substring(1, checked[i].lengasdth));
 		var toRemove = document.getElementById('LI1' + checked[i].substring(1, checked[i].length)).remove();
 		var toRemove = document.getElementById('LI3' + checked[i].substring(1, checked[i].length)).remove();
 	}
 }
 
+function cancelDelete(){
+	var deleteList = document.getElementsByName("delete");
+	// console.log(deleteList);
+	var checked = [];
+	for (var i = 0; i < deleteList.length; i++)
+		if (document.getElementById(deleteList[i].id).checked) {
+			var deleteId = deleteList[i].id;
+        	$("#"+deleteId).prop('checked', false);
+		}
+}
 
-// $("input[type='checkbox']").each(function(){
-//   var name = $(this).attr('name'); // grab name of original
-//   var value = $(this).attr('value'); // grab value of original
-//   var ischecked = $(this).is(":checked"); //check if checked
-// });
-// $(document).ready(function() {
-// 	function addToSchedule(){
+function saveCanvas(){
+	Toasty();
+	// Insert Title to be used for download name
+    html2canvas(document.querySelector("#capture")).then(canvas => {
+      	var a = document.createElement('a');
+      	a.href = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
+        a.download = $("#newScheduleName").val() + '.jpg';
+        a.click();
 
-// 	}
+      	// window.location.href = image;
+      }
+    );
+}
+
+$(document).ready(() => {
+	var oldScheduleName;
+	$('#newScheduleName').keyup(() => {
+        var newScheduleName = $("#newScheduleName").val();
+        var currentUser = $("#currentUser").html();
+        console.log(newScheduleName);
+        console.log(currentUser)
+        if (newScheduleName) {
+            $('#errorNewSchedule').text('');
+            $.get("/getScheduleName", { scheduleName: newScheduleName,
+			 username: currentUser},(result) => {
+				if(result.schedName == newScheduleName) {
+					console.log("Schedule name unavailable");
+                	$('#createNewSchedule').prop('disabled', true);
+	                $('#errorNewSchedule').text(' Schedule name unavailable');
+	            }
+	            else {
+	                $('#createNewSchedule').prop('disabled', false);
+	            	console.log("Schedule name available");
+	            }
+	        });
+        } else {
+			$('#createNewSchedule').prop('disabled', true);
+            console.log("Incomplete");
+        }
+    });
+
+	$('#createNewSchedule').click(function () {
+        var newScheduleName = $("#newScheduleName").val();
+        var currentUser = $("#currentUser").html();
+        $.get("/addScheduleName", { scheduleName: newScheduleName, username: currentUser},
+    	(result) => {
+			if (result){
+				$('#scheduleName').val(newScheduleName);
+				oldScheduleName = $("#scheduleName").val();
+        		console.log("Added schedule name");
+			}
+			else console.log("Failed to add schedule name")
+		});
+    });
+
+	$('#scheduleName').keyup(() => {
+		if ($("#scheduleName").val().length > 0) {
+			var newScheduleName = $("#scheduleName").val();
+			var currentUser = $("#currentUser").html();
+			console.log("Old: " + oldScheduleName);
+			console.log("New: " + newScheduleName);
+			$.get("/getScheduleName", { scheduleName: newScheduleName,
+			 username: currentUser},(result) => {
+				if(result.schedName == newScheduleName) {
+					console.log("Schedule name unavailable");
+	                $('#scheduleName').css('background-color', 'red');
+	                $('#save').prop('disabled', true);
+	            }
+	            else {
+	            	console.log("Schedule name available");
+	                $.get("/updateScheduleName", { newScheduleName: newScheduleName,
+			 		username: currentUser, oldScheduleName: oldScheduleName},(result) => {
+			 			if (result){
+			 				if (darkSwitch.checked)
+					 			$('#scheduleName').css('background-color', '#1a1a1b');
+					 		else 
+					 			$('#scheduleName').css('background-color', '#fff');
+		                	$('#save').prop('disabled', false);
+		                	oldScheduleName = $("#scheduleName").val();
+		                	console.log("Just updated oldScheduleName to " + oldScheduleName);
+			 			}
+			 		});
+	            }
+	        });
+	    }
+	    else if ($("#scheduleName").val().length == 0){
+	    	$('#scheduleName').css('background-color', 'red');
+			$('#save').prop('disabled', true);
+	    }
+	});
+
+	// Timepicker 
+	$('#startTime').timepicker({
+	    timeFormat: 'HH:mm',
+	    interval: 15,
+	    minTime: '7:00',
+	    maxTime: '22:00',
+	    defaultTime: '12',
+	    startTime: '7:00',
+	    steps: 5,
+	    use24hours: true,
+	    dynamic: false,
+	    dropdown: true,
+	    scrollbar: true,
+	    show2400: true
+	});
+	$('#endTime').timepicker({
+	    timeFormat: 'HH:mm',
+	    interval: 15,
+	    minTime: '7:00',
+	    maxTime: '22:00',
+	    defaultTime: '12',
+	    startTime: '7:00',
+	    steps: 5,
+	    use24hours: true,
+	    dynamic: false,
+	    dropdown: true,
+	    scrollbar: true,
+	    show2400: true
+	});
+	$("#newSchedule").modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: true // added property here
+    });
+    // Entering create
+	$("#newSchedule").modal('show');
+	// Disable clicking outside modal
+    $("#addClass").modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: true // added property here
+    });
+    $("#deleteClass").modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: true // added property here
+    });
+    $("#createClass").modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: true // added property here
+    });
+});
+
+var classIdCnt = 1001;
+// Checks and creates a custom class
+$('#creatingClass').click(function () {
+	var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var newScheduleName = $("#classCodeValue").val();
+	var checked = "";
+	for (var i = 0; i < days.length; i++)
+		if (document.getElementById(days[i]).checked){
+			if (days[i] == "Thursday")   
+	        	checked = checked + "H";
+	        else checked = checked + days[i].substring(0,1)
+		}
+	var startTime = $('#startTime').val();
+    var endTime = $('#endTime').val();
+    var startTimeH = $('#startTime').val().substring(0,2);
+    var endTimeH = $('#endTime').val().substring(0,2);
+    var startTimeM = $('#endTime').val().substring(3,5);
+    var endTimeM = $('#endTime').val().substring(3,5);
+
+    var fullName = "";
+    $('#errorNewClass').text('');
+    if (newScheduleName.length == 7 && checked.length > 0 && 
+    	(endTimeH > startTimeH || endTimeH == startTimeH && endTimeM > startTimeM)){
+		fullName = newScheduleName + " " + checked + " " + startTime + "-" + endTime;
+		console.log(fullName);
+		var button = document.createElement('input')
+		button.className = "form-check-input";
+		button.type = "checkbox";
+		button.id = 'M' + classIdCnt;
+		button.name = 'include';
+		button.addEventListener("change", callAdd, false);
+		// Adding Checkboxes to Class List
+		var classLabel = document.createElement('label')
+		classLabel.className = 'form-check-label';
+		classLabel.id = 'L1' + classIdCnt;
+		var labelID = 'L2' + classIdCnt;
+		console.log(labelID);
+		classLabel.innerHTML = fullName;
+		// Assigning New Classes to Class List
+		var div1 = document.createElement("div");
+		var div2 = document.createElement("div");
+		var li = document.createElement("li");
+		var classList = document.getElementById("classList");
+		div1.className = 'container p-0';	
+		div2.className = 'form-check';
+		li.className = 'list-group-item';
+		li.id = 'LI1' + classIdCnt;
+		classList.appendChild(li);
+		li.appendChild(div2);
+		div2.appendChild(div1);
+		div1.appendChild(button);
+		div1.appendChild(classLabel);
+		// Adding classes to Delete
+		var button = document.createElement('input')
+		button.className = "form-check-input";
+		button.type = "checkbox";
+		button.name = 'delete';
+		button.id = 'D' + classIdCnt;
+		console.log(classIdCnt);
+		console.log(button.id);
+		// Adding Checkboxes to Class List
+		var classLabel = document.createElement('label')
+		classLabel.className = 'form-check-label';
+		classLabel.id = 'L3' + classIdCnt;
+		var labelID = 'L2' + classIdCnt;
+		classLabel.innerHTML =  fullName;
+		// Assigning New Classes to Class List
+		var div1 = document.createElement("div");
+		var div2 = document.createElement("div");
+		var li = document.createElement("li");
+		var classList = document.getElementById("delClassList");
+		div1.className = 'container p-0';	
+		div2.className = 'form-check';
+		li.className = 'list-group-item';
+		li.id = 'LI3' + classIdCnt;
+		classList.appendChild(li);
+		li.appendChild(div2);
+		div2.appendChild(div1);
+		div1.appendChild(button);
+		div1.appendChild(classLabel);
+		$('#classCodeValue').val('');
+		for (var i = 0; i < days.length; i++)
+			if (document.getElementById(days[i]).checked){
+				$("#"+days[i]).prop('checked', false);
+			}
+		$('#startTime').val('12:00');
+	    $('#endTime').val('12:00');
+	    classIdCnt = classIdCnt + 1;
+	    $("#createClass").modal('hide');
+    }
+    else $('#errorNewClass').text(' One or more conditions was not met');
+});
+// Resets all fields in create modal
+$('#cancelCreate').click(function () {
+	$('#classCodeValue').val('');
+	var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	for (var i = 0; i < days.length; i++)
+		if (document.getElementById(days[i]).checked){
+			$("#" + days[i]).prop('checked', false);
+		}
+	$('#startTime').val('12:00');
+    $('#endTime').val('12:00');
+});
 
 
-// 	function submitExpense(){
-// 		var desc_field = document.getElementById("item");
-// 		var amount_field = document.getElementById("amount");
-// 		desc_field.style.borderColor = "#DDDDDD";
-// 		amount_field.style.borderColor = "#DDDDDD";
-// 		document.getElementById('error').innerHTML = '';
+var option = {
+	animation : true,
+	delay : 10000
+};
 
-// 		if (desc_field.value == "") {
-// 			document.getElementById('error').innerHTML = 'Please enter a description for the expense.';
-// 			desc_field.style.borderColor = "#B00000";
-// 		}
-// 		else if (amount_field.value == "") {
-// 			document.getElementById('error').innerHTML = 'Please enter an amount';
-// 			amount_field.style.borderColor = "#B00000";
-// 		} 
-// 		else {
-// 			var date_field = document.getElementById("date");
-// 			var date_value = document.createTextNode(date_field.value);
-// 			var date_label = document.createElement('label')
-// 				date_label.className = 'datecol';
-// 				date_label.appendChild(date_value);
-
-// 			var desc_value = document.createTextNode(desc_field.value);
-// 			var desc_label = document.createElement('label')
-// 				desc_label.className = 'itemcol';
-// 				desc_label.appendChild(desc_value);
-
-// 			var amount_value = document.createTextNode(amount_field.value);
-// 			var amount_label = document.createElement('label')
-// 				amount_label.className = 'amountcol';
-// 				amount_label.appendChild(amount_value);
-
-// 				// Updates Total Expenses
-// 				sum = parseFloat(sum) + parseFloat(amount_field.value);
-// 				document.getElementById('total').innerHTML = parseFloat(sum).toFixed(2);
-				
-// 			var expense_list = document.getElementById("list");
-// 		    var div = document.createElement("div");
-// 		    div.id = "container";
-// 		    var category_level = document.getElementById("category").value;
-// 		    if (category_level.localeCompare("food") == 0){
-// 		    	div.className = 'food expenseItem';
-// 		    }
-// 		    else if (category_level.localeCompare("transpo") == 0){
-// 		    	div.className = 'transpo expenseItem';
-// 		    }
-// 		    else if (category_level.localeCompare("bills") == 0){
-// 		    	div.className = 'bills expenseItem';
-// 		    }
-// 		    expense_list.appendChild(div);
-// 		    div.appendChild(date_label);
-// 		    div.appendChild(desc_label);
-// 		    div.appendChild(amount_label);
-
-// 		    var temp = new Object()
-// 		    temp.date = date_field.value;
-// 		    temp.category = category_level;
-// 		    temp.description = desc_field.value;
-// 		    temp.amount = amount_field.value;
-// 		    expenses.push(temp);
-// 		    console.log(temp);
-
-// 		    // Reset Values
-// 		    document.getElementById("date").value = formattedDate;
-// 		    document.getElementById("item").value = "";
-// 		    document.getElementById("amount").value = "";
-// 		    document.getElementById("category").value = "food";
-// 		}
-// 	}
-// 	var button = document.getElementById("submit");
-// 		button.onclick = submitExpense;
-
-// 		function filterList(){
-// 			var filter_by= document.getElementById("filter").value;
-// 			sum = 0;
-// 			document.getElementById("list").innerHTML = "";
-// 			document.getElementById('total').innerHTML = parseFloat(0).toFixed(2);
-// 			var filtered = expenses.filter(function(expense){
-// 				if (filter_by == expense.category){
-// 					var date_value = document.createTextNode(expense.date);
-// 				var date_label = document.createElement('label');
-//    				date_label.className = 'datecol';
-//    				date_label.appendChild(date_value);
-   				
-//    				var desc_value = document.createTextNode(expense.description);
-// 				var desc_label = document.createElement('label');
-//    				desc_label.className = 'itemcol';
-//    				desc_label.appendChild(desc_value);
-
-//    				var amount_value = document.createTextNode(expense.amount);
-// 				var amount_label = document.createElement('label');
-//    				amount_label.className = 'amountcol';
-//    				amount_label.appendChild(amount_value);
-
-//    				// Updates Total Expenses
-//    				sum = parseFloat(sum) + parseFloat(expense.amount);
-//    				document.getElementById('total').innerHTML = parseFloat(sum).toFixed(2);
-   				
-// 				var expense_list = document.getElementById("list");
-// 			    var div = document.createElement("div");
-// 			    div.id = "container";
-// 			    if (expense.category.localeCompare("food") == 0){
-// 			    	div.className = 'food expenseItem';
-// 			    }
-// 			    else if (expense.category.localeCompare("transpo") == 0){
-// 			    	div.className = 'transpo expenseItem';
-// 			    }
-// 			    else if (expense.category.localeCompare("bills") == 0){
-// 			    	div.className = 'bills expenseItem';
-// 			    }
-// 			    expense_list.appendChild(div);
-// 			    div.appendChild(date_label);
-// 			    div.appendChild(desc_label);
-// 			    div.appendChild(amount_label);
-// 			}
-// 			else if (filter_by == "all") {
-// 				var date_value = document.createTextNode(expense.date);
-// 				var date_label = document.createElement('label');
-//    				date_label.className = 'datecol';
-//    				date_label.appendChild(date_value);
-   				
-//    				var desc_value = document.createTextNode(expense.description);
-// 				var desc_label = document.createElement('label');
-//    				desc_label.className = 'itemcol';
-//    				desc_label.appendChild(desc_value);
-
-//    				var amount_value = document.createTextNode(expense.amount);
-// 				var amount_label = document.createElement('label');
-//    				amount_label.className = 'amountcol';
-//    				amount_label.appendChild(amount_value);
-
-//    				// Updates Total Expenses
-//    				sum = parseFloat(sum) + parseFloat(expense.amount);
-//    				document.getElementById('total').innerHTML = parseFloat(sum).toFixed(2);
-   				
-// 				var expense_list = document.getElementById("list");
-// 			    var div = document.createElement("div");
-// 			    div.id = "container";
-// 			    if (expense.category.localeCompare("food") == 0){
-// 			    	div.className = 'food expenseItem';
-// 			    }
-// 			    else if (expense.category.localeCompare("transpo") == 0){
-// 			    	div.className = 'transpo expenseItem';
-// 			    }
-// 			    else if (expense.category.localeCompare("bills") == 0){
-// 			    	div.className = 'bills expenseItem';
-// 			    }
-// 			    expense_list.appendChild(div);
-// 			    div.appendChild(date_label);
-// 			    div.appendChild(desc_label);
-// 			    div.appendChild(amount_label);
-// 			}
-// 			});
-// 		}
-// 	var select = document.getElementById("filter");
-// 		select.onchange = filterList;
-// 	})
+function Toasty()
+{
+  var toastHTMLElement = document.getElementById( 'EpicToast' );
+  var toastElement = new bootstrap.Toast( toastHTMLElement, option );
+  toastElement.show( );
+}

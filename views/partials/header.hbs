@@ -20,10 +20,10 @@
           <a class="nav-link" href="/home">HOME</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/about_in">ABOUT</a>
+          <a class="nav-link" href="/about">ABOUT</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/contact_in">CONTACT US</a>
+          <a class="nav-link" href="/contact">CONTACT US</a>
         </li>
         {{#if flag}}
         <li class="nav-item">
@@ -59,8 +59,9 @@
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
       {{#if flag}}
+      <li"><a class="dropdown-item" id="currentUser">{{username}}</a></li>
       <li><a class="dropdown-item" href="/manage_account">Manage Account</a></li>
-      <li><a class="dropdown-item" href="/home_out">Log Out</a></li>
+      <li><a class="dropdown-item" href="/logout">Log Out</a></li>
       <li><hr class="dropdown-divider"></li>
       {{/if}}
       <li ><a class="dropdown-item" href="#">Dark Mode
