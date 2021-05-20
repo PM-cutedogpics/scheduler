@@ -438,3 +438,11 @@ body {
 	color: #f44336;
 }
 
+.npmlist {
+	list-style-type: circle;
+}
+
+.npmlist-title {
+	font-size: 150%;
+	font-weight: bold;
+}
