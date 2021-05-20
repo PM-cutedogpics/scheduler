@@ -446,3 +446,46 @@ body {
 	font-size: 150%;
 	font-weight: bold;
 }
+
+.edit-del-mysched-btns {
+	padding: 2%;
+}
+
+.mysched-btn {
+	margin: 0px 3px 0px 3px;
+	color: #f44336;
+}
+
+.mysched-btn:hover {
+	color: black;
+}
+
+[data-theme="dark"] .mysched-btn:hover {
+	color: #d7dadc;
+}
+
+.label-editpost {
+	font-size: 180%;
+	font-weight: 500;
+}
+
+.hidden-label-editpost {
+	height: 0%;
+	width: 0%;
+}
+
+#submit-editpost {
+	padding: 5px 10px 5px 10px;
+	margin: 5px;
+	margin-left: 85%;
+	margin-right: 15%;
+}
+
+.field-editpost {
+	width: 100%;
+	height: 50px;
+}
+
+#schedDesc-box {
+	height: 100px;
+}
