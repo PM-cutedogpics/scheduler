@@ -88,14 +88,26 @@ app.get("/getScheduleName", (req, res) => {
 	);
 });
 
+app.get("/getScheduleId", (req, res) => {
+	console.log("Checking schedule Id from db");
+	console.log(req.query.scheduleName);
+	console.log(req.query.username);
+	db.findOne(Schedules, { schedName: req.query.scheduleName, username: req.query.username }, "_id", function (result) {
+		console.log(result);
+		res.send(result);
+	});
+});
+
 app.get("/addScheduleName", (req, res) => {
 	console.log("Adding schedule name to db");
 	console.log(req.query.scheduleName);
 	console.log(req.query.username);
 	db.insertOne(
 		Schedules,
-		{ schedName: req.query.scheduleName, username: req.query.username },
+		{ schedName: req.query.scheduleName, username: req.query.username,
+		schedId: req.query.schedId },
 		function (result) {
+			console.log(result);
 			res.send(result);
 		}
 	);
@@ -122,12 +134,17 @@ app.get("/updateScheduleName", (req, res) => {
 });
 
 app.get("/saveSchedule", (req, res) => {
-	console.log("Saving schedule and classes to db");
-	console.log(req.query.details);
-	// console.log(req.query.details.username);
-	db.insertMany(Classes, req.query.details, (result) => {
-		if (result) res.send(result);
-		else console.log("Error inserting classes into database");
+	console.log("Attempting to save schedule and classes to db");
+	console.log(req.query.schedule);
+	console.log(req.query.schedule.schedId);
+	db.updateOne(Schedules, { _id: req.query.schedule.schedId}, {classes : req.query.schedule.classes}, (result) => {
+		if (result > 0) {
+			console.log("Successful updating schedule")
+			res.send(result);
+		} else {
+			console.log("Error updating schedule");
+			res.send(null);
+		}
 	});
 });
 

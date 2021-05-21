@@ -8,7 +8,27 @@ var SchedulesSchema = new mongoose.Schema({
 	schedName: {
 		type: String,
 		required: true,
-	}
+	},
+	classes: [
+		{
+			className: {
+				type: String,
+				required: true,
+			},
+			classId: {
+				type: String,
+				required: true,
+			},
+			checked: {
+				type: Boolean,
+				required: true,
+			},
+			category: {
+				type: String,
+				required: true,
+			}
+		}
+	]
 });
 
 module.exports = mongoose.model("Schedules", SchedulesSchema);

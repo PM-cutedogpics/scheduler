@@ -9,6 +9,10 @@ var ClassesSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	schedId: {
+		type: String,
+		required: true,
+	},
 	className: {
 		type: String,
 		required: true,

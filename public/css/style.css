@@ -137,6 +137,7 @@ body {
 
 [data-theme="dark"] .sidebar {
 	background: #1a1a1b;
+	color: #fff;
 }
 
 [data-theme="dark"] .btn-primary {
@@ -251,7 +252,7 @@ body {
 	min-width: 300px;
 	max-width: 300px;
 	background: #6c757d;
-	color: #fff;
+	color: #212529;
 	-webkit-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
@@ -490,6 +491,11 @@ body {
 	height: 100px;
 }
 
- .ui-timepicker-container {
-      z-index: 3500 !important;
- }
+.ui-timepicker-container {
+	z-index: 3500 !important;
+}
+
+/*.capture { 
+	width: 1200px !important; 
+	height: 1200px !important; 
+}*/

@@ -14,6 +14,7 @@
   <body>
     {{> header flag=flag username=username}}
     <div hidden id="currUser">{{username}}</div>
+    <div hidden id="schedId"></div>
     <div class="wrapper d-flex align-items-stretch">
       <div id="newSchedule" class="modal fade">
         <div class="modal-dialog">
@@ -56,7 +57,7 @@
               <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="addClassLabel">Choose a Class</h5>
+                  <h5 class="modal-title modal_titles" id="addClassLabel">Choose a Class</h5>
                 </div>
                 <div class="modal-body">
                   <div class="card" style="max-height: 400px;">
@@ -92,7 +93,7 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="deleteClassLabel">Choose a Class</h5>
+                  <h5 class="modal-title modal_titles" id="deleteClassLabel">Choose a Class</h5>
                 </div>
                 <div class="modal-body">
                   <div class="card" style="max-height: 400px;">
@@ -119,7 +120,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="staticBackdropLabel">Create your own Class</h5>
+                  <h5 class="modal-title modal_titles" id="staticBackdropLabel">Create your own Class</h5>
                 </div>
                 <div class="modal-body">
                   <div class="card" style="max-height: 320px;">
@@ -218,8 +219,8 @@
         </div>
       </div>
     </nav>
-    <div id="capture" class="p-4 mr-5">
-      <div id="content" class="p-4 p-md-5">
+    <div id="content" class="p-4 mr-5">
+      <div id="capture" class="p-4 p-md-5">
       <div class="row">
         <!-- Row 1 -->
         <div class="col-1"></div>

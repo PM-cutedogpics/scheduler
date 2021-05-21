@@ -220,7 +220,7 @@ function cancelDelete(){
 function saveCanvas(){
 	Toasty();
 	// Insert Title to be used for download name
-    html2canvas(document.querySelector("#capture")).then(canvas => {
+    html2canvas(document.querySelector("#capture"),{scrollY: -window.scrollY}).then(canvas => {
       	var a = document.createElement('a');
       	a.href = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
         a.download = $("#newScheduleName").val() + '.jpg';
@@ -257,11 +257,13 @@ $(document).ready(() => {
             console.log("Incomplete");
         }
     });
-
+	var found = false;
 	$('#createNewSchedule').click(function () {
         var newScheduleName = $("#newScheduleName").val();
         var currentUser = $("#currentUser").html();
-        $.get("/addScheduleName", { scheduleName: newScheduleName, username: currentUser},
+
+        $.get("/addScheduleName", 
+        { scheduleName: newScheduleName, username: currentUser},
     	(result) => {
 			if (result){
 				$('#scheduleName').val(newScheduleName);
@@ -270,9 +272,16 @@ $(document).ready(() => {
 			}
 			else console.log("Failed to add schedule name")
 		});
+		$.get("/getScheduleId", { scheduleName: newScheduleName, username: currentUser},(result) => {
+			if (result){
+				console.log(result);
+				$('#schedId').html(result._id);
+			}
+			else console.log("Didn't retrieve _id")
+		});
     });
 
-	$('#scheduleName').keyup(() => {
+	$('#scheduleName').blur(() => {
 		if ($("#scheduleName").val().length > 0) {
 			var newScheduleName = $("#scheduleName").val();
 			var currentUser = $("#currentUser").html();
@@ -467,19 +476,16 @@ $('#cancelCreate').click(function () {
 });
 
 $('#saveSchedule').click(function () {
-	var scheduleName = $("#scheduleName").val();
-	var currentUser = $("#currentUser").html();
-	console.log(currentUser);
-	console.log(scheduleName);
+	var schedId = $("#schedId").html();
 	var includeList = document.getElementsByName("include");
 	console.log(includeList);
 	var addList = document.getElementsByName("add");
 	console.log(addList);
-	var details = [];
+	var schedule = {};
+	var classes = [];
+	schedule.schedId = schedId;
 	for (var i = 0; i < includeList.length; i++){
 		var classDetails = {};
-		classDetails.schedName = scheduleName;
-		classDetails.username = currentUser;
 		classDetails.category = "include";
 		classDetails.classId = includeList[i].id.substring(1,5);
 		classDetails.className = document.getElementById("L1" + 
@@ -487,12 +493,10 @@ $('#saveSchedule').click(function () {
 		if (document.getElementById(includeList[i].id).checked)
 			classDetails.checked = true;
 		else classDetails.checked = false;
-		details.push(classDetails);
+		classes.push(classDetails);
 	}
 	for (var j = 0; j < addList.length; j++, i++){
 		var classDetails = {};
-		classDetails.schedName = scheduleName;
-		classDetails.username = currentUser;
 		classDetails.category = "add";
 		classDetails.classId = addList[j].id.substring(1,5);
 		classDetails.className = document.getElementById("L2" + 
@@ -500,12 +504,12 @@ $('#saveSchedule').click(function () {
 		if (document.getElementById(addList[j].id).checked)
 			classDetails.checked = true;
 		else classDetails.checked = false;
-		details.push(classDetails);
+		classes.push(classDetails);
 	}
-	console.log(details);
-	console.log(details[0]);
-	$.get("/saveSchedule", { details: details }, (result) => {
-		if (result != null)
+	schedule.classes = classes;
+	console.log(schedule);
+	$.get("/saveSchedule", { schedule: schedule }, (result) => {
+		if (result)
 			console.log("Success saving into database");
 		else console.log("Failed saving into database")
     });
