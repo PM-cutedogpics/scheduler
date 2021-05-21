@@ -17,11 +17,11 @@
     <section>
         <div class="container" id="contents">
             <section class="sub-header search-sheader">
-                <h1 style="padding-top: 4vh;">Search Results for: {{query}}</h1>
+                <h1 style="padding-top: 4vh;">Search Results for: {{searchquery.query}}</h1>
             </section>
 
             <div class="row g-3 my-5 mx-5 row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
-            {{#each this.posts}}
+            {{#each searchquery.posts}}
             {{#if schedcard}}
                 <div class="col">
                     <div class="card" id="{{schedcard}}">

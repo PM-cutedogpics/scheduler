@@ -34,7 +34,7 @@ const database = {
 	/*
 			inserts multiple `docs` to the database based on the model `model`
 		*/
-	insertMany: function (model, docs) {
+	insertMany: function (model, docs, callback) {
 		model.insertMany(docs, function (error, result) {
 			if (error) return callback(false);
 			console.log("Added " + result);

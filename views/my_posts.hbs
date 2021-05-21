@@ -13,34 +13,24 @@
     <title>Scheduler | My Posts</title>
   </head>
   <body>
-    {{> header}}
-    <div class="sched-homepage">
-        <div class="row g-3 my-5 mx-5 row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
-          {{#each this}}
+    {{> header flag=flag}}
+    <section class="sub-header search-sheader">
+        <h1 style="padding-top: 4vh;">My Posts</h1>
+    </section>
+    <div class="container sched-homepage ">
+        <div class="row gy-5">
+          {{#each result}}
             {{#if schedcard}}
-                <div class="col">
+                <div class="col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center">
                     <div class="card" id="{{schedcard}}">
                         <a href="/viewpost/{{schedid}}" class="post-title card-title">{{schedTitle}}</a>
                         <a href="/viewpost/{{schedid}}" type="button" class="btn p-0" id="{{schedid}}">
                             <img class="sched-img card-img-top" src="{{postImg}}">
                         </a>
-                        {{!-- <div class="card-body p-2 align-content-center">
-                            <div class="d-flex justify-content-between">
-                                <div class="p-0">
-                                    <button type="button" class="upvote-btn btn btn-outline-danger" data-bs-toggle="button" autocomplete="off">
-                                        <i class="fas fa-arrow-up"></i>
-                                    </button>
-                                    <button type="button" class="downvote-btn btn btn-outline-danger" data-bs-toggle="button" autocomplete="off">
-                                        <i class="fas fa-arrow-down"></i>
-                                    </button>
-                                </div>
-                                <div class="p-0">
-                                    <a href="/viewpost/{{schedid}}" type="button" class="btn btn-light">
-                                        <span class="align-middle">Comment</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div> --}}
+                        <row class="edit-del-mysched-btns d-flex justify-content-center">
+                            <col><a href="/editpost/{{schedid}}" class="mysched-btn edit-mysched-btn"><i class="fas fa-edit"></i></a></col>
+                            <col><a href="/deletepost/{{schedid}}" class="mysched-btn delete-mysched-btn"><i class="fas fa-trash-alt"></i></a></col>
+                        </row>
                     </div>
                 </div>
             {{/if}}

@@ -49,28 +49,27 @@ app.get("/create", function (req, res) {
 	if (req.session.username) {
 		var query = {
 			flag: true,
-			username: req.session.username
+			username: req.session.username,
 		};
 
 		db.findMany(defaultclasses, {}, "classId className", function (result) {
-	        if (result != null) {
-	            console.log("Loading default classes from DB");
-	            var classList = [];
-	            for (var j = 0; j < result.length; j++) {
-	            	    classList.push({
-	                    classId: result[j].classId,                    
-	                    fullName: result[j].className,
-	                    className: result[j].className.substring(0, 7),
-	                });
-	            }
-	            query.classList = classList;
-	            console.log(query);
-	            
-	            res.render("create", query);
-	        } else console.log("Error finding default classes");
+			if (result != null) {
+				console.log("Loading default classes from DB");
+				var classList = [];
+				for (var j = 0; j < result.length; j++) {
+					classList.push({
+						classId: result[j].classId,
+						fullName: result[j].className,
+						className: result[j].className.substring(0, 7),
+					});
+				}
+				query.classList = classList;
+				console.log(query);
+
+				res.render("create", query);
+			} else console.log("Error finding default classes");
 		});
-	}
-	else {
+	} else {
 		res.redirect("home");
 	}
 });
@@ -79,30 +78,37 @@ app.get("/getScheduleName", (req, res) => {
 	console.log("Checking schedule name from db");
 	console.log(req.query.scheduleName);
 	console.log(req.query.username);
-	db.findOne(Schedules, { schedName: req.query.scheduleName,  
-	username: req.query.username }, 'schedName username', function (result) {
-        res.send(result);
-    });
+	db.findOne(
+		Schedules,
+		{ schedName: req.query.scheduleName, username: req.query.username },
+		"schedName username",
+		function (result) {
+			res.send(result);
+		}
+	);
 });
 
 app.get("/addScheduleName", (req, res) => {
 	console.log("Adding schedule name to db");
 	console.log(req.query.scheduleName);
 	console.log(req.query.username);
-	db.insertOne(Schedules, { schedName: req.query.scheduleName, username: req.query.username}, 
-	function (result) {
-        res.send(result);
-    });
+	db.insertOne(
+		Schedules,
+		{ schedName: req.query.scheduleName, username: req.query.username },
+		function (result) {
+			res.send(result);
+		}
+	);
 });
 
 app.get("/updateScheduleName", (req, res) => {
 	console.log("Updating schedule name");
 	console.log("Finding " + req.query.oldScheduleName);
-	console.log("Changing to " + req.query.newScheduleName)
+	console.log("Changing to " + req.query.newScheduleName);
 	db.updateOne(
 		Schedules,
-		{ schedName: req.query.oldScheduleName, username: req.query.username},
-		{ schedName: req.query.newScheduleName},
+		{ schedName: req.query.oldScheduleName, username: req.query.username },
+		{ schedName: req.query.newScheduleName },
 		(result) => {
 			if (result) {
 				console.log("Updated schedule name in db");
@@ -119,12 +125,10 @@ app.get("/saveSchedule", (req, res) => {
 	console.log("Saving schedule and classes to db");
 	console.log(req.query.details);
 	// console.log(req.query.details.username);
-	db.insertMany(Classes, req.query.details, function (result) {
-        if (result){
-        	res.send(result);
-        }
-        else console.log("Error inserting classes into database");
-    });
+	db.insertMany(Classes, req.query.details, (result) => {
+		if (result) res.send(result);
+		else console.log("Error inserting classes into database");
+	});
 });
 
 app.get("/edit_account", function (req, res) {
@@ -363,21 +367,7 @@ app.get("/manage_account", function (req, res) {
 });
 
 app.get("/my_schedules", function (req, res) {
-	var currUser = req.session.username;
-	var postDetails =
-		"schedcard schedid postImg schedTitle schedAuthor schedDesc upqty downqty";
-	db.findMany(Posts, { schedAuthor: currUser }, postDetails, (result) => {
-		if (result != null) {
-			console.log("loading my schedules");
-			var details = {
-				flag: true,
-				result: result,
-			};
-			res.render("my_schedules", details);
-		} else {
-			console.log("error loading my schedules");
-		}
-	});
+	res.render("my_schedules", details);
 });
 
 app.get("/search_result", function (req, res) {
@@ -581,6 +571,8 @@ app.get("/viewpost/:postid", (req, res) => {
 	if there are 0 matching posts, it says none has been found
 */
 app.get("/searchResults", (req, res) => {
+	var currUser = req.session.username;
+	var details = {};
 	if (req.query.q <= 0) {
 		res.redirect("/home");
 	} else {
@@ -604,10 +596,18 @@ app.get("/searchResults", (req, res) => {
 				result.forEach((post) => {
 					searchquery.posts.push(post);
 				});
-				res.render("searchResults", searchquery);
+
+				if (currUser)
+					details = { flag: true, searchquery: searchquery };
+				else details = { flag: false, searchquery: searchquery };
+
+				res.render("searchResults", details);
 				console.log("found posts from search");
 			} else {
-				res.render("emptyResults", searchquery);
+				if (currUser)
+					details = { flag: true, searchquery: searchquery };
+				else details = { flag: false, searchquery: searchquery };
+				res.render("emptyResults", details);
 				console.log("no posts found with query");
 				console.log("none was found from users");
 			}
@@ -895,17 +895,20 @@ app.get("/deletecomment", (req, res) => {
 	redirects to my posts to see the current user's posts with imgs
 */
 app.get("/my_posts", (req, res) => {
-	// GET USERNAME FROM DATABASE
-	var query = { username: req.session.username };
-	console.log(query);
-	// find the post using the username from the database with comments
-	var postshome = "schedcard schedTitle schedid postImg";
-	db.findMany(Posts, query, postshome, (result) => {
+	var currUser = req.session.username;
+	var postDetails =
+		"schedcard schedid postImg schedTitle schedAuthor schedDesc upqty downqty";
+	db.findMany(Posts, { schedAuthor: currUser }, postDetails, (result) => {
 		if (result != null) {
 			console.log("loading my posts");
-			console.log(result);
-			res.render("home", result);
-		} else console.log("error with db");
+			var details = {
+				flag: true,
+				result: result,
+			};
+			res.render("my_posts", details);
+		} else {
+			console.log("error loading my posts");
+		}
 	});
 });
 
@@ -927,7 +930,7 @@ app.get("/deletepost/:schedid", (req, res) => {
 	var schedid = req.params.schedid;
 	db.deleteOne(Posts, { schedid: schedid }, (result) => {
 		if (result) {
-			res.redirect("/my_schedules");
+			res.redirect("/my_posts");
 		} else console.log("error removing post");
 	});
 });
@@ -946,7 +949,7 @@ app.post("/save_edits", (req, res) => {
 		},
 		(error) => {
 			if (!error) console.log("failed to update");
-			else res.redirect("/my_schedules");
+			else res.redirect("/my_posts");
 		}
 	);
 });
