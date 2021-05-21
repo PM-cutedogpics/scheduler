@@ -49,7 +49,7 @@ body {
 	font-size: 5%;
 }
 
-[id^="schedcard-"] {
+.schedcard {
 	max-width: 380px;
 	width: auto;
 }
@@ -488,4 +488,12 @@ body {
 
 #schedDesc-box {
 	height: 100px;
+}
+
+.createpost {
+	padding-top: 30px;
+}
+
+#formFileSm {
+	width: 15rem;
 }

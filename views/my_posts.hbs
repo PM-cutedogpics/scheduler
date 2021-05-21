@@ -17,19 +17,24 @@
     <section class="sub-header search-sheader">
         <h1 style="padding-top: 4vh;">My Posts</h1>
     </section>
+    <section class="createpost d-flex justify-content-center">
+      <form action="/create_post" method="get">
+        <input type="submit" class="search-btn" id="createpost-btn" value="Create a Post">
+      </form>
+    </section>
     <div class="container sched-homepage ">
         <div class="row gy-5">
           {{#each result}}
-            {{#if schedcard}}
+            {{#if _id}}
                 <div class="col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center">
-                    <div class="card" id="{{schedcard}}">
-                        <a href="/viewpost/{{schedid}}" class="post-title card-title">{{schedTitle}}</a>
-                        <a href="/viewpost/{{schedid}}" type="button" class="btn p-0" id="{{schedid}}">
+                    <div class="card schedcard">
+                        <a href="/viewpost/{{_id}}" class="post-title card-title">{{schedTitle}}</a>
+                        <a href="/viewpost/{{_id}}" type="button" class="btn p-0" id="{{_id}}">
                             <img class="sched-img card-img-top" src="{{postImg}}">
                         </a>
                         <row class="edit-del-mysched-btns d-flex justify-content-center">
-                            <col><a href="/editpost/{{schedid}}" class="mysched-btn edit-mysched-btn"><i class="fas fa-edit"></i></a></col>
-                            <col><a href="/deletepost/{{schedid}}" class="mysched-btn delete-mysched-btn"><i class="fas fa-trash-alt"></i></a></col>
+                            <col><a href="/editpost/{{_id}}" class="mysched-btn edit-mysched-btn"><i class="fas fa-edit"></i></a></col>
+                            <col><a href="/deletepost/{{_id}}" class="mysched-btn delete-mysched-btn"><i class="fas fa-trash-alt"></i></a></col>
                         </row>
                     </div>
                 </div>

@@ -14,19 +14,30 @@
     {{> header flag=flag}}
         <div class="post-template row justify-content-md-center">
             <div class="simg col-md-4 d-flex justify-content-center">
-                <img src="{{post.postImg}}" class="sched-img card-img-top" alt="{{post.schedid}}" id="{{post.schedid}}">
+                <img src="{{post.postImg}}" class="sched-img card-img-top" alt="{{post._id}}" id="{{post._id}}">
             </div>
             <div class="col-md-8">
                 <div class="card pimg">
                     <div class="card-body">
-                        <form action="/save_edits" method="post">
-                            <input hidden type="text" class="hidden-label-editpost" name="schedid" value="{{post.schedid}}"><br>
-                            <label for="schedTitle-box" class="label-editpost">Schedule Title</label><br>
-                            <input type="text" name="schedTitle" id="schedTitle-box" class="field-editpost" value="{{post.schedTitle}}" required><br>
-                            <label for="schedDesc-box" class="label-editpost">Schedule Description</label><br>
-                            <input type="text" name="schedDesc" id="schedDesc-box" class="field-editpost" value="{{post.schedDesc}}" required><br>
-                            <input type="submit" id="submit-editpost" value="Save">
-                        </form>
+                        <div class="container">
+                            <form class="row g-3 mt-1" method="POST" action="/save_edits">
+                                <div class="col-md-12">
+                                    <label for="schedTitle-box" class="form-label">Schedule Title <required>*</required></label>
+                                    <input type="text" class="field-editpost form-control" id="schedTitle" value="{{post.schedTitle}}" name="schedTitle" required>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="schedDesc" class="form-label">Schedule Description</label>
+                                    <textarea class="field-editpost form-control" id="schedDesc" name="schedDesc" rows="3">{{post.schedDesc}}</textarea>
+                                </div>
+                                <div class="col-3 mb-3">
+                                    <label for="formFileSm" class="form-label">Schedule Image</label>
+                                    <input class="form-control form-control-sm" id="formFileSm" type="file" name="postImg">
+                                </div>
+                                    <div class="col-12">
+                                    <button type="submit" class="btn btn-primary" id="submit" value="Save">Save</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
