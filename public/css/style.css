@@ -489,3 +489,7 @@ body {
 #schedDesc-box {
 	height: 100px;
 }
+
+ .ui-timepicker-container {
+      z-index: 3500 !important;
+ }
