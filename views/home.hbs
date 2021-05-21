@@ -17,11 +17,11 @@
     <div class="container sched-homepage ">
         <div class="row gy-5">
           {{#each result}}
-            {{#if schedcard}}
+            {{#if _id}}
                 <div class="col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center">
-                    <div class="card" id="{{schedcard}}">
-                        <a href="/viewpost/{{schedid}}" class="post-title card-title">{{schedTitle}}</a>
-                        <a href="/viewpost/{{schedid}}" type="button" class="btn p-0" id="{{schedid}}">
+                    <div class="card schedcard">
+                        <a href="/viewpost/{{_id}}" class="post-title card-title">{{schedTitle}}</a>
+                        <a href="/viewpost/{{_id}}" type="button" class="btn p-0" id="{{_id}}">
                             <img class="sched-img card-img-top" src="{{postImg}}">
                         </a>
                         {{!-- <div class="card-body p-2 align-content-center">

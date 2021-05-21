@@ -14,8 +14,8 @@ $(document).ready(() => {
 			// add an upvote to the counter
 			// var upvotes = parseInt($("#upqty").text()) + 1;
 
-			$.get("/upvoteInc", { schedid: schedid }, (result) => {
-				if (result.schedid == schedid) {
+			$.get("/upvoteInc", { _id: schedid }, (result) => {
+				if (result._id == schedid) {
 					console.log("upvote on downvote off");
 					console.log("upvotes = " + result.upqty);
 					$("#upqty").text(result.upqty.toString());
@@ -35,8 +35,8 @@ $(document).ready(() => {
 			// var upvotes = parseInt($("#upqty").text()) - 1;
 			// $("#upqty").text(upvotes);
 
-			$.get("/upvoteDec", { schedid: schedid }, (result) => {
-				if (result.schedid == schedid) {
+			$.get("/upvoteDec", { _id: schedid }, (result) => {
+				if (result._id == schedid) {
 					console.log("upvote off downvote off");
 					console.log("upvotes = " + result.upqty);
 					$("#upqty").text(result.upqty.toString());
@@ -64,8 +64,8 @@ $(document).ready(() => {
 			// var upvotes = parseInt($("#upqty").text()) + 1;
 			// $("#upqty").text(upvotes);
 
-			$.get("/downDecupInc", { schedid: schedid }, (result) => {
-				if (result.schedid == schedid) {
+			$.get("/downDecupInc", { _id: schedid }, (result) => {
+				if (result._id == schedid) {
 					console.log("upvote on downvote off (2)");
 					console.log("upvotes = " + result.upqty);
 					console.log("downvotes = " + result.downqty);
@@ -92,8 +92,8 @@ $(document).ready(() => {
 			// var downvotes = parseInt($("#downqty").text()) + 1;
 			// $("#downqty").text(downvotes);
 
-			$.get("/downvoteInc", { schedid: schedid }, (result) => {
-				if (result.schedid == schedid) {
+			$.get("/downvoteInc", { _id: schedid }, (result) => {
+				if (result._id == schedid) {
 					console.log("downvote on upvote off");
 					console.log("downvotes = " + result.downqty);
 					$("#downqty").text(result.downqty.toString());
@@ -113,8 +113,8 @@ $(document).ready(() => {
 			// var downvotes = parseInt($("#downqty").text()) - 1;
 			// $("#downqty").text(downvotes);
 
-			$.get("/downvoteDec", { schedid: schedid }, (result) => {
-				if (result.schedid == schedid) {
+			$.get("/downvoteDec", { _id: schedid }, (result) => {
+				if (result._id == schedid) {
 					console.log("upvote off downvote off");
 					console.log("downvotes = " + result.downqty);
 					$("#downqty").text(result.downqty.toString());
@@ -140,8 +140,8 @@ $(document).ready(() => {
 			// var downvotes = parseInt($("#downqty").text()) + 1;
 			// $("#downqty").text(downvotes);
 
-			$.get("/upDecdownInc", { schedid: schedid }, (result) => {
-				if (result.schedid == schedid) {
+			$.get("/upDecdownInc", { _id: schedid }, (result) => {
+				if (result._id == schedid) {
 					console.log("upvote off downvote on (2)");
 					console.log("upvotes = " + result.upqty);
 					console.log("downvotes = " + result.downqty);
@@ -165,12 +165,12 @@ $(document).ready(() => {
 			$.get(
 				"/addComment",
 				{
-					schedid: schedid,
+					_id: schedid,
 					cDesc: $("#comment-form").val(),
 				},
 				(result) => {
 					var comment = {
-						schedid: result.schedid,
+						schedid: result._id,
 						commentid: result._id,
 						cAuthor: result.cAuthor,
 						cDesc: result.cDesc,

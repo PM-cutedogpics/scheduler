@@ -1,18 +1,6 @@
 var mongoose = require("mongoose");
 
 var PostsSchema = new mongoose.Schema({
-	// schedcard-<post#>
-	// example: schedcard-1
-	schedcard: {
-		type: String,
-		required: true,
-	},
-	// A1B2<post#>
-	// A1B21
-	schedid: {
-		type: String,
-		required: true,
-	},
 	// TODO: CHANGE TO REAL IMAGE
 	postImg: {
 		type: String,

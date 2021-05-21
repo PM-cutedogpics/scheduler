@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const db = require("../models/db");
 const User = require("../models/UserModel.js");
 const Posts = require("../models/PostModel.js");
@@ -387,13 +388,6 @@ app.get("/my_schedules", function (req, res) {
 	res.render("my_schedules", details);
 });
 
-app.get("/search_result", function (req, res) {
-	var details = {
-		flag: true,
-	};
-	res.render("search_result", details);
-});
-
 app.get("/view_account", function (req, res) {
 	var details = {
 		flag: true,
@@ -461,7 +455,7 @@ app.get("/home", (req, res) => {
 	console.log(req.session.username);
 	if (req.session.username) {
 		// get all the posts from the database
-		var postshome = "schedcard schedTitle schedid postImg";
+		var postshome = "schedcard schedTitle _id postImg";
 		db.findMany(Posts, {}, postshome, (result) => {
 			if (result != null) {
 				console.log("loading home");
@@ -475,7 +469,7 @@ app.get("/home", (req, res) => {
 		});
 	} else {
 		// get all the posts from the database
-		var postshome = "schedcard schedTitle schedid postImg";
+		var postshome = "schedcard schedTitle _id postImg";
 		db.findMany(Posts, {}, postshome, (result) => {
 			if (result != null) {
 				console.log("loading home");
@@ -501,19 +495,18 @@ app.get("/home", (req, res) => {
 app.get("/viewpost/:postid", (req, res) => {
 	var user = req.session.username;
 	console.log("in session: " + user);
-	var query = { schedid: req.params.postid };
+	var query = { _id: req.params.postid };
 	console.log(query);
 	// find the post from the database with comments
 	var postdetails =
-		"schedcard schedid postImg schedTitle schedAuthor schedDesc upqty downqty";
+		"schedcard _id postImg schedTitle schedAuthor schedDesc upqty downqty";
 	db.findOne(Posts, query, postdetails, (result) => {
 		if (result != null) {
 			console.log("redirecting to selected post");
 			console.log(result);
 			var post = {
 				loggedUser: user,
-				schedcard: result.schedcard,
-				schedid: result.schedid,
+				_id: result._id,
 				postImg: result.postImg,
 				schedTitle: result.schedTitle,
 				schedAuthor: result.schedAuthor,
@@ -524,14 +517,19 @@ app.get("/viewpost/:postid", (req, res) => {
 			};
 
 			var commentdetails = "schedid cAuthor cDesc";
-			db.findMany(Comments, query, commentdetails, (result) => {
-				if (result != null) {
-					console.log(result);
-					result.forEach((comment) => {
-						post.comments.push(comment);
-					});
+			db.findMany(
+				Comments,
+				{ schedid: req.params.postid },
+				commentdetails,
+				(result) => {
+					if (result != null) {
+						console.log(result);
+						result.forEach((comment) => {
+							post.comments.push(comment);
+						});
+					}
 				}
-			});
+			);
 			var details;
 			if (req.session.username) details = { flag: true, post: post };
 			else details = { flag: false, post: post };
@@ -600,7 +598,7 @@ app.get("/searchResults", (req, res) => {
 		console.log("Search Results for: " + searchquery.query);
 		// query the posts that have the following keyword (QUERY)
 		// find from db
-		var postres = "schedcard schedTitle schedid postImg";
+		var postres = "schedTitle _id postImg";
 		// find by username or title
 		var byuser = { schedAuthor: { $regex: req.query.q, $options: "i" } };
 		var bytitle = { schedTitle: { $regex: req.query.q, $options: "i" } };
@@ -617,13 +615,14 @@ app.get("/searchResults", (req, res) => {
 				if (currUser)
 					details = { flag: true, searchquery: searchquery };
 				else details = { flag: false, searchquery: searchquery };
-
+				console.log(details);
 				res.render("searchResults", details);
 				console.log("found posts from search");
 			} else {
 				if (currUser)
 					details = { flag: true, searchquery: searchquery };
 				else details = { flag: false, searchquery: searchquery };
+				console.log(details);
 				res.render("emptyResults", details);
 				console.log("no posts found with query");
 				console.log("none was found from users");
@@ -650,35 +649,29 @@ app.get("/searchResults", (req, res) => {
 	increase the number of upvotes
 */
 app.get("/upvoteInc", (req, res) => {
-	var schedid = req.query.schedid;
+	var schedid = req.query._id;
+	var query = {
+		_id: req.query._id,
+	};
+	console.log(schedid);
 	console.log("increasing upvote by 1");
-	db.updateOne(
-		Posts,
-		{ schedid: schedid },
-		{ $inc: { upqty: 1 } },
-		(result) => {
-			if (result) {
-				console.log("returning updated schedule");
-				db.findOne(
-					Posts,
-					{ schedid: schedid },
-					"schedid upqty",
-					function (result) {
-						if (result != null) {
-							console.log("RESULTS\n" + result);
-							res.send(result);
-						} else {
-							console.log("error");
-							res.send(null);
-						}
-					}
-				);
-			} else {
-				console.log("error updating upvote count");
-				res.send(null);
-			}
+	db.updateOne(Posts, query, { $inc: { upqty: 1 } }, (result) => {
+		if (result) {
+			console.log("returning updated schedule");
+			db.findOne(Posts, query, "_id upqty", function (result) {
+				if (result != null) {
+					console.log("RESULTS\n" + result);
+					res.send(result);
+				} else {
+					console.log("error");
+					res.send(null);
+				}
+			});
+		} else {
+			console.log("error updating upvote count");
+			res.send(null);
 		}
-	);
+	});
 });
 
 /*
@@ -686,35 +679,26 @@ app.get("/upvoteInc", (req, res) => {
 	reduce the amount of upvotes
 */
 app.get("/upvoteDec", (req, res) => {
-	var schedid = req.query.schedid;
+	var schedid = req.query._id;
+	var query = { _id: req.query._id };
 	console.log("decreasing upvote by 1");
-	db.updateOne(
-		Posts,
-		{ schedid: schedid },
-		{ $inc: { upqty: -1 } },
-		(result) => {
-			if (result) {
-				console.log("returning updated schedule");
-				db.findOne(
-					Posts,
-					{ schedid: schedid },
-					"schedid upqty",
-					function (result) {
-						if (result != null) {
-							console.log("RESULTS\n" + result);
-							res.send(result);
-						} else {
-							console.log("error");
-							res.send(null);
-						}
-					}
-				);
-			} else {
-				console.log("error updating upvote count");
-				res.send(null);
-			}
+	db.updateOne(Posts, query, { $inc: { upqty: -1 } }, (result) => {
+		if (result) {
+			console.log("returning updated schedule");
+			db.findOne(Posts, query, "_id upqty", function (result) {
+				if (result != null) {
+					console.log("RESULTS\n" + result);
+					res.send(result);
+				} else {
+					console.log("error");
+					res.send(null);
+				}
+			});
+		} else {
+			console.log("error updating upvote count");
+			res.send(null);
 		}
-	);
+	});
 });
 
 /*
@@ -722,19 +706,20 @@ app.get("/upvoteDec", (req, res) => {
 	reduce downvote by 1 and add 1 to upvote
 */
 app.get("/downDecupInc", (req, res) => {
-	var schedid = req.query.schedid;
+	var schedid = req.query._id;
+	var query = { _id: req.query._id };
 	console.log("decreasing downvote by 1 & increasing upvote by 1");
 	db.updateOne(
 		Posts,
-		{ schedid: schedid },
+		query,
 		{ $inc: { upqty: 1, downqty: -1 } },
 		(result) => {
 			if (result) {
 				console.log("returning updated schedule");
 				db.findOne(
 					Posts,
-					{ schedid: schedid },
-					"schedid upqty downqty",
+					query,
+					"_id upqty downqty",
 					function (result) {
 						if (result != null) {
 							console.log("RESULTS\n" + result);
@@ -758,35 +743,26 @@ app.get("/downDecupInc", (req, res) => {
 	increase downvote by 1
 */
 app.get("/downvoteInc", (req, res) => {
-	var schedid = req.query.schedid;
+	var schedid = req.query._id;
+	var query = { _id: req.query._id };
 	console.log("increasing downvote by 1");
-	db.updateOne(
-		Posts,
-		{ schedid: schedid },
-		{ $inc: { downqty: 1 } },
-		(result) => {
-			if (result) {
-				console.log("returning updated schedule");
-				db.findOne(
-					Posts,
-					{ schedid: schedid },
-					"schedid downqty",
-					function (result) {
-						if (result != null) {
-							console.log("RESULTS\n" + result);
-							res.send(result);
-						} else {
-							console.log("error");
-							res.send(null);
-						}
-					}
-				);
-			} else {
-				console.log("error updating upvote count");
-				res.send(null);
-			}
+	db.updateOne(Posts, query, { $inc: { downqty: 1 } }, (result) => {
+		if (result) {
+			console.log("returning updated schedule");
+			db.findOne(Posts, query, "_id downqty", function (result) {
+				if (result != null) {
+					console.log("RESULTS\n" + result);
+					res.send(result);
+				} else {
+					console.log("error");
+					res.send(null);
+				}
+			});
+		} else {
+			console.log("error updating upvote count");
+			res.send(null);
 		}
-	);
+	});
 });
 
 /*
@@ -794,35 +770,26 @@ app.get("/downvoteInc", (req, res) => {
 	decrease downvote by one 
 */
 app.get("/downvoteDec", (req, res) => {
-	var schedid = req.query.schedid;
+	var schedid = req.query._id;
+	var query = { _id: req.query._id };
 	console.log("decreasing downvote by 1");
-	db.updateOne(
-		Posts,
-		{ schedid: schedid },
-		{ $inc: { downqty: -1 } },
-		(result) => {
-			if (result) {
-				console.log("returning updated schedule");
-				db.findOne(
-					Posts,
-					{ schedid: schedid },
-					"schedid downqty",
-					function (result) {
-						if (result != null) {
-							console.log("RESULTS\n" + result);
-							res.send(result);
-						} else {
-							console.log("error");
-							res.send(null);
-						}
-					}
-				);
-			} else {
-				console.log("error updating upvote count");
-				res.send(null);
-			}
+	db.updateOne(Posts, query, { $inc: { downqty: -1 } }, (result) => {
+		if (result) {
+			console.log("returning updated schedule");
+			db.findOne(Posts, query, "_id downqty", function (result) {
+				if (result != null) {
+					console.log("RESULTS\n" + result);
+					res.send(result);
+				} else {
+					console.log("error");
+					res.send(null);
+				}
+			});
+		} else {
+			console.log("error updating upvote count");
+			res.send(null);
 		}
-	);
+	});
 });
 
 /*
@@ -830,19 +797,20 @@ app.get("/downvoteDec", (req, res) => {
 	reduce upvote by 1 and increase downvote by 1
 */
 app.get("/upDecdownInc", (req, res) => {
-	var schedid = req.query.schedid;
+	var schedid = req.query._id;
+	var query = { _id: req.query._id };
 	console.log("decreasing upvote by 1 & increasing downvote by 1");
 	db.updateOne(
 		Posts,
-		{ schedid: schedid },
+		{ _id: schedid },
 		{ $inc: { downqty: 1, upqty: -1 } },
 		(result) => {
 			if (result) {
 				console.log("returning updated schedule");
 				db.findOne(
 					Posts,
-					{ schedid: schedid },
-					"schedid upqty downqty",
+					{ _id: schedid },
+					"_id upqty downqty",
 					function (result) {
 						if (result != null) {
 							console.log("RESULTS\n" + result);
@@ -866,7 +834,7 @@ app.get("/upDecdownInc", (req, res) => {
 */
 app.get("/addComment", (req, res) => {
 	var comment = {
-		schedid: req.query.schedid,
+		schedid: req.query._id,
 		commentid: req.query.commentid,
 		cAuthor: req.session.username,
 		cDesc: req.query.cDesc,
@@ -931,8 +899,8 @@ app.get("/my_posts", (req, res) => {
 
 app.get("/editpost/:schedid", (req, res) => {
 	var schedid = req.params.schedid;
-	var scheddet = "postImg schedTitle schedid schedAuthor schedDesc";
-	db.findOne(Posts, { schedid: schedid }, scheddet, (result) => {
+	var scheddet = "postImg schedTitle _id schedAuthor schedDesc";
+	db.findOne(Posts, { _id: schedid }, scheddet, (result) => {
 		if (result != null) {
 			var details = {
 				flag: true,
@@ -945,7 +913,7 @@ app.get("/editpost/:schedid", (req, res) => {
 
 app.get("/deletepost/:schedid", (req, res) => {
 	var schedid = req.params.schedid;
-	db.deleteOne(Posts, { schedid: schedid }, (result) => {
+	db.deleteOne(Posts, { _id: schedid }, (result) => {
 		if (result) {
 			res.redirect("/my_posts");
 		} else console.log("error removing post");
@@ -957,7 +925,7 @@ app.post("/save_edits", (req, res) => {
 	console.log(schedid);
 	db.updateOne(
 		Posts,
-		{ schedid: schedid },
+		{ _id: schedid },
 		{
 			$set: {
 				schedTitle: req.body.schedTitle,
@@ -969,6 +937,27 @@ app.post("/save_edits", (req, res) => {
 			else res.redirect("/my_posts");
 		}
 	);
+});
+
+app.get("/create_post", (req, res) => {
+	res.render("create_post");
+});
+
+app.post("/create_post", (req, res) => {
+	var postDetails = {
+		schedTitle: req.body.schedTitle,
+		schedAuthor: req.session.username,
+		schedDesc: req.body.schedDesc,
+		postImg: "/img/example5.jpg", // use multer
+		upqty: 0,
+		downqty: 0,
+	};
+	console.log("posting new post");
+	console.log(postDetails);
+	db.insertOne(Posts, postDetails, (result) => {
+		if (result) res.redirect("/my_posts");
+		else console.log("error posting schdule");
+	});
 });
 
 module.exports = app;
