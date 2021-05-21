@@ -136,7 +136,8 @@ body {
 }
 
 [data-theme="dark"] .sidebar {
-	background: #1a1a1b;
+    background: #1a1a1b;
+    color: #fff;
 }
 
 [data-theme="dark"] .btn-primary {
@@ -251,7 +252,7 @@ body {
 	min-width: 300px;
 	max-width: 300px;
 	background: #6c757d;
-	color: #fff;
+	color: #1a1a1b;
 	-webkit-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
