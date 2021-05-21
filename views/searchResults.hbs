@@ -20,65 +20,21 @@
                 <h1 style="padding-top: 4vh;">Search Results for: {{searchquery.query}}</h1>
             </section>
 
-            <div class="row g-3 my-5 mx-5 row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
-            {{#each searchquery.posts}}
-            {{#if schedcard}}
-                <div class="col">
-                    <div class="card" id="{{schedcard}}">
-                        <a href="/viewpost/{{schedid}}" class="post-title card-title">{{schedTitle}}</a>
-                        <a href="/viewpost/{{schedid}}" type="button" class="btn p-0" id="{{schedid}}">
-                            <img class="sched-img card-img-top" src="{{postImg}}">
-                        </a>
-                        {{!-- <div class="card-body p-2 align-content-center">
-                            <div class="d-flex justify-content-between">
-                                <div class="p-0">
-                                    <button type="button" class="upvote-btn btn btn-outline-danger" data-bs-toggle="button" autocomplete="off">
-                                        <i class="fas fa-arrow-up"></i>
-                                    </button>
-                                    <button type="button" class="downvote-btn btn btn-outline-danger" data-bs-toggle="button" autocomplete="off">
-                                        <i class="fas fa-arrow-down"></i>
-                                    </button>
-                                </div>
-                                <div class="p-0">
-                                    <a href="/viewpost/{{schedid}}" type="button" class="btn btn-light">
-                                        <span class="align-middle">Comment</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div> --}}
-                    </div>
-                </div>
-            {{/if}}
-          {{/each}}
-            
-            {{!-- {{#each this.posts}}
-                {{#if schedcard}}
-                    <div class="col">
-                        <div class="card" id="{{schedcard}}">
-                            <a href="/viewpost/{{schedid}}" type="button" class="btn p-0" id="{{schedid}}">
-                                <img class="sched-img card-img-top" src="{{postImg}}">
-                            </a>
-                            <div class="card-body p-2 align-content-center">
-                                <div class="d-flex justify-content-between">
-                                    <div class="p-0">
-                                        <button type="button" class="upvote-btn btn btn-outline-danger" data-bs-toggle="button" autocomplete="off">
-                                            <i class="fas fa-arrow-up"></i>
-                                        </button>
-                                        <button type="button" class="downvote-btn btn btn-outline-danger" data-bs-toggle="button" autocomplete="off">
-                                            <i class="fas fa-arrow-down"></i>
-                                        </button>
-                                    </div>
-                                    <div class="p-0">
-                                        <a href="/viewpost/{{schedid}}" type="button" class="btn btn-light">
-                                            <span class="align-middle">Comment</span>
-                                        </a>
-                                    </div>
-                                </div>
+            <div class="container sched-homepage ">
+                <div class="row gy-5">
+                {{#each searchquery.posts}}
+                    {{#if _id}}
+                        <div class="col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center">
+                            <div class="card schedcard">
+                                <a href="/viewpost/{{_id}}" class="post-title card-title">{{schedTitle}}</a>
+                                <a href="/viewpost/{{_id}}" type="button" class="btn p-0" id="{{_id}}">
+                                    <img class="sched-img card-img-top" src="{{postImg}}">
+                                </a>
                             </div>
                         </div>
-                    </div>
-                {{/if}}
-            {{/each}} --}}
+                    {{/if}}
+                {{/each}}
+                </div>
             </div>
         </div>
     </section>

@@ -371,13 +371,6 @@ app.get("/my_schedules", function (req, res) {
 	res.render("my_schedules", details);
 });
 
-app.get("/search_result", function (req, res) {
-	var details = {
-		flag: true,
-	};
-	res.render("search_result", details);
-});
-
 app.get("/view_account", function (req, res) {
 	var details = {
 		flag: true,
@@ -605,13 +598,14 @@ app.get("/searchResults", (req, res) => {
 				if (currUser)
 					details = { flag: true, searchquery: searchquery };
 				else details = { flag: false, searchquery: searchquery };
-
+				console.log(details);
 				res.render("searchResults", details);
 				console.log("found posts from search");
 			} else {
 				if (currUser)
 					details = { flag: true, searchquery: searchquery };
 				else details = { flag: false, searchquery: searchquery };
+				console.log(details);
 				res.render("emptyResults", details);
 				console.log("no posts found with query");
 				console.log("none was found from users");
