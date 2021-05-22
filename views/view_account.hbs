@@ -12,7 +12,7 @@
     <title>Scheduler</title>
   </head>
   <body>
-    {{> header}}
+    {{> header flag=flag}}
     <div class="container">
       <nav aria-label="breadcrumb" class="mt-2">
         <ol class="breadcrumb">
@@ -24,139 +24,46 @@
       <form class="row g-3">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Username</label>
-          <input type="text" class="form-control" id="inputUsername" placeholder="ironman3000 ">
+          <input type="text" class="form-control" id="inputUsername" value="{{user.username}}">
         </div>
         <div class="col-6">
           <label for="inputAddress" class="form-label">Email Address</label>
-          <input type="email" class="form-control" id="inputAddress" placeholder="nottherealtonystark@gmail.com">
+          <input type="email" class="form-control" id="inputAddress" value="{{user.email}}">
         </div>
         <div class="col-12">
           <label for="inputAddress2" class="form-label">Description</label>
-          <input type="text" class="form-control" id="inputAddress2" placeholder="I'm rich">
+          <input type="text" class="form-control" id="inputAddress2" value="{{user.desc}}">
         </div>
       </form>
-      <div class="row mt-4">
-      <div class="col-2">
-        <div class="list-group flex_force" id="list-tab" role="tablist">
-          <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="view_account1.html" role="tab" aria-controls="home">Posts</a>
-          <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="view_account1_comments.html" role="tab" aria-controls="profile">Comments</a>
+      {{#if same=same}}
+      <section class="createpost d-flex justify-content-center">
+      <form action="/create_post" method="get">
+        <input type="submit" class="search-btn" id="createpost-btn" value="Create a Post">
+      </form>
+    </section>
+    {{/if}}
+    <div class="container sched-homepage ">
+        <div class="row gy-5">
+          {{#each result}}
+            {{#if _id}}
+                <div class="col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center">
+                    <div class="card schedcard">
+                        <a href="/viewpost/{{_id}}" class="post-title card-title">{{schedTitle}}</a>
+                        <a href="/viewpost/{{_id}}" type="button" class="btn p-0" id="{{_id}}">
+                            <img class="sched-img card-img-top" src="{{postImg}}">
+                        </a>
+                        {{#if same=../same}}
+                        <row class="edit-del-mysched-btns d-flex justify-content-center">
+                            <col><a href="/editpost/{{_id}}" class="mysched-btn edit-mysched-btn"><i class="fas fa-edit"></i></a></col>
+                            <col><a href="/deletepost/{{_id}}" class="mysched-btn delete-mysched-btn"><i class="fas fa-trash-alt"></i></a></col>
+                        </row>
+                        {{/if}}
+                    </div>
+                </div>
+            {{/if}}
+          {{/each}}
         </div>
       </div>
-      <div class="col-8">
-      <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list"></div>
-        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list"></div>
-        </div>
-      </div>
-    </div>
-    </fieldset>
-    <div class="col">
-      <div class="card" id="schedcard-4">
-          <button type="button" class="btn p-0" data-bs-toggle="modal" data-bs-target="#scheduleModal4">
-              <img class="sched-img" src="img/example4.jpg" class="card-img-top" alt="sched4">
-          </button>
-          <div class="modal fade" id="scheduleModal4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h4 class="modal-title">Scheduler</h4>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                          <div class="row row-cols-2">
-                              <div class="col">
-                                  <img src="img/example4.jpg" class="card-img-top" alt="sched4" style="position: sticky; top: 0;">
-                              </div>
-                              <div class="col">
-                                  <div class="card" style="max-height: 300px;">
-                                      <div class="card-body">
-                                          <h3 class="card-title">Panget ng profs ko sched</h3>
-                                          <h6 class="sched-author">posted by ironman3000</h6>
-                                          <p class="card-text">This sucks.</p>
-                                          <p>2 Likes</p>
-                                      </div>
-                                  </div>
-                                  <div class="card" style="max-height: 400px;">
-                                      <ul class="list-group list-group-flush" style="overflow:auto">
-                                          <li class="list-group-item">
-                                              <div class="container p-0">
-                                                  <p><b><a href="./views/view_account5.html" class="link-unstyled">sendcutedogpics </a></b><span>Nice sched :D</span></p>
-                                                  <button type="button" class="btn btn-light" style="height: 30px; font-size: smaller;">Edit</button>
-                                              </div>
-                                          </li>
-                                          <li class="list-group-item">
-                                              <div class="container p-0">
-                                                  <p><b><a href="./views/view_account2.html" class="link-unstyled">captamerica </a></b><span>That is a very nice schedule! We also have the same classes :)</span></p>
-                                              </div>
-                                          </li>
-                                          <li class="list-group-item">
-                                              <div class="container p-0">
-                                                  <p><b><a href=./views/"view_account4.html" class="link-unstyled">blackwidow </a></b><span>I'll see you in homeroom ;)</span></p>
-                                              </div>                                                        
-                                          </li>
-                                          <li class="list-group-item">
-                                              <div class="container p-0">
-                                                  <p><b><a href="" class="link-unstyled">drbanner </a></b><span>hulk smash</span></p>
-                                              </div>
-                                          </li>
-                                          <li class="list-group-item">
-                                              <div class="container p-0">
-                                                  <p><b><a href="./views/view_account1.html" class="link-unstyled">ironman3000 </a></b><span>@drbanner bffs</span></p>
-                                              </div>
-                                          </li>
-                                          <li class="list-group-item">
-                                              <div class="container p-0">
-                                                  <p><b><a href="" class="link-unstyled">hawkeye123 </a></b><span>lets have lunch together</span></p>
-                                              </div>
-                                          </li>
-                                          <li class="list-group-item">
-                                              <div class="container p-0">
-                                                  <p><b><a href="./views/view_account5.html" class="link-unstyled">sendcutedogpics </a></b><span>lets be friends</span></p>
-                                                  <button type="button" class="btn btn-light" style="height: 30px; font-size: smaller;">Edit</button>
-                                              </div>
-                                          </li>
-                                          <li class="list-group-item">
-                                              <div class="container p-0">
-                                                  <p><b><a href="./views/view_account1.html" class="link-unstyled">ironman3000 </a></b><span>@hawkeye123 see you dude!</span></p>
-                                              </div>
-                                          </li>
-                                      </ul>
-                                  </div>
-                                  <div class="card-body p-2 align-content-center">
-                                      <div class="d-flex justify-content-between">
-                                          <div class="p-0">
-                                              <button type="button" class="btn btn-outline-danger" data-bs-toggle="button" autocomplete="off">
-                                                  <img src="img/like_32x32.png" class="like-img" alt="like">
-                                              </button>
-                                          </div>
-                                          <div class="form-floating">
-                                              <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="width: 280px; height: 50px; resize: none;"></textarea>
-                                              <label for="floatingTextarea">Leave a comment here</label>
-                                            </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="card-body p-2 align-content-center">
-              <div class="d-flex justify-content-between">
-                  <div class="p-0">
-                      <button type="button" class="btn btn-outline-danger" data-bs-toggle="button" autocomplete="off">
-                          <img src="img/like_32x32.png" class="like-img" alt="like">
-                      </button>
-                  </div>
-                  <div class="p-0">
-                      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#scheduleModal4">
-                          <span class="align-middle">Comment</span>
-                      </button>
-                  </div>
-              </div>
-          </div>
-      </div>
-    </div>
     {{> footer}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>

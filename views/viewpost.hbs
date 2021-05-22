@@ -34,7 +34,7 @@
                             {{#if cAuthor}}
                                 <li class="list-group-item" id="C-{{_id}}">
                                     <div class="comment-content">
-                                        <div class="comment-details"><a href="/account?username={{cAuthor}}" class="link-unstyled sauthor">{{cAuthor}} </a><span>{{cDesc}}</span></div>
+                                        <div class="comment-details"><a href="/view_account?username={{cAuthor}}" class="link-unstyled sauthor">{{cAuthor}} </a><span>{{cDesc}}</span></div>
                                         {{#inSession ../post.loggedUser cAuthor }}
                                         <div class="del-div-btn"><button id="{{../_id}}" type="submit" class="delete-comment"><i class="far fa-trash-alt"></i></button></div>
                                         {{/inSession}}                           

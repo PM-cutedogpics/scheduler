@@ -27,11 +27,32 @@ app.get("/about", function (req, res) {
 });
 
 app.get("/change_password", function (req, res) {
+<<<<<<< Updated upstream
 	var details = {
 		username: req.session.username,
 		flag: true,
 	};
 	res.render("change_password", details);
+=======
+	res.render("change_password");
+});
+
+app.post("/change_password", function (req, res) {
+	var old = req.body.old;
+	var newPass = req.body.newPass;
+	var confirm = req.body.confirm;
+
+	if (req.session.password == old && newPass == confirm){
+		db.updateOne(User, username, { password: newPass}, (result) => {
+			if (result)
+				console.log("updated");
+			else
+				console.log("failed");
+		})
+	}
+
+	res.render("manage_account");
+>>>>>>> Stashed changes
 });
 
 app.get("/contact", function (req, res) {
@@ -75,6 +96,27 @@ app.get("/create", function (req, res) {
 	} else {
 		res.redirect("home");
 	}
+});
+
+app.get("/delete_account", (req, res) => {
+	var username = req.session.username;
+	console.log("deleting user from database");
+	db.deleteOne(User, { username: username }, (result) => {
+		if (result) console.log("SUCCESS deleting user");
+		else console.log("FAILED deleting user");
+	});
+	db.deleteMany(Comments, { cAuthor: username }, (result) => {
+		if (result) console.log("SUCCESS deleting comment");
+		else console.log("FAILED deleting comment");
+	});
+	db.deleteMany(Posts, { schedAuthor: username }, (result) => {
+		if (result) console.log("SUCCESS deleting post");
+		else console.log("FAILED deleting post");
+	});
+
+	req.session.username = null;
+	req.session.password = null;
+	res.redirect("home");
 });
 
 app.get("/getScheduleName", (req, res) => {
@@ -154,66 +196,87 @@ app.get("/saveSchedule", (req, res) => {
 });
 
 app.get("/edit_account", function (req, res) {
+<<<<<<< Updated upstream
 	var details = {
 		username: req.session.username,
 		flag: true,
 	};
 	res.render("edit_account", details);
+=======
+	db.findOne(User, { username: req.session.username }, "", function (result) {
+		if (result){
+			var user = {
+				username: result.username,
+				desc: result.desc,
+				email: result.email,
+				password: result.password,
+			};
+		}
+	}
+
+	res.render("edit_account", user);
+		
+});
+
+app.post("/edit_account", function (req, res) {
+	var username = req.body.username;
+	var password = req.body.password;
+	var email = req.body.email;
+	var desc = req.body.desc;
+	db.updateOne(User, username, { email: email,  desc: desc, password: password}, (result) => {
+		if (result) {
+			console.log("updated");
+		}
+		else
+			console.log("failed");
+	}
+	
+	res.render("/manage_account");
+>>>>>>> Stashed changes
 });
 
 app.get("/log_in", function (req, res) {
 	if (req.session.username) {
-		/*
-                redirects the client to `/profile` using HTTP GET,
-                defined in `../routes/routes.js`
-                passing values using URL
-                which calls getProfile() method
-                defined in `./profileController.js`
-            */
 		res.redirect("home");
 	}
-	// else if a user is not yet logged-in
 	else {
-		/*
-                sets `details.flag` to false
-                to hide the profile and logout tabs in the nav bar
-            */
 		var details = {
 			flag: false,
 		};
 
-		// render `../views/login.hbs`
 		res.render("log_in", details);
 	}
 });
 
 app.get("/manage_account", function (req, res) {
+<<<<<<< Updated upstream
 	var details = {
 		username: req.session.username,
 		flag: true,
 	};
 	res.render("manage_account", details);
+=======
+	db.findOne(User, { username: req.session.username }, "", function (result) => {
+		if (result) {
+			var user = {
+				username: result.username,
+				desc: result.desc,
+				email: result.email,
+			};
+		}
+	})
+
+	res.render("manage_account", user);
+>>>>>>> Stashed changes
 });
 
 app.post("/log_in", function (req, res) {
-	/*
-            when submitting forms using HTTP POST method
-            the values in the input fields are stored in `req.body` object
-            each <input> element is identified using its `name` attribute
-            Example: the value entered in <input type="text" name="username">
-            can be retrieved using `req.body.idNum`
-        */
 	console.log("here");
 	var username = req.body.username;
 	var password = req.body.password;
-	/*
-            calls the function findOne()
-            defined in the `database` object in `../models/db.js`
-            this function finds a document from collection `users`
-            where `username` is equal to `username`
-        */
+
 	db.findOne(User, { username: username }, "", function (result) {
-		// if a user with `username` equal to `username` exists
+
 		console.log(result);
 		if (result) {
 			var user = {
@@ -221,72 +284,34 @@ app.post("/log_in", function (req, res) {
 				desc: result.desc,
 				email: result.email,
 			};
-			/*
-                    use compare() method of module `bcrypt`
-                    to check if the password entered by the user
-                    is equal to the hashed password in the database
-                */
+
 			bcrypt.compare(password, result.password, function (err, equal) {
-				/*
-                        if the entered password
-                        match the hashed password from the database
-                    */
+
 				if (equal) {
-					/*
-                            stores `user.username` to `req.session.username`
-                            stores `user.fName` to `req.session.name`
-                            these values are stored to the `req.session` object
-                            to indicate that a user is logged-in
-                            these values will be removed
-                            if the user logs-out from the web application
-                        */
+		
 					req.session.username = user.username;
-					/*
-                            redirects the client to `/profile/idNum`
-                            where `username` is equal
-                            to the `username` entered by the user
-                            defined in `../routes/routes.js`
-                            which calls getProfile() method
-                            defined in `./profileController.js`
-                        */
+					req.session.password = user.password;
+
 					res.redirect("home");
 				} else {
-					/*
-                        else if the entered password
-                        does not match the hashed password from the database
-                    */
-					/*
-                            sets `details.flag` to false
-                            to hide the profile and logout tabs in the nav bar
-                        */
+		
 					var details = {
 						flag: false,
 						error: `ID Number and/or Password is incorrect.`,
 					};
 					console.log("this");
-					/*
-                            render `../views/login.hbs`
-                            display the errors
-                        */
+
 					res.render("log_in", details);
 				}
 			});
 		}
-		// else if a user with `idNum` equal to `idNum` does not exist
 		else {
-			/*
-                    sets `details.flag` to false
-                    to hide the profile and logout tabs in the nav bar
-                */
+
 			var details = {
 				flag: false,
 				ERROR: `ID Number and/or Password is incorrect.`,
 			};
 			console.log("that");
-			/*
-                    render `../views/login.hbs`
-                    display the errors
-                */
 			res.render("log_in", details);
 		}
 	});
@@ -294,50 +319,24 @@ app.post("/log_in", function (req, res) {
 
 app.get("/register", function (req, res) {
 	var details = {};
-	// checks if a user is logged-in by checking the session data
+
 	if (req.session.username) {
-		/*
-                sets `details.flag` to true
-                to display the profile and logout tabs in the nav bar
-                sets the value of `details.name` to `req.session.name`
-                to display the name of the logged-in user
-                in the profile tab of the nav bar
-                sets the value of `details.username` to `req.session.username`
-                to provide the link the profile of the logged-in user
-                in the profile tab of the nav bar
-                these values are rendered in `../views/partials/header.hbs`
-            */
 		details.flag = true;
 		details.username = req.session.username;
 	}
-	// else if a user is not yet logged-in
-	/*
-                sets `details.flag` to false
-                to hide the profile and logout tabs in the nav bar
-            */
+
 	else details.flag = false;
-	// render `../views/signup.hbs`
+
 	res.render("register", details);
 });
 
 app.post("/register", function (req, res) {
-	/*
-                when submitting forms using HTTP POST method
-                the values in the input fields are stored in `req.body` object
-                each <input> element is identified using its `name` attribute
-                Example: the value entered in <input type="text" name="fName">
-                can be retrieved using `req.body.fName`
-            */
+
 	var username = req.body.username;
 	var email = req.body.email;
 	var desc = req.body.desc;
 	var password = req.body.password;
-	/*
-                use hash() method of module `bcrypt`
-                to hash the password entered by the user
-                the hashed password is stored in variable `hash`
-                in the callback function
-            */
+
 	bcrypt.hash(password, saltRounds, function (err, hash) {
 		var user = {
 			username: username,
@@ -346,21 +345,8 @@ app.post("/register", function (req, res) {
 			password: hash,
 		};
 
-		/*
-                    calls the function insertOne()
-                    defined in the `database` object in `../models/db.js`
-                    this function adds a document to collection `users`
-                */
 		db.insertOne(User, user, (result) => {
 			if (result) {
-				/*
-                            upon adding a user to the database,
-                            redirects the client to `/success` using HTTP GET,
-                            defined in `../routes/routes.js`
-                            passing values using URL
-                            which calls getSuccess() method
-                            defined in `./successController.js`
-                        */
 				req.session.username = user.username;
 				res.redirect("/home");
 			} else console.log("ERROR");
@@ -403,11 +389,54 @@ app.get("/my_schedules", function (req, res) {
 	});
 });
 
+<<<<<<< Updated upstream
 app.get("/view_account", function (req, res) {
 	var details = {
 		flag: true,
 		username: req.session.username,
 	};
+=======
+app.get("/view_account/:username", function (req, res) {
+	var currUser = req.session.username;
+	var paramUser = req.params.username;
+	if (req.session.username) {
+		var flag = true;
+	}
+	else
+		var flag = false;
+	if (currUser == paramUser) {
+		var same = true;
+	}
+	else
+		var same = false;
+	db.findOne(User, { username: username }, "", function (result) {
+
+		console.log(result);
+		if (result) {
+			var user = {
+				username: result.username,
+				desc: result.desc,
+				email: result.email,
+			};
+		}
+	});
+	var postDetails =
+		"schedcard schedid postImg schedTitle schedAuthor schedDesc upqty downqty";
+	db.findMany(Posts, { schedAuthor: paramUser }, postDetails, (result) => {
+		if (result != null) {
+			console.log("loading my posts");
+			var details = {
+				flag: flag,
+				result: result,
+				user: user,
+				same: same,
+			};
+		} else {
+			console.log("error loading my posts");
+		}
+	});
+
+>>>>>>> Stashed changes
 	res.render("view_account", details);
 });
 
