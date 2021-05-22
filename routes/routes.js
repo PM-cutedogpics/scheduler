@@ -52,17 +52,14 @@ app.post("/change_password", function (req, res) {
 							console.log("updated");
 							res.redirect("/manage_account");
 						} else console.log("failed");
-					}	
+					}
 				);
 			}
-		}
-	}
-	else {
-		ERROR = 'Username and/or Password is incorrect.'
+		});
+	} else {
+		ERROR = "Username and/or Password is incorrect.";
 		res.send("/change_password", ERROR);
 	}
-	
-
 	res.render("manage_account");
 });
 
