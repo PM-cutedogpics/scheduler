@@ -12,7 +12,7 @@
     <title>Scheduler</title>
   </head>
   <body>
-    {{> header flag=flag}}
+    {{> header flag=true}}
     <div class="container">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb mt-2">
@@ -20,25 +20,21 @@
           <li class="breadcrumb-item active" aria-current="page">Edit Account</li>
         </ol>
       </nav>
-      <form class="row g-3">
+      <form class="row g-3" method="POST" action="/edit_account">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Username</label>
-          <input type="text" class="form-control" id="inputUsername" value="sendcutedogpics">
+          <input type="text" class="form-control" id="inputUsername" value="{{username}}" name="username" disabled>
         </div>
         <div class="col-6">
           <label for="inputAddress" class="form-label">Email Address</label>
-          <input type="email" class="form-control" id="inputAddress" value="jerry_perez@gmail.com">
+          <input type="email" class="form-control" id="inputAddress" value="{{email}}" name="email"required>
         </div>
         <div class="col-12">
           <label for="inputAddress2" class="form-label">Description</label>
-          <input type="text" class="form-control" id="inputAddress2" value="I'm not a busy person">
-        </div>
-        <div class="col-3">
-          <label for="oldPassword" class="form-label">Password</label>
-          <input type="password" class="form-control" id="inputOldPassword" placeholder="Password">
+          <input type="text" class="form-control" id="inputAddress2" value="{{desc}}" name="desc"required>
         </div>
         <div class="d-grid gap-2 d-md-block">
-          <button type="button" class="btn btn-primary" onclick=" goto_manage()">Save</button>
+          <button type="submit" class="btn btn-primary" id="submit" value="Submit">Save</button>
           <button type="button" class="btn btn-primary" onclick=" goto_manage()">Cancel</button>
           <script>
           function goto_manage()

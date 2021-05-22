@@ -27,11 +27,49 @@ app.get("/about", function (req, res) {
 });
 
 app.get("/change_password", function (req, res) {
-	var details = {
-		username: req.session.username,
-		flag: true,
-	};
-	res.render("change_password", details);
+	res.render("change_password");
+});
+
+app.post("/change_password", function (req, res) {
+	var old = req.body.old;
+	var newPass = req.body.newPass;
+	var confirm = req.body.confirm;
+	var error = { ERROR: "One or more fields is/are incorrect." };
+
+	if (newPass == confirm) {
+		console.log("CHANGING PASSWORD");
+		console.log(req.session.password);
+		console.log(old);
+		if (req.session.password == old) {
+			bcrypt.hash(newPass, saltRounds, function (err, hash) {
+				console.log("CHANGING PASSWORD");
+				db.updateOne(
+					User,
+					{ username: req.session.username },
+					{
+						$set: {
+							password: hash,
+						},
+					},
+					(result) => {
+						if (result) {
+							console.log("CHANGING PASSWORD");
+							console.log("updated password");
+							res.redirect("/manage_account");
+						} else {
+							console.log("failed");
+							res.render("change_password", error);
+						}
+					}
+				);
+			});
+		} else {
+			console.log("ERROR EQUALS");
+			res.render("change_password", error);
+		}
+	} else {
+		res.render("change_password", error);
+	}
 });
 
 app.get("/contact", function (req, res) {
@@ -76,6 +114,27 @@ app.get("/create", function (req, res) {
 	}
 });
 
+app.get("/delete_account", (req, res) => {
+	var username = req.session.username;
+	console.log("deleting user from database");
+	db.deleteOne(User, { username: username }, (result) => {
+		if (result) console.log("SUCCESS deleting user");
+		else console.log("FAILED deleting user");
+	});
+	db.deleteMany(Comments, { cAuthor: username }, (result) => {
+		if (result) console.log("SUCCESS deleting comment");
+		else console.log("FAILED deleting comment");
+	});
+	db.deleteMany(Posts, { schedAuthor: username }, (result) => {
+		if (result) console.log("SUCCESS deleting post");
+		else console.log("FAILED deleting post");
+	});
+
+	req.session.username = null;
+	req.session.password = null;
+	res.redirect("home");
+});
+
 app.get("/getScheduleName", (req, res) => {
 	console.log("Checking schedule name from db");
 	console.log(req.query.scheduleName);
@@ -94,10 +153,15 @@ app.get("/getScheduleId", (req, res) => {
 	console.log("Checking schedule Id from db");
 	console.log(req.query.scheduleName);
 	console.log(req.query.username);
-	db.findOne(Schedules, { schedName: req.query.scheduleName, username: req.query.username }, "_id", function (result) {
-		console.log(result);
-		res.send(result);
-	});
+	db.findOne(
+		Schedules,
+		{ schedName: req.query.scheduleName, username: req.query.username },
+		"_id",
+		function (result) {
+			console.log(result);
+			res.send(result);
+		}
+	);
 });
 
 app.get("/addScheduleName", (req, res) => {
@@ -106,8 +170,12 @@ app.get("/addScheduleName", (req, res) => {
 	console.log(req.query.username);
 	db.insertOne(
 		Schedules,
-		{ schedName: req.query.scheduleName, username: req.query.username,
-		schedId: req.query.schedId, classCnt: 9 },
+		{
+			schedName: req.query.scheduleName,
+			username: req.query.username,
+			schedId: req.query.schedId,
+			classCnt: 9,
+		},
 		function (result) {
 			console.log(result);
 			res.send(result);
@@ -139,80 +207,93 @@ app.get("/saveSchedule", (req, res) => {
 	console.log("Attempting to save schedule and classes to db");
 	console.log(req.query.schedule);
 	console.log(req.query.schedule.schedId);
-	db.updateOne(Schedules, { _id: req.query.schedule.schedId}, 
-		{classCnt: req.query.schedule.classCnt, 
-		classes : req.query.schedule.classes}, (result) => {
-		if (result > 0) {
-			console.log("Successful updating schedule")
-			res.send(result);
-		} else {
-			console.log("Error updating schedule");
-			res.send(null);
+	db.updateOne(
+		Schedules,
+		{ _id: req.query.schedule.schedId },
+		{
+			classCnt: req.query.schedule.classCnt,
+			classes: req.query.schedule.classes,
+		},
+		(result) => {
+			if (result > 0) {
+				console.log("Successful updating schedule");
+				res.send(result);
+			} else {
+				console.log("Error updating schedule");
+				res.send(null);
+			}
 		}
-	});
+	);
 });
 
 app.get("/edit_account", function (req, res) {
-	var details = {
-		username: req.session.username,
-		flag: true,
-	};
-	res.render("edit_account", details);
+	db.findOne(
+		User,
+		{ username: req.session.username },
+		"username desc email",
+		function (result) {
+			if (result) {
+				res.render("edit_account", result);
+			} else console.log("error editing account");
+		}
+	);
+});
+
+app.post("/edit_account", function (req, res) {
+	var username = req.session.username;
+	var email = req.body.email;
+	var desc = req.body.desc;
+	db.updateOne(
+		User,
+		{ username: username },
+		{
+			$set: {
+				email: email,
+				desc: desc,
+			},
+		},
+		(result) => {
+			if (result) {
+				console.log("updated");
+				res.redirect("/manage_account");
+			} else console.log("failed");
+		}
+	);
 });
 
 app.get("/log_in", function (req, res) {
 	if (req.session.username) {
-		/*
-                redirects the client to `/profile` using HTTP GET,
-                defined in `../routes/routes.js`
-                passing values using URL
-                which calls getProfile() method
-                defined in `./profileController.js`
-            */
 		res.redirect("home");
-	}
-	// else if a user is not yet logged-in
-	else {
-		/*
-                sets `details.flag` to false
-                to hide the profile and logout tabs in the nav bar
-            */
+	} else {
 		var details = {
 			flag: false,
 		};
 
-		// render `../views/login.hbs`
 		res.render("log_in", details);
 	}
 });
 
 app.get("/manage_account", function (req, res) {
-	var details = {
-		username: req.session.username,
-		flag: true,
-	};
-	res.render("manage_account", details);
+	var user;
+	db.findOne(
+		User,
+		{ username: req.session.username },
+		"username desc email",
+		function (result) {
+			if (result) {
+				console.log(result);
+				res.render("manage_account", result);
+			} else console.log("error managing account");
+		}
+	);
 });
 
 app.post("/log_in", function (req, res) {
-	/*
-            when submitting forms using HTTP POST method
-            the values in the input fields are stored in `req.body` object
-            each <input> element is identified using its `name` attribute
-            Example: the value entered in <input type="text" name="username">
-            can be retrieved using `req.body.idNum`
-        */
 	console.log("here");
 	var username = req.body.username;
 	var password = req.body.password;
-	/*
-            calls the function findOne()
-            defined in the `database` object in `../models/db.js`
-            this function finds a document from collection `users`
-            where `username` is equal to `username`
-        */
+
 	db.findOne(User, { username: username }, "", function (result) {
-		// if a user with `username` equal to `username` exists
 		console.log(result);
 		if (result) {
 			var user = {
@@ -220,72 +301,29 @@ app.post("/log_in", function (req, res) {
 				desc: result.desc,
 				email: result.email,
 			};
-			/*
-                    use compare() method of module `bcrypt`
-                    to check if the password entered by the user
-                    is equal to the hashed password in the database
-                */
+
 			bcrypt.compare(password, result.password, function (err, equal) {
-				/*
-                        if the entered password
-                        match the hashed password from the database
-                    */
 				if (equal) {
-					/*
-                            stores `user.username` to `req.session.username`
-                            stores `user.fName` to `req.session.name`
-                            these values are stored to the `req.session` object
-                            to indicate that a user is logged-in
-                            these values will be removed
-                            if the user logs-out from the web application
-                        */
 					req.session.username = user.username;
-					/*
-                            redirects the client to `/profile/idNum`
-                            where `username` is equal
-                            to the `username` entered by the user
-                            defined in `../routes/routes.js`
-                            which calls getProfile() method
-                            defined in `./profileController.js`
-                        */
+					req.session.password = password;
+
 					res.redirect("home");
 				} else {
-					/*
-                        else if the entered password
-                        does not match the hashed password from the database
-                    */
-					/*
-                            sets `details.flag` to false
-                            to hide the profile and logout tabs in the nav bar
-                        */
 					var details = {
 						flag: false,
-						error: `ID Number and/or Password is incorrect.`,
+						ERROR: "Username and/or Password is incorrect.",
 					};
 					console.log("this");
-					/*
-                            render `../views/login.hbs`
-                            display the errors
-                        */
+
 					res.render("log_in", details);
 				}
 			});
-		}
-		// else if a user with `idNum` equal to `idNum` does not exist
-		else {
-			/*
-                    sets `details.flag` to false
-                    to hide the profile and logout tabs in the nav bar
-                */
+		} else {
 			var details = {
 				flag: false,
-				ERROR: `ID Number and/or Password is incorrect.`,
+				ERROR: "Username and/or Password is incorrect.",
 			};
 			console.log("that");
-			/*
-                    render `../views/login.hbs`
-                    display the errors
-                */
 			res.render("log_in", details);
 		}
 	});
@@ -293,50 +331,21 @@ app.post("/log_in", function (req, res) {
 
 app.get("/register", function (req, res) {
 	var details = {};
-	// checks if a user is logged-in by checking the session data
+
 	if (req.session.username) {
-		/*
-                sets `details.flag` to true
-                to display the profile and logout tabs in the nav bar
-                sets the value of `details.name` to `req.session.name`
-                to display the name of the logged-in user
-                in the profile tab of the nav bar
-                sets the value of `details.username` to `req.session.username`
-                to provide the link the profile of the logged-in user
-                in the profile tab of the nav bar
-                these values are rendered in `../views/partials/header.hbs`
-            */
 		details.flag = true;
 		details.username = req.session.username;
-	}
-	// else if a user is not yet logged-in
-	/*
-                sets `details.flag` to false
-                to hide the profile and logout tabs in the nav bar
-            */
-	else details.flag = false;
-	// render `../views/signup.hbs`
+	} else details.flag = false;
+
 	res.render("register", details);
 });
 
 app.post("/register", function (req, res) {
-	/*
-                when submitting forms using HTTP POST method
-                the values in the input fields are stored in `req.body` object
-                each <input> element is identified using its `name` attribute
-                Example: the value entered in <input type="text" name="fName">
-                can be retrieved using `req.body.fName`
-            */
 	var username = req.body.username;
 	var email = req.body.email;
 	var desc = req.body.desc;
 	var password = req.body.password;
-	/*
-                use hash() method of module `bcrypt`
-                to hash the password entered by the user
-                the hashed password is stored in variable `hash`
-                in the callback function
-            */
+
 	bcrypt.hash(password, saltRounds, function (err, hash) {
 		var user = {
 			username: username,
@@ -345,21 +354,8 @@ app.post("/register", function (req, res) {
 			password: hash,
 		};
 
-		/*
-                    calls the function insertOne()
-                    defined in the `database` object in `../models/db.js`
-                    this function adds a document to collection `users`
-                */
 		db.insertOne(User, user, (result) => {
 			if (result) {
-				/*
-                            upon adding a user to the database,
-                            redirects the client to `/success` using HTTP GET,
-                            defined in `../routes/routes.js`
-                            passing values using URL
-                            which calls getSuccess() method
-                            defined in `./successController.js`
-                        */
 				req.session.username = user.username;
 				res.redirect("/home");
 			} else console.log("ERROR");
@@ -416,30 +412,90 @@ app.get("/schedule/:scheduleId", (req, res) => {
 
 app.get("/my_schedules", function (req, res) {
 	var currUser = req.session.username;
-	var scheduleDetails =
-		"schedName classCnt _id";
-	db.findMany(Schedules, { username: currUser }, scheduleDetails, (result) => {
-		if (result != null) {
-			console.log("Loading my schedules");
-			var details = {
-				flag: true,
-				result: result,
-				username: req.session.username,
-			};
-			console.log(result);
-			res.render("my_schedules", details);
-		} else {
-			console.log("error loading my posts");
+	var scheduleDetails = "schedName classCnt _id";
+	db.findMany(
+		Schedules,
+		{ username: currUser },
+		scheduleDetails,
+		(result) => {
+			if (result != null) {
+				console.log("Loading my schedules");
+				var details = {
+					flag: true,
+					result: result,
+					username: req.session.username,
+				};
+				console.log(result);
+				res.render("my_schedules", details);
+			} else {
+				console.log("error loading my posts");
+			}
 		}
-	});
+	);
 });
 
-app.get("/view_account", function (req, res) {
-	var details = {
-		flag: true,
-		username: req.session.username,
-	};
-	res.render("view_account", details);
+app.get("/viewaccount", (req, res, next) => {
+	console.log("HOW MANY TIMES WILL U PRINT ME");
+	var username = req.query.username;
+	var details;
+	db.findOne(
+		User,
+		{ username: username },
+		"username email desc",
+		(result) => {
+			if (result != null) {
+				console.log("RENDERING ACCOUNT");
+				console.log(result);
+				var user = result;
+				db.findMany(
+					Posts,
+					{ schedAuthor: username },
+					"_id postImg schedTitle schedAuthor schedDesc",
+					(result) => {
+						if (result != null) {
+							if (req.session.username) {
+								if (req.session.username == username) {
+									details = {
+										flag: true,
+										same: true,
+										result: result,
+										user: user,
+									};
+									res.render("viewaccount", details);
+								} else {
+									details = {
+										flag: true,
+										same: false,
+										result: result,
+										user: user,
+									};
+									res.render("viewaccount", details);
+								}
+							} else {
+								if (req.session.username == username) {
+									details = {
+										flag: false,
+										same: true,
+										result: result,
+										user: user,
+									};
+									res.render("viewaccount", details);
+								} else {
+									details = {
+										flag: false,
+										same: false,
+										result: result,
+										user: user,
+									};
+									res.render("viewaccount", details);
+								}
+							}
+						}
+					}
+				);
+			} else console.log("ERROR FINDING ACCOUNT");
+		}
+	);
 });
 
 /*
@@ -579,7 +635,12 @@ app.get("/viewpost/:postid", (req, res) => {
 				}
 			);
 			var details;
-			if (req.session.username) details = { flag: true, post: post, username: req.session.username};
+			if (req.session.username)
+				details = {
+					flag: true,
+					post: post,
+					username: req.session.username,
+				};
 			else details = { flag: false, post: post };
 			res.render("viewpost", details);
 		} else {
@@ -661,14 +722,22 @@ app.get("/searchResults", (req, res) => {
 				});
 
 				if (currUser)
-					details = { flag: true, searchquery: searchquery, username: req.session.username,};
+					details = {
+						flag: true,
+						searchquery: searchquery,
+						username: req.session.username,
+					};
 				else details = { flag: false, searchquery: searchquery };
 				console.log(details);
 				res.render("searchResults", details);
 				console.log("found posts from search");
 			} else {
 				if (currUser)
-					details = { flag: true, searchquery: searchquery, username: req.session.username};
+					details = {
+						flag: true,
+						searchquery: searchquery,
+						username: req.session.username,
+					};
 				else details = { flag: false, searchquery: searchquery };
 				console.log(details);
 				res.render("emptyResults", details);
@@ -930,7 +999,7 @@ app.get("/deletecomment", (req, res) => {
 app.get("/my_posts", (req, res) => {
 	var currUser = req.session.username;
 	var postDetails =
-		"schedcard schedid postImg schedTitle schedAuthor schedDesc upqty downqty";
+		"_id postImg schedTitle schedAuthor schedDesc upqty downqty";
 	db.findMany(Posts, { schedAuthor: currUser }, postDetails, (result) => {
 		if (result != null) {
 			console.log("loading my posts");

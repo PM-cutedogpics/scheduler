@@ -184,7 +184,7 @@ $(document).ready(() => {
 					var authorLink = document.createElement("a");
 					authorLink.classList.add("link-unstyled");
 					authorLink.classList.add("sauthor");
-					var link = "/account?username=" + comment.cAuthor;
+					var link = "/viewaccount/" + comment.cAuthor;
 					authorLink.href = link;
 					authorLink.innerHTML = comment.cAuthor + " ";
 					var commentSpan = document.createElement("span");
