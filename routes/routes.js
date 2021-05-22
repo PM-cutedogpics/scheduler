@@ -37,30 +37,34 @@ app.post("/change_password", function (req, res) {
 	var ERROR;
 
 	if (newPass == confirm) {
-		bcrypt.compare(req.session.password, newPass, function (err, equal) {
-			if (equal) {
+		console.log("CHANGING PASSWORD");
+		console.log(req.session.password);
+		console.log(old);
+		if (req.session.password == old) {
+			bcrypt.hash(newPass, saltRounds, function (err, hash) {
+				console.log("CHANGING PASSWORD");
 				db.updateOne(
 					User,
 					{ username: req.session.username },
 					{
 						$set: {
-							password: newPass,
+							password: hash,
 						},
 					},
 					(result) => {
 						if (result) {
-							console.log("updated");
+							console.log("CHANGING PASSWORD");
+							console.log("updated password");
 							res.redirect("/manage_account");
 						} else console.log("failed");
 					}
 				);
-			}
-		});
+			});
+		} else console.log("ERROR EQUALS");
 	} else {
 		ERROR = "Username and/or Password is incorrect.";
-		res.send("/change_password", ERROR);
+		res.render("/change_password", ERROR);
 	}
-	res.render("manage_account");
 });
 
 app.get("/contact", function (req, res) {
@@ -297,26 +301,26 @@ app.post("/log_in", function (req, res) {
 			bcrypt.compare(password, result.password, function (err, equal) {
 				if (equal) {
 					req.session.username = user.username;
-					req.session.password = user.password;
+					req.session.password = password;
 
 					res.redirect("home");
 				} else {
 					var details = {
 						flag: false,
-						error: `Username and/or Password is incorrect.`,
+						ERROR: "Username and/or Password is incorrect.",
 					};
 					console.log("this");
 
-					res.send("log_in", details);
+					res.render("log_in", details);
 				}
 			});
 		} else {
 			var details = {
 				flag: false,
-				ERROR: `Username and/or Password is incorrect.`,
+				ERROR: "Username and/or Password is incorrect.",
 			};
 			console.log("that");
-			res.send("log_in", details);
+			res.render("log_in", details);
 		}
 	});
 });
