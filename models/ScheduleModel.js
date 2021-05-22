@@ -24,7 +24,7 @@ var SchedulesSchema = new mongoose.Schema({
 				required: true,
 			},
 			checked: {
-				type: Boolean,
+				type: String,
 				required: true,
 			},
 			category: {

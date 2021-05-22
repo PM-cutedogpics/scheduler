@@ -232,7 +232,54 @@ function saveCanvas(){
 }
 
 $(document).ready(() => {
-	var oldScheduleName = $("#scheduleName").val();
+	var oldScheduleName;
+	$('#newScheduleName').keyup(() => {
+        var newScheduleName = $("#newScheduleName").val();
+        var currentUser = $("#currentUser").html();
+        console.log(newScheduleName);
+        console.log(currentUser)
+        if (newScheduleName) {
+            $('#errorNewSchedule').text('');
+            $.get("/getScheduleName", { scheduleName: newScheduleName,
+			 username: currentUser},(result) => {
+				if(result.schedName == newScheduleName) {
+					console.log("Schedule name unavailable");
+                	$('#createNewSchedule').prop('disabled', true);
+	                $('#errorNewSchedule').text(' Schedule name unavailable');
+	            }
+	            else {
+	                $('#createNewSchedule').prop('disabled', false);
+	            	console.log("Schedule name available");
+	            }
+	        });
+        } else {
+			$('#createNewSchedule').prop('disabled', true);
+            console.log("Incomplete");
+        }
+    });
+	var found = false;
+	$('#createNewSchedule').click(function () {
+        var newScheduleName = $("#newScheduleName").val();
+        var currentUser = $("#currentUser").html();
+
+        $.get("/addScheduleName", 
+        { scheduleName: newScheduleName, username: currentUser},
+    	(result) => {
+			if (result){
+				$('#scheduleName').val(newScheduleName);
+				oldScheduleName = $("#scheduleName").val();
+        		console.log("Added schedule name");
+			}
+			else console.log("Failed to add schedule name")
+		});
+		$.get("/getScheduleId", { scheduleName: newScheduleName, username: currentUser},(result) => {
+			if (result){
+				console.log(result);
+				$('#schedId').html(result._id);
+			}
+			else console.log("Didn't retrieve _id")
+		});
+    });
 
 	$('#scheduleName').blur(() => {
 		if ($("#scheduleName").val().length > 0) {
@@ -299,6 +346,13 @@ $(document).ready(() => {
 	    scrollbar: true,
 	    show2400: true
 	});
+	$("#newSchedule").modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: true // added property here
+    });
+    // Entering create
+	$("#newSchedule").modal('show');
 	// Disable clicking outside modal
     $("#addClass").modal({
         backdrop: 'static',
@@ -317,7 +371,7 @@ $(document).ready(() => {
     });
 });
 
-var classIdCnt = 1000 + $("#classCnt").val();;
+var classIdCnt = 1001;
 // Checks and creates a custom class
 $('#creatingClass').click(function () {
 	var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -435,24 +489,21 @@ $('#saveSchedule').click(function () {
 		classDetails.classId = includeList[i].id.substring(1,5);
 		classDetails.className = document.getElementById("L1" + 
 		includeList[i].id.substring(1)).innerHTML;
-		console.log("L1" + includeList[i].id.substring(1));
 		if (document.getElementById(includeList[i].id).checked)
-			classDetails.checked = true;
-		else classDetails.checked = false;
+			classDetails.checked = "checked";
+		else classDetails.checked = "";
 		classes.push(classDetails);
 		classCnt += 1;
 	}
-	console.log("HELP");
 	for (var j = 0; j < addList.length; j++, i++){
 		var classDetails = {};
 		classDetails.category = "add";
 		classDetails.classId = addList[j].id.substring(1,5);
 		classDetails.className = document.getElementById("L2" + 
 		addList[j].id.substring(1)).innerHTML;
-		console.log("L2" + includeList[i].id.substring(1));
 		if (document.getElementById(addList[j].id).checked)
-			classDetails.checked = true;
-		else classDetails.checked = false;
+			classDetails.checked = "checked";
+		else classDetails.checked = "";
 		classes.push(classDetails);
 		classCnt += 1;
 	}
@@ -494,12 +545,4 @@ window.addEventListener("beforeunload", function (e) {
 
     (e || window.event).returnValue = confirmationMessage; //Gecko + IE
     return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-});
-
-Handlebars.registerHelper("ifEquals", function(a, b, options) {
-    if (a == b) {
-        return opts.fn(this);
-    } else {
-        return opts.inverse(this);
-    }
 });

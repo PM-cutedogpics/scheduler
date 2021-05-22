@@ -14,31 +14,14 @@
   <body>
     {{> header flag=flag username=username}}
     <div hidden id="currUser">{{username}}</div>
-    <div hidden id="schedId"></div>
+    <div hidden id="schedId">{{schedule.schedId}}</div>
+    <div hidden id="classCnt">{{schedule.classCnt}}</div>
     <div class="wrapper d-flex align-items-stretch">
-      <div id="newSchedule" class="modal fade">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Schedule Name</h5>
-            </div>
-            <div class="modal-body">
-              <form class="mb-3">
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Name Your Schedule" id="newScheduleName">
-                </div>
-                <div id="errorNewSchedule" class="form-text"></div>
-                <button type="submit" class="btn btn-primary mt-2" id="createNewSchedule" data-bs-dismiss="modal" disabled>Create</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
     <nav class="sidebar">
       <div class="p-3 pt-3">
         <form>
           <div class="form-group mb-2">
-            <input type="text" class="form-control" id="scheduleName" aria-describedby="emailHelp" value="">
+            <input type="text" class="form-control" id="scheduleName" aria-describedby="emailHelp"  value="{{schedule.schedName}}">
           </div>
         </form>
 
@@ -47,10 +30,22 @@
           <div class="card" style="max-height: 410px;">
             <ul class="list-group list-group-flush" style="overflow:auto">
               <div id="classList">
+                {{#each schedule.classes}}
+                  {{#if classId}}
+                    <li class="list-group-item" id="LI1{{classId}}">
+                      <div class="form-check">
+                        <div class="container p-0">
+                          <input class="form-check-input" type="checkbox" id="M{{classId}}" name="include" {{checked}}>
+                          <label class="form-check-label" id="L1{{classId}}">{{className}}</label>
+                        </div>
+                      </div>
+                    </li>
+                  {{/if}}
+                {{/each}}
               </div>
             </ul>
           </div>  
-            <div class="row gx-1">a
+            <div class="row gx-1">
               <div class="col">
                 <button type="button" class="btn btn-primary btn-lg mt-1 w-100" data-bs-toggle="modal" data-bs-target="#addClass">Add</button>
                 <div class="modal fade" id="addClass" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -62,18 +57,17 @@
                     <div class="modal-body">
                       <div class="card" style="max-height: 400px;">
                           <ul class="list-group list-group-flush" style="overflow:auto">
-                            {{#each classList}}
-                              {{#if className}}
+                            {{#each schedule.classes}}
+                              {{#if classId}}
                                 <li class="list-group-item" id="LI2{{classId}}">
                                   <div class="container p-0">
                                     <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="add" id="A{{classId}}">
-                                    <label class="form-check-label" for="flexCheckDefault" id="L2{{classId}}">{{fullName}}</label>
+                                    <input class="form-check-input" type="checkbox" name="add" id="A{{classId}}" {{checked}}>
+                                    <label class="form-check-label" for="flexCheckDefault" id="L2{{classId}}">{{className}}</label>
                                   </div></div>
                                 </li>
                               {{/if}}
                             {{/each}}
-                            <!-- more magical stuff from db  -->
                             <div id="addClassList">
                             </div>
                           </ul>
@@ -98,8 +92,19 @@
                 <div class="modal-body">
                   <div class="card" style="max-height: 400px;">
                       <ul class="list-group list-group-flush" style="overflow:auto" id="deleteClassList">
-                        <!-- magical stuff from db -->
                         <div id="delClassList">
+                          {{#each schedule.classes}}
+                            {{#if classId}}
+                              <li class="list-group-item" id="LI{{classId}}">
+                                <div class="form-check">
+                                  <div class="container p-0">
+                                    <input class="form-check-input" type="checkbox" name="delete" id="D{{classId}}" {{checked}}>
+                                    <label class="form-check-label" id="L3{{classId}}">{{className}}</label>
+                                  </div>
+                                </div>
+                              </li>
+                            {{/if}}
+                          {{/each}}
                         </div>
                       </ul>
                   </div>

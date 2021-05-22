@@ -62,8 +62,7 @@ app.get("/create", function (req, res) {
 				for (var j = 0; j < result.length; j++) {
 					classList.push({
 						classId: result[j].classId,
-						fullName: result[j].className,
-						className: result[j].className.substring(0, 7),
+						className: result[j].className
 					});
 				}
 				query.classList = classList;
@@ -380,6 +379,38 @@ app.get("/logout", function (req, res) {
 	req.session.destroy(function (err) {
 		if (err) throw err;
 		res.redirect("home");
+	});
+});
+
+app.get("/schedule/:scheduleId", (req, res) => {
+	var user = req.session.username;
+	console.log("in session: " + user);
+	var query = { _id: req.params.scheduleId };
+	console.log(query);
+	// find the post from the database with comments
+	var postdetails =
+		"username _id schedName classCnt classes";
+	db.findOne(Schedules, query, postdetails, (result) => {
+		if (result != null) {
+			console.log("redirecting to selected scheduled");
+			console.log(result);
+
+			schedule = {
+				username: result.username,
+				schedId: result._id,
+				schedName: result.schedName,
+				classCnt: result.classCnt,
+				classes: result.classes
+			}
+			console.log(result);
+			var details;
+			if (req.session.username) details = { flag: true, schedule: schedule, username: req.session.username};
+			else details = { flag: false, post: post };
+			res.render("schedule", details);
+		} else {
+			res.render("error");
+			console.log("post not found");
+		}
 	});
 });
 
