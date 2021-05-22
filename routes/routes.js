@@ -394,49 +394,45 @@ app.get("/my_schedules", function (req, res) {
 	);
 });
 
-app.get("/viewaccount/:name", (req, res, next) => {
+app.get("/viewaccount/:name", (req, res) => {
 	console.log("viewing account");
-	var details, user, flag, same, posts;
+	var details, flag, same;
 	var currUser = req.session.username;
-	var paramUser = req.params.name;
-
+	var userQuery = { username: req.params.name };
+	console.log(req.params.name);
 	if (req.session.username) flag = true;
 	else flag = false;
-	if (currUser == paramUser) same = true;
+	if (currUser == req.params.name) same = true;
 	else same = false;
 
 	// console.log(currUser);
 	// console.log(paramUser);
 	var userDetails = "username email desc";
-	db.findOne(User, { username: paramUser }, userDetails, (result) => {
+	db.findOne(User, userQuery, userDetails, (result) => {
 		if (result != null) {
-			user = result;
+			var user = result;
 			console.log("USER DETAILS");
 			console.log(user);
 			var postDetails = "_id postImg schedTitle schedAuthor schedDesc";
-			db.findMany(
-				Posts,
-				{ schedAuthor: paramUser },
-				postDetails,
-				(result) => {
-					if (result != null) {
-						posts = result;
-						console.log("POSTS DETAILS");
-						console.log(posts);
-						details = {
-							user: user,
-							result: posts,
-							same: same,
-							flag: flag,
-						};
-						console.log(details);
-						console.log("SHOWING ACCOUNT WITH POSTS");
-						res.render("viewaccount", details);
-					} else {
-						console.log("error finding posts");
-					}
+			userQuery = { schedAuthor: req.params.name };
+			db.findMany(Posts, userQuery, postDetails, (result) => {
+				if (result != null) {
+					var posts = result;
+					console.log("POSTS DETAILS");
+					console.log(posts);
+					details = {
+						user: user,
+						result: posts,
+						same: same,
+						flag: flag,
+					};
+					console.log(details);
+					console.log("SHOWING ACCOUNT WITH POSTS");
+					res.render("viewaccount", details);
+				} else {
+					console.log("error finding posts");
 				}
-			);
+			});
 		} else {
 			console.log("Error finding user");
 		}
