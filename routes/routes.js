@@ -37,33 +37,34 @@ app.post("/change_password", function (req, res) {
 	var ERROR;
 
 	if (newPass == confirm) {
-		bcrypt.compare(req.session.password, newPass, function (err, equal) {
-			if (equal) {
+		console.log("CHANGING PASSWORD");
+		console.log(req.session.password);
+		console.log(old);
+		if (req.session.password == old) {
+			bcrypt.hash(newPass, saltRounds, function (err, hash) {
+				console.log("CHANGING PASSWORD");
 				db.updateOne(
 					User,
 					{ username: req.session.username },
 					{
 						$set: {
-							password: newPass,
+							password: hash,
 						},
 					},
 					(result) => {
 						if (result) {
-							console.log("updated");
+							console.log("CHANGING PASSWORD");
+							console.log("updated password");
 							res.redirect("/manage_account");
 						} else console.log("failed");
-					}	
+					}
 				);
-			}
-		}
+			});
+		} else console.log("ERROR EQUALS");
+	} else {
+		ERROR = "Username and/or Password is incorrect.";
+		res.render("/change_password", ERROR);
 	}
-	else {
-		ERROR = 'Username and/or Password is incorrect.'
-		res.send("/change_password", ERROR);
-	}
-	
-
-	res.render("manage_account");
 });
 
 app.get("/contact", function (req, res) {
@@ -300,26 +301,26 @@ app.post("/log_in", function (req, res) {
 			bcrypt.compare(password, result.password, function (err, equal) {
 				if (equal) {
 					req.session.username = user.username;
-					req.session.password = user.password;
+					req.session.password = password;
 
 					res.redirect("home");
 				} else {
 					var details = {
 						flag: false,
-						error: `Username and/or Password is incorrect.`,
+						ERROR: "Username and/or Password is incorrect.",
 					};
 					console.log("this");
 
-					res.send("log_in", details);
+					res.render("log_in", details);
 				}
 			});
 		} else {
 			var details = {
 				flag: false,
-				ERROR: `Username and/or Password is incorrect.`,
+				ERROR: "Username and/or Password is incorrect.",
 			};
 			console.log("that");
-			res.send("log_in", details);
+			res.render("log_in", details);
 		}
 	});
 });
@@ -397,49 +398,45 @@ app.get("/my_schedules", function (req, res) {
 	);
 });
 
-app.get("/viewaccount/:name", (req, res, next) => {
+app.get("/viewaccount/:name", (req, res) => {
 	console.log("viewing account");
-	var details, user, flag, same, posts;
+	var details, flag, same;
 	var currUser = req.session.username;
-	var paramUser = req.params.name;
-
+	var userQuery = { username: req.params.name };
+	console.log(req.params.name);
 	if (req.session.username) flag = true;
 	else flag = false;
-	if (currUser == paramUser) same = true;
+	if (currUser == req.params.name) same = true;
 	else same = false;
 
 	// console.log(currUser);
 	// console.log(paramUser);
 	var userDetails = "username email desc";
-	db.findOne(User, { username: paramUser }, userDetails, (result) => {
+	db.findOne(User, userQuery, userDetails, (result) => {
 		if (result != null) {
-			user = result;
+			var user = result;
 			console.log("USER DETAILS");
 			console.log(user);
 			var postDetails = "_id postImg schedTitle schedAuthor schedDesc";
-			db.findMany(
-				Posts,
-				{ schedAuthor: paramUser },
-				postDetails,
-				(result) => {
-					if (result != null) {
-						posts = result;
-						console.log("POSTS DETAILS");
-						console.log(posts);
-						details = {
-							user: user,
-							result: posts,
-							same: same,
-							flag: flag,
-						};
-						console.log(details);
-						console.log("SHOWING ACCOUNT WITH POSTS");
-						res.render("viewaccount", details);
-					} else {
-						console.log("error finding posts");
-					}
+			userQuery = { schedAuthor: req.params.name };
+			db.findMany(Posts, userQuery, postDetails, (result) => {
+				if (result != null) {
+					var posts = result;
+					console.log("POSTS DETAILS");
+					console.log(posts);
+					details = {
+						user: user,
+						result: posts,
+						same: same,
+						flag: flag,
+					};
+					console.log(details);
+					console.log("SHOWING ACCOUNT WITH POSTS");
+					res.render("viewaccount", details);
+				} else {
+					console.log("error finding posts");
 				}
-			);
+			});
 		} else {
 			console.log("Error finding user");
 		}
