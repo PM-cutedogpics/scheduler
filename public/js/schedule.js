@@ -218,7 +218,7 @@ function cancelDelete(){
 }
 
 function saveCanvas(){
-	Toasty();
+	ToastyDownload();
 	// Insert Title to be used for download name
     html2canvas(document.querySelector("#capture"),{scrollY: -window.scrollY}).then(canvas => {
       	var a = document.createElement('a');
@@ -387,7 +387,7 @@ $('#creatingClass').click(function () {
     var endTime = $('#endTime').val();
     var startTimeH = $('#startTime').val().substring(0,2);
     var endTimeH = $('#endTime').val().substring(0,2);
-    var startTimeM = $('#endTime').val().substring(3,5);
+    var startTimeM = $('#startTime').val().substring(3,5);
     var endTimeM = $('#endTime').val().substring(3,5);
 
     var fullName = "";
@@ -395,7 +395,6 @@ $('#creatingClass').click(function () {
     if (newScheduleName.length == 7 && checked.length > 0 && 
     	(endTimeH > startTimeH || endTimeH == startTimeH && endTimeM > startTimeM)){
 		fullName = newScheduleName + " " + checked + " " + startTime + "-" + endTime;
-		console.log(fullName);
 		var button = document.createElement('input')
 		button.className = "form-check-input";
 		button.type = "checkbox";
@@ -429,8 +428,6 @@ $('#creatingClass').click(function () {
 		button.type = "checkbox";
 		button.name = 'delete';
 		button.id = 'D' + classIdCnt;
-		console.log(classIdCnt);
-		console.log(button.id);
 		// Adding Checkboxes to Class List
 		var classLabel = document.createElement('label')
 		classLabel.className = 'form-check-label';
@@ -473,6 +470,7 @@ $('#cancelCreate').click(function () {
 		}
 	$('#startTime').val('12:00');
     $('#endTime').val('12:00');
+    $('#errorNewClass').text('');
 });
 
 $('#saveSchedule').click(function () {
@@ -483,6 +481,7 @@ $('#saveSchedule').click(function () {
 	console.log(addList);
 	var schedule = {};
 	var classes = [];
+	var classCnt = 0;
 	schedule.schedId = schedId;
 	for (var i = 0; i < includeList.length; i++){
 		var classDetails = {};
@@ -494,6 +493,7 @@ $('#saveSchedule').click(function () {
 			classDetails.checked = true;
 		else classDetails.checked = false;
 		classes.push(classDetails);
+		classCnt += 1;
 	}
 	for (var j = 0; j < addList.length; j++, i++){
 		var classDetails = {};
@@ -505,23 +505,44 @@ $('#saveSchedule').click(function () {
 			classDetails.checked = true;
 		else classDetails.checked = false;
 		classes.push(classDetails);
+		classCnt += 1;
 	}
 	schedule.classes = classes;
+	schedule.classCnt = classCnt;
 	console.log(schedule);
 	$.get("/saveSchedule", { schedule: schedule }, (result) => {
-		if (result)
+		if (result){
+			ToastySave();
 			console.log("Success saving into database");
+		}
 		else console.log("Failed saving into database")
+
     });
 });
+
 var option = {
 	animation : true,
 	delay : 10000
 };
 
-function Toasty()
+function ToastyDownload()
 {
-  var toastHTMLElement = document.getElementById( 'EpicToast' );
+  var toastHTMLElement = document.getElementById( 'EpicToastDownload' );
   var toastElement = new bootstrap.Toast( toastHTMLElement, option );
   toastElement.show( );
 }
+
+function ToastySave()
+{
+  var toastHTMLElement = document.getElementById( 'EpicToastSave' );
+  var toastElement = new bootstrap.Toast( toastHTMLElement, option );
+  toastElement.show( );
+}
+
+window.addEventListener("beforeunload", function (e) {
+    var confirmationMessage = 'It looks like you have been editing something. '
+                            + 'If you leave before saving, your changes will be lost.';
+
+    (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+    return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+});

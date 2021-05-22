@@ -6,7 +6,6 @@ const Posts = require("../models/PostModel.js");
 const Comments = require("../models/CommentModel.js");
 const defaultclasses = require("../models/DefaultClassModel.js");
 const Schedules = require("../models/ScheduleModel.js");
-const Classes = require("../models/ClassesModel.js");
 const app = express();
 const bcrypt = require("bcrypt");
 const validationResult = require("express-validator");
@@ -15,6 +14,7 @@ const saltRounds = 10;
 app.get("/about", function (req, res) {
 	if (req.session.username) {
 		var details = {
+			username: req.session.username,
 			flag: true,
 		};
 	} else {
@@ -28,6 +28,7 @@ app.get("/about", function (req, res) {
 
 app.get("/change_password", function (req, res) {
 	var details = {
+		username: req.session.username,
 		flag: true,
 	};
 	res.render("change_password", details);
@@ -36,6 +37,7 @@ app.get("/change_password", function (req, res) {
 app.get("/contact", function (req, res) {
 	if (req.session.username) {
 		var details = {
+			username: req.session.username,
 			flag: true,
 		};
 	} else {
@@ -106,7 +108,7 @@ app.get("/addScheduleName", (req, res) => {
 	db.insertOne(
 		Schedules,
 		{ schedName: req.query.scheduleName, username: req.query.username,
-		schedId: req.query.schedId },
+		schedId: req.query.schedId, classCnt: 9 },
 		function (result) {
 			console.log(result);
 			res.send(result);
@@ -138,7 +140,9 @@ app.get("/saveSchedule", (req, res) => {
 	console.log("Attempting to save schedule and classes to db");
 	console.log(req.query.schedule);
 	console.log(req.query.schedule.schedId);
-	db.updateOne(Schedules, { _id: req.query.schedule.schedId}, {classes : req.query.schedule.classes}, (result) => {
+	db.updateOne(Schedules, { _id: req.query.schedule.schedId}, 
+		{classCnt: req.query.schedule.classCnt, 
+		classes : req.query.schedule.classes}, (result) => {
 		if (result > 0) {
 			console.log("Successful updating schedule")
 			res.send(result);
@@ -151,6 +155,7 @@ app.get("/saveSchedule", (req, res) => {
 
 app.get("/edit_account", function (req, res) {
 	var details = {
+		username: req.session.username,
 		flag: true,
 	};
 	res.render("edit_account", details);
@@ -184,6 +189,7 @@ app.get("/log_in", function (req, res) {
 
 app.get("/manage_account", function (req, res) {
 	var details = {
+		username: req.session.username,
 		flag: true,
 	};
 	res.render("manage_account", details);
@@ -377,20 +383,30 @@ app.get("/logout", function (req, res) {
 	});
 });
 
-app.get("/manage_account", function (req, res) {
-	var details = {
-		flag: true,
-	};
-	res.render("manage_account", details);
-});
-
 app.get("/my_schedules", function (req, res) {
-	res.render("my_schedules", details);
+	var currUser = req.session.username;
+	var scheduleDetails =
+		"schedName classCnt _id";
+	db.findMany(Schedules, { username: currUser }, scheduleDetails, (result) => {
+		if (result != null) {
+			console.log("Loading my schedules");
+			var details = {
+				flag: true,
+				result: result,
+				username: req.session.username,
+			};
+			console.log(result);
+			res.render("my_schedules", details);
+		} else {
+			console.log("error loading my posts");
+		}
+	});
 });
 
 app.get("/view_account", function (req, res) {
 	var details = {
 		flag: true,
+		username: req.session.username,
 	};
 	res.render("view_account", details);
 });
@@ -463,6 +479,7 @@ app.get("/home", (req, res) => {
 				var details = {
 					flag: true,
 					result: result,
+					username: req.session.username,
 				};
 				res.render("home", details);
 			} else console.log("error with db");
@@ -531,7 +548,7 @@ app.get("/viewpost/:postid", (req, res) => {
 				}
 			);
 			var details;
-			if (req.session.username) details = { flag: true, post: post };
+			if (req.session.username) details = { flag: true, post: post, username: req.session.username};
 			else details = { flag: false, post: post };
 			res.render("viewpost", details);
 		} else {
@@ -596,7 +613,7 @@ app.get("/searchResults", (req, res) => {
 			posts: [],
 		};
 		console.log("Search Results for: " + searchquery.query);
-		// query the posts that have the following keyword (QUERY)
+		// query the posts that have the following keyword (QUERY)s
 		// find from db
 		var postres = "schedTitle _id postImg";
 		// find by username or title
@@ -613,14 +630,14 @@ app.get("/searchResults", (req, res) => {
 				});
 
 				if (currUser)
-					details = { flag: true, searchquery: searchquery };
+					details = { flag: true, searchquery: searchquery, username: req.session.username,};
 				else details = { flag: false, searchquery: searchquery };
 				console.log(details);
 				res.render("searchResults", details);
 				console.log("found posts from search");
 			} else {
 				if (currUser)
-					details = { flag: true, searchquery: searchquery };
+					details = { flag: true, searchquery: searchquery, username: req.session.username};
 				else details = { flag: false, searchquery: searchquery };
 				console.log(details);
 				res.render("emptyResults", details);
@@ -889,6 +906,7 @@ app.get("/my_posts", (req, res) => {
 			var details = {
 				flag: true,
 				result: result,
+				username: req.session.username,
 			};
 			res.render("my_posts", details);
 		} else {
@@ -905,6 +923,7 @@ app.get("/editpost/:schedid", (req, res) => {
 			var details = {
 				flag: true,
 				post: result,
+				username: req.session.username,
 			};
 			res.render("edit_post", details);
 		} else console.log("error editing post");

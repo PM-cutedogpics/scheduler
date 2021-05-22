@@ -18,24 +18,18 @@
         <h1 style="padding-top: 4vh;">My Schedules</h1>
     </section>
     <div class="container sched-homepage ">
-        <div class="row gy-5">
-          {{#each result}}
-            {{#if schedcard}}
-                <div class="col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center">
-                    <div class="card" id="{{schedcard}}">
-                        <a href="/viewpost/{{schedid}}" class="post-title card-title">{{schedTitle}}</a>
-                        <a href="/viewpost/{{schedid}}" type="button" class="btn p-0" id="{{schedid}}">
-                            <img class="sched-img card-img-top" src="{{postImg}}">
-                        </a>
-                        <row class="edit-del-mysched-btns d-flex justify-content-center">
-                            <col><a href="/editpost/{{schedid}}" class="mysched-btn edit-mysched-btn"><i class="fas fa-edit"></i></a></col>
-                            <col><a href="/deletepost/{{schedid}}" class="mysched-btn delete-mysched-btn"><i class="fas fa-trash-alt"></i></a></col>
-                        </row>
-                    </div>
+        <div class="row">
+          <div class="col border border-dark"><center><h3>Schedule Name</h3></center></div>
+          <div class="col-3 border border-dark"><center><h3>Number of Classes</h3></center></div>
+        </div>
+        {{#each result}} 
+            {{#if _id}}
+                <div class="row">
+                  <div class="col border border-dark"><a href="/document/{{_id}}" class="post-title card-title">{{schedName}}</a></div>
+                  <div class="col-3 border border-dark"><center>{{classCnt}}</center></div>
                 </div>
             {{/if}}
-          {{/each}}
-        </div>
+        {{/each}}
     </div>
     {{> footer}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

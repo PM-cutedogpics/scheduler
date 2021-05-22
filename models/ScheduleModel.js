@@ -9,6 +9,10 @@ var SchedulesSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	classCnt: {
+		type: String,
+		required: true,
+	},
 	classes: [
 		{
 			className: {
