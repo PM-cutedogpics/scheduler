@@ -34,7 +34,7 @@ app.post("/change_password", function (req, res) {
 	var old = req.body.old;
 	var newPass = req.body.newPass;
 	var confirm = req.body.confirm;
-	var ERROR;
+	var error = { ERROR: "One or more fields is/are incorrect." };
 
 	if (newPass == confirm) {
 		console.log("CHANGING PASSWORD");
@@ -56,14 +56,19 @@ app.post("/change_password", function (req, res) {
 							console.log("CHANGING PASSWORD");
 							console.log("updated password");
 							res.redirect("/manage_account");
-						} else console.log("failed");
+						} else {
+							console.log("failed");
+							res.render("change_password", error);
+						}
 					}
 				);
 			});
-		} else console.log("ERROR EQUALS");
+		} else {
+			console.log("ERROR EQUALS");
+			res.render("change_password", error);
+		}
 	} else {
-		ERROR = "Username and/or Password is incorrect.";
-		res.render("/change_password", ERROR);
+		res.render("change_password", error);
 	}
 });
 
@@ -398,49 +403,68 @@ app.get("/my_schedules", function (req, res) {
 	);
 });
 
-app.get("/viewaccount/:name", (req, res) => {
-	console.log("viewing account");
-	var details, flag, same;
-	var currUser = req.session.username;
-	var userQuery = { username: req.params.name };
-	console.log(req.params.name);
-	if (req.session.username) flag = true;
-	else flag = false;
-	if (currUser == req.params.name) same = true;
-	else same = false;
-
-	// console.log(currUser);
-	// console.log(paramUser);
-	var userDetails = "username email desc";
-	db.findOne(User, userQuery, userDetails, (result) => {
-		if (result != null) {
-			var user = result;
-			console.log("USER DETAILS");
-			console.log(user);
-			var postDetails = "_id postImg schedTitle schedAuthor schedDesc";
-			userQuery = { schedAuthor: req.params.name };
-			db.findMany(Posts, userQuery, postDetails, (result) => {
-				if (result != null) {
-					var posts = result;
-					console.log("POSTS DETAILS");
-					console.log(posts);
-					details = {
-						user: user,
-						result: posts,
-						same: same,
-						flag: flag,
-					};
-					console.log(details);
-					console.log("SHOWING ACCOUNT WITH POSTS");
-					res.render("viewaccount", details);
-				} else {
-					console.log("error finding posts");
-				}
-			});
-		} else {
-			console.log("Error finding user");
+app.get("/viewaccount", (req, res, next) => {
+	console.log("HOW MANY TIMES WILL U PRINT ME");
+	var username = req.query.username;
+	var details;
+	db.findOne(
+		User,
+		{ username: username },
+		"username email desc",
+		(result) => {
+			if (result != null) {
+				console.log("RENDERING ACCOUNT");
+				console.log(result);
+				var user = result;
+				db.findMany(
+					Posts,
+					{ schedAuthor: username },
+					"_id postImg schedTitle schedAuthor schedDesc",
+					(result) => {
+						if (result != null) {
+							if (req.session.username) {
+								if (req.session.username == username) {
+									details = {
+										flag: true,
+										same: true,
+										result: result,
+										user: user,
+									};
+									res.render("viewaccount", details);
+								} else {
+									details = {
+										flag: true,
+										same: false,
+										result: result,
+										user: user,
+									};
+									res.render("viewaccount", details);
+								}
+							} else {
+								if (req.session.username == username) {
+									details = {
+										flag: false,
+										same: true,
+										result: result,
+										user: user,
+									};
+									res.render("viewaccount", details);
+								} else {
+									details = {
+										flag: false,
+										same: false,
+										result: result,
+										user: user,
+									};
+									res.render("viewaccount", details);
+								}
+							}
+						}
+					}
+				);
+			} else console.log("ERROR FINDING ACCOUNT");
 		}
-	});
+	);
 });
 
 /*

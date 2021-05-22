@@ -24,7 +24,7 @@
                 <div class="card pimg" style="max-height: 300px;">
                     <div class="card-body">
                         <h3 class="vp-title">{{post.schedTitle}}</h3>
-                        <h6 class="sched-author">posted by <span><b><a href="/viewaccount/{{post.schedAuthor}}" class="link-unstyled sauthor">{{post.schedAuthor}}</a></b></span></h6>
+                        <h6 class="sched-author">posted by <span><b><a href="/viewaccount?username={{post.schedAuthor}}" class="link-unstyled sauthor">{{post.schedAuthor}}</a></b></span></h6>
                         <p class="card-text">{{post.schedDesc}}</p>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                             {{#if cAuthor}}
                                 <li class="list-group-item" id="C-{{_id}}">
                                     <div class="comment-content">
-                                        <div class="comment-details"><a href="/viewaccount/{{cAuthor}}" class="link-unstyled sauthor">{{cAuthor}} </a><span>{{cDesc}}</span></div>
+                                        <div class="comment-details"><a href="/viewaccount?username={{cAuthor}}" class="link-unstyled sauthor">{{cAuthor}} </a><span>{{cDesc}}</span></div>
                                         {{#inSession ../post.loggedUser cAuthor }}
                                         <div class="del-div-btn"><button id="{{../_id}}" type="submit" class="delete-comment"><i class="far fa-trash-alt"></i></button></div>
                                         {{/inSession}}                           
