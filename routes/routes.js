@@ -27,13 +27,6 @@ app.get("/about", function (req, res) {
 });
 
 app.get("/change_password", function (req, res) {
-<<<<<<< Updated upstream
-	var details = {
-		username: req.session.username,
-		flag: true,
-	};
-	res.render("change_password", details);
-=======
 	res.render("change_password");
 });
 
@@ -52,7 +45,6 @@ app.post("/change_password", function (req, res) {
 	}
 
 	res.render("manage_account");
->>>>>>> Stashed changes
 });
 
 app.get("/contact", function (req, res) {
@@ -196,13 +188,6 @@ app.get("/saveSchedule", (req, res) => {
 });
 
 app.get("/edit_account", function (req, res) {
-<<<<<<< Updated upstream
-	var details = {
-		username: req.session.username,
-		flag: true,
-	};
-	res.render("edit_account", details);
-=======
 	db.findOne(User, { username: req.session.username }, "", function (result) {
 		if (result){
 			var user = {
@@ -232,7 +217,6 @@ app.post("/edit_account", function (req, res) {
 	}
 	
 	res.render("/manage_account");
->>>>>>> Stashed changes
 });
 
 app.get("/log_in", function (req, res) {
@@ -249,13 +233,6 @@ app.get("/log_in", function (req, res) {
 });
 
 app.get("/manage_account", function (req, res) {
-<<<<<<< Updated upstream
-	var details = {
-		username: req.session.username,
-		flag: true,
-	};
-	res.render("manage_account", details);
-=======
 	db.findOne(User, { username: req.session.username }, "", function (result) => {
 		if (result) {
 			var user = {
@@ -389,13 +366,6 @@ app.get("/my_schedules", function (req, res) {
 	});
 });
 
-<<<<<<< Updated upstream
-app.get("/view_account", function (req, res) {
-	var details = {
-		flag: true,
-		username: req.session.username,
-	};
-=======
 app.get("/view_account/:username", function (req, res) {
 	var currUser = req.session.username;
 	var paramUser = req.params.username;
@@ -436,7 +406,6 @@ app.get("/view_account/:username", function (req, res) {
 		}
 	});
 
->>>>>>> Stashed changes
 	res.render("view_account", details);
 });
 
