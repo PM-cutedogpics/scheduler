@@ -34,13 +34,34 @@ app.post("/change_password", function (req, res) {
 	var old = req.body.old;
 	var newPass = req.body.newPass;
 	var confirm = req.body.confirm;
+	var ERROR;
 
-	if (req.session.password == old && newPass == confirm) {
-		db.updateOne(User, username, { password: newPass }, (result) => {
-			if (result) console.log("updated");
-			else console.log("failed");
-		});
+	if (newPass == confirm) {
+		bcrypt.compare(req.session.password, newPass, function (err, equal) {
+			if (equal) {
+				db.updateOne(
+					User,
+					{ username: req.session.username },
+					{
+						$set: {
+							password: newPass,
+						},
+					},
+					(result) => {
+						if (result) {
+							console.log("updated");
+							res.redirect("/manage_account");
+						} else console.log("failed");
+					}	
+				);
+			}
+		}
 	}
+	else {
+		ERROR = 'Username and/or Password is incorrect.'
+		res.send("/change_password", ERROR);
+	}
+	
 
 	res.render("manage_account");
 });
@@ -285,20 +306,20 @@ app.post("/log_in", function (req, res) {
 				} else {
 					var details = {
 						flag: false,
-						error: `ID Number and/or Password is incorrect.`,
+						error: `Username and/or Password is incorrect.`,
 					};
 					console.log("this");
 
-					res.render("log_in", details);
+					res.send("log_in", details);
 				}
 			});
 		} else {
 			var details = {
 				flag: false,
-				ERROR: `ID Number and/or Password is incorrect.`,
+				ERROR: `Username and/or Password is incorrect.`,
 			};
 			console.log("that");
-			res.render("log_in", details);
+			res.send("log_in", details);
 		}
 	});
 });
