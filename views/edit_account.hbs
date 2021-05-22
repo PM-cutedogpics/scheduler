@@ -23,19 +23,15 @@
       <form class="row g-3" method="POST" action="/edit_account">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Username</label>
-          <input type="text" class="form-control" id="inputUsername" value="{{username}}" disabled>
+          <input type="text" class="form-control" id="inputUsername" value="{{username}}" name="username" disabled>
         </div>
         <div class="col-6">
           <label for="inputAddress" class="form-label">Email Address</label>
-          <input type="email" class="form-control" id="inputAddress" value="{{email}}" required>
+          <input type="email" class="form-control" id="inputAddress" value="{{email}}" name="email"required>
         </div>
         <div class="col-12">
           <label for="inputAddress2" class="form-label">Description</label>
-          <input type="text" class="form-control" id="inputAddress2" value="{{desc}}" required>
-        </div>
-        <div class="col-3">
-          <label for="oldPassword" class="form-label">Password</label>
-          <input type="password" class="form-control" id="inputOldPassword" placeholder="{{password}}" disabled>
+          <input type="text" class="form-control" id="inputAddress2" value="{{desc}}" name="desc"required>
         </div>
         <div class="d-grid gap-2 d-md-block">
           <button type="submit" class="btn btn-primary" id="submit" value="Submit">Save</button>

@@ -35,13 +35,11 @@ app.post("/change_password", function (req, res) {
 	var newPass = req.body.newPass;
 	var confirm = req.body.confirm;
 
-	if (req.session.password == old && newPass == confirm){
-		db.updateOne(User, username, { password: newPass}, (result) => {
-			if (result)
-				console.log("updated");
-			else
-				console.log("failed");
-		})
+	if (req.session.password == old && newPass == confirm) {
+		db.updateOne(User, username, { password: newPass }, (result) => {
+			if (result) console.log("updated");
+			else console.log("failed");
+		});
 	}
 
 	res.render("manage_account");
@@ -129,10 +127,15 @@ app.get("/getScheduleId", (req, res) => {
 	console.log("Checking schedule Id from db");
 	console.log(req.query.scheduleName);
 	console.log(req.query.username);
-	db.findOne(Schedules, { schedName: req.query.scheduleName, username: req.query.username }, "_id", function (result) {
-		console.log(result);
-		res.send(result);
-	});
+	db.findOne(
+		Schedules,
+		{ schedName: req.query.scheduleName, username: req.query.username },
+		"_id",
+		function (result) {
+			console.log(result);
+			res.send(result);
+		}
+	);
 });
 
 app.get("/addScheduleName", (req, res) => {
@@ -141,8 +144,12 @@ app.get("/addScheduleName", (req, res) => {
 	console.log(req.query.username);
 	db.insertOne(
 		Schedules,
-		{ schedName: req.query.scheduleName, username: req.query.username,
-		schedId: req.query.schedId, classCnt: 9 },
+		{
+			schedName: req.query.scheduleName,
+			username: req.query.username,
+			schedId: req.query.schedId,
+			classCnt: 9,
+		},
 		function (result) {
 			console.log(result);
 			res.send(result);
@@ -174,56 +181,64 @@ app.get("/saveSchedule", (req, res) => {
 	console.log("Attempting to save schedule and classes to db");
 	console.log(req.query.schedule);
 	console.log(req.query.schedule.schedId);
-	db.updateOne(Schedules, { _id: req.query.schedule.schedId}, 
-		{classCnt: req.query.schedule.classCnt, 
-		classes : req.query.schedule.classes}, (result) => {
-		if (result > 0) {
-			console.log("Successful updating schedule")
-			res.send(result);
-		} else {
-			console.log("Error updating schedule");
-			res.send(null);
+	db.updateOne(
+		Schedules,
+		{ _id: req.query.schedule.schedId },
+		{
+			classCnt: req.query.schedule.classCnt,
+			classes: req.query.schedule.classes,
+		},
+		(result) => {
+			if (result > 0) {
+				console.log("Successful updating schedule");
+				res.send(result);
+			} else {
+				console.log("Error updating schedule");
+				res.send(null);
+			}
 		}
-	});
+	);
 });
 
 app.get("/edit_account", function (req, res) {
-	db.findOne(User, { username: req.session.username }, "", function (result) {
-		if (result){
-			var user = {
-				username: result.username,
-				desc: result.desc,
-				email: result.email,
-				password: result.password,
-			};
+	db.findOne(
+		User,
+		{ username: req.session.username },
+		"username desc email",
+		function (result) {
+			if (result) {
+				res.render("edit_account", result);
+			} else console.log("error editing account");
 		}
-	}
-
-	res.render("edit_account", user);
-		
+	);
 });
 
 app.post("/edit_account", function (req, res) {
-	var username = req.body.username;
-	var password = req.body.password;
+	var username = req.session.username;
 	var email = req.body.email;
 	var desc = req.body.desc;
-	db.updateOne(User, username, { email: email,  desc: desc, password: password}, (result) => {
-		if (result) {
-			console.log("updated");
+	db.updateOne(
+		User,
+		{ username: username },
+		{
+			$set: {
+				email: email,
+				desc: desc,
+			},
+		},
+		(result) => {
+			if (result) {
+				console.log("updated");
+				res.redirect("/manage_account");
+			} else console.log("failed");
 		}
-		else
-			console.log("failed");
-	}
-	
-	res.render("/manage_account");
+	);
 });
 
 app.get("/log_in", function (req, res) {
 	if (req.session.username) {
 		res.redirect("home");
-	}
-	else {
+	} else {
 		var details = {
 			flag: false,
 		};
@@ -233,18 +248,18 @@ app.get("/log_in", function (req, res) {
 });
 
 app.get("/manage_account", function (req, res) {
-	db.findOne(User, { username: req.session.username }, "", function (result) => {
-		if (result) {
-			var user = {
-				username: result.username,
-				desc: result.desc,
-				email: result.email,
-			};
+	var user;
+	db.findOne(
+		User,
+		{ username: req.session.username },
+		"username desc email",
+		function (result) {
+			if (result) {
+				console.log(result);
+				res.render("manage_account", result);
+			} else console.log("error managing account");
 		}
-	})
-
-	res.render("manage_account", user);
->>>>>>> Stashed changes
+	);
 });
 
 app.post("/log_in", function (req, res) {
@@ -253,7 +268,6 @@ app.post("/log_in", function (req, res) {
 	var password = req.body.password;
 
 	db.findOne(User, { username: username }, "", function (result) {
-
 		console.log(result);
 		if (result) {
 			var user = {
@@ -263,15 +277,12 @@ app.post("/log_in", function (req, res) {
 			};
 
 			bcrypt.compare(password, result.password, function (err, equal) {
-
 				if (equal) {
-		
 					req.session.username = user.username;
 					req.session.password = user.password;
 
 					res.redirect("home");
 				} else {
-		
 					var details = {
 						flag: false,
 						error: `ID Number and/or Password is incorrect.`,
@@ -281,9 +292,7 @@ app.post("/log_in", function (req, res) {
 					res.render("log_in", details);
 				}
 			});
-		}
-		else {
-
+		} else {
 			var details = {
 				flag: false,
 				ERROR: `ID Number and/or Password is incorrect.`,
@@ -300,15 +309,12 @@ app.get("/register", function (req, res) {
 	if (req.session.username) {
 		details.flag = true;
 		details.username = req.session.username;
-	}
-
-	else details.flag = false;
+	} else details.flag = false;
 
 	res.render("register", details);
 });
 
 app.post("/register", function (req, res) {
-
 	var username = req.body.username;
 	var email = req.body.email;
 	var desc = req.body.desc;
@@ -348,65 +354,75 @@ app.get("/logout", function (req, res) {
 
 app.get("/my_schedules", function (req, res) {
 	var currUser = req.session.username;
-	var scheduleDetails =
-		"schedName classCnt _id";
-	db.findMany(Schedules, { username: currUser }, scheduleDetails, (result) => {
-		if (result != null) {
-			console.log("Loading my schedules");
-			var details = {
-				flag: true,
-				result: result,
-				username: req.session.username,
-			};
-			console.log(result);
-			res.render("my_schedules", details);
-		} else {
-			console.log("error loading my posts");
+	var scheduleDetails = "schedName classCnt _id";
+	db.findMany(
+		Schedules,
+		{ username: currUser },
+		scheduleDetails,
+		(result) => {
+			if (result != null) {
+				console.log("Loading my schedules");
+				var details = {
+					flag: true,
+					result: result,
+					username: req.session.username,
+				};
+				console.log(result);
+				res.render("my_schedules", details);
+			} else {
+				console.log("error loading my posts");
+			}
 		}
-	});
+	);
 });
 
-app.get("/view_account/:username", function (req, res) {
+app.get("/viewaccount/:name", (req, res, next) => {
+	console.log("viewing account");
+	var details, user, flag, same, posts;
 	var currUser = req.session.username;
-	var paramUser = req.params.username;
-	if (req.session.username) {
-		var flag = true;
-	}
-	else
-		var flag = false;
-	if (currUser == paramUser) {
-		var same = true;
-	}
-	else
-		var same = false;
-	db.findOne(User, { username: username }, "", function (result) {
+	var paramUser = req.params.name;
 
-		console.log(result);
-		if (result) {
-			var user = {
-				username: result.username,
-				desc: result.desc,
-				email: result.email,
-			};
-		}
-	});
-	var postDetails =
-		"schedcard schedid postImg schedTitle schedAuthor schedDesc upqty downqty";
-	db.findMany(Posts, { schedAuthor: paramUser }, postDetails, (result) => {
+	if (req.session.username) flag = true;
+	else flag = false;
+	if (currUser == paramUser) same = true;
+	else same = false;
+
+	// console.log(currUser);
+	// console.log(paramUser);
+	var userDetails = "username email desc";
+	db.findOne(User, { username: paramUser }, userDetails, (result) => {
 		if (result != null) {
-			console.log("loading my posts");
-			var details = {
-				flag: flag,
-				result: result,
-				user: user,
-				same: same,
-			};
+			user = result;
+			console.log("USER DETAILS");
+			console.log(user);
+			var postDetails = "_id postImg schedTitle schedAuthor schedDesc";
+			db.findMany(
+				Posts,
+				{ schedAuthor: paramUser },
+				postDetails,
+				(result) => {
+					if (result != null) {
+						posts = result;
+						console.log("POSTS DETAILS");
+						console.log(posts);
+						details = {
+							user: user,
+							result: posts,
+							same: same,
+							flag: flag,
+						};
+						console.log(details);
+						console.log("SHOWING ACCOUNT WITH POSTS");
+						res.render("viewaccount", details);
+					} else {
+						console.log("error finding posts");
+					}
+				}
+			);
 		} else {
-			console.log("error loading my posts");
+			console.log("Error finding user");
 		}
 	});
-
-	res.render("view_account", details);
 });
 
 /*
@@ -546,7 +562,12 @@ app.get("/viewpost/:postid", (req, res) => {
 				}
 			);
 			var details;
-			if (req.session.username) details = { flag: true, post: post, username: req.session.username};
+			if (req.session.username)
+				details = {
+					flag: true,
+					post: post,
+					username: req.session.username,
+				};
 			else details = { flag: false, post: post };
 			res.render("viewpost", details);
 		} else {
@@ -628,14 +649,22 @@ app.get("/searchResults", (req, res) => {
 				});
 
 				if (currUser)
-					details = { flag: true, searchquery: searchquery, username: req.session.username,};
+					details = {
+						flag: true,
+						searchquery: searchquery,
+						username: req.session.username,
+					};
 				else details = { flag: false, searchquery: searchquery };
 				console.log(details);
 				res.render("searchResults", details);
 				console.log("found posts from search");
 			} else {
 				if (currUser)
-					details = { flag: true, searchquery: searchquery, username: req.session.username};
+					details = {
+						flag: true,
+						searchquery: searchquery,
+						username: req.session.username,
+					};
 				else details = { flag: false, searchquery: searchquery };
 				console.log(details);
 				res.render("emptyResults", details);
@@ -897,7 +926,7 @@ app.get("/deletecomment", (req, res) => {
 app.get("/my_posts", (req, res) => {
 	var currUser = req.session.username;
 	var postDetails =
-		"schedcard schedid postImg schedTitle schedAuthor schedDesc upqty downqty";
+		"_id postImg schedTitle schedAuthor schedDesc upqty downqty";
 	db.findMany(Posts, { schedAuthor: currUser }, postDetails, (result) => {
 		if (result != null) {
 			console.log("loading my posts");

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
+   <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/style.css">
@@ -9,16 +9,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/">
     <link href="sticky-footer.css" rel="stylesheet">
-    <title>Scheduler</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+    
+    <title>Scheduler | View Account</title>
   </head>
   <body>
     {{> header flag=flag}}
     <div class="container">
-      <nav aria-label="breadcrumb" class="mt-2">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item active" aria-current="page">View Account</li>
-        </ol>
-      </nav>
       <img src="img/user1.jpg" class="img-thumbnail" alt="User Icon" width=200px height=200px>
             <fieldset disabled>
       <form class="row g-3">
@@ -35,7 +32,7 @@
           <input type="text" class="form-control" id="inputAddress2" value="{{user.desc}}">
         </div>
       </form>
-      {{#if same=same}}
+      {{#if same}}
       <section class="createpost d-flex justify-content-center">
       <form action="/create_post" method="get">
         <input type="submit" class="search-btn" id="createpost-btn" value="Create a Post">
@@ -52,7 +49,7 @@
                         <a href="/viewpost/{{_id}}" type="button" class="btn p-0" id="{{_id}}">
                             <img class="sched-img card-img-top" src="{{postImg}}">
                         </a>
-                        {{#if same=../same}}
+                        {{#if ../same}}
                         <row class="edit-del-mysched-btns d-flex justify-content-center">
                             <col><a href="/editpost/{{_id}}" class="mysched-btn edit-mysched-btn"><i class="fas fa-edit"></i></a></col>
                             <col><a href="/deletepost/{{_id}}" class="mysched-btn delete-mysched-btn"><i class="fas fa-trash-alt"></i></a></col>
