@@ -24,12 +24,12 @@
           <input type="email" class="form-control" id="email" placeholder="scheduler@gmail.com" name="email" required> 
         </div>
         <div class="col-12">
-          <label for="inputAddress2" class="form-label">Description</label>
-          <input type="text" class="form-control" id="desc" placeholder="I'm a busy person" name="desc">
+          <label for="inputAddress2" class="form-label">Description<required>*</required></label>
+          <input type="text" class="form-control" id="desc" placeholder="I'm a busy person" name="desc" required>
         </div>
         <div class="col-3 mb-3">
-          <label for="formFileSm" class="form-label">Small file input example</label>
-          <input class="form-control form-control-sm" id="formFileSm" type="file" name="dp">
+          <label for="formFileSm" class="form-label">Small file input example<required>*</required></label>
+          <input class="form-control form-control-sm" id="formFileSm" type="file" name="dp" required>
         </div>
         <div class="col-6">
           <p id="usernameError" class="error">{{usernameError}}</p>

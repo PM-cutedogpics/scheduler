@@ -376,7 +376,7 @@ app.get("/register", function (req, res) {
 	res.render("register", details);
 });
 
-app.post("/register", upload.single("dp") function (req, res) {
+app.post("/register", upload.single("dp"), function (req, res) {
 	var username = req.body.username;
 	var email = req.body.email;
 	var desc = req.body.desc;

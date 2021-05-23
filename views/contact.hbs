@@ -16,7 +16,7 @@
     <div class="container">
         <form class="row g-3">
           <div class="col-md-6">
-            <label for="inputEmail4" class="form-label mt-2">Send Email</label>
+            <label for="inputEmail4" class="form-label mt-2">Send Feedback</label>
             <textarea class="form-control" rows="3" placeholder="Comments..." required></textarea>
           </div>
           <div class="col-12">
@@ -25,18 +25,18 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Verify Email</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Scheduler</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  Thank you for the feedback. Expect a reply from us within one business week.  
+                  Thank you. Your feedback is valuable to our team. Expect a reply from us within one business week.  
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-primary" onclick="send_feedback()">Okay</button>
                   <script>
                   function send_feedback()
                   {
-                       location.href = "/home_in";
+                       location.href = "/home";
                   } 
                   </script>
                 </div>
