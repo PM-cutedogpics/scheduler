@@ -14,10 +14,10 @@
   <body>
     {{> header flag=flag}}
     <div class="container">
-        <form class="row g-3">
+        <form class="row g-3" method="POST" action="/contact">
           <div class="col-md-6">
             <label for="inputEmail4" class="form-label mt-2">Send Feedback</label>
-            <textarea class="form-control" rows="3" placeholder="Comments..." required></textarea>
+            <textarea class="form-control" rows="3" placeholder="Comments..." name="comments" required></textarea>
           </div>
           <div class="col-12">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Submit</button>
@@ -32,13 +32,7 @@
                   Thank you. Your feedback is valuable to our team. Expect a reply from us within one business week.  
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" onclick="send_feedback()">Okay</button>
-                  <script>
-                  function send_feedback()
-                  {
-                       location.href = "/home";
-                  } 
-                  </script>
+                  <button type="submit" class="btn btn-primary" value="Submit" id="submit">Okay</button>
                 </div>
               </div>
             </div>  

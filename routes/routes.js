@@ -122,6 +122,18 @@ app.get("/contact", function (req, res) {
 	res.render("contact", details);
 });
 
+app.post("/contact", function (req, res) {
+	var comments = req.body.comments;
+	db.insertOne (Feedback, {comments: comments}, function (result) {
+		if (result)
+			console.log("comment sent");
+		else
+			console.log("failed");
+	});
+	
+	res.redirect("home");
+})
+
 app.get("/create", function (req, res) {
 	if (req.session.username) {
 		var query = {
