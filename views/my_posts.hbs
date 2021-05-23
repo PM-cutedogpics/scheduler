@@ -18,9 +18,9 @@
         <h1 style="padding-top: 4vh;">My Posts</h1>
     </section>
     <section class="createpost d-flex justify-content-center">
-      <form action="/create_post" method="get">
+      <a href="/create_post">
         <input type="submit" class="search-btn" id="createpost-btn" value="Create a Post">
-      </form>
+      </a>
     </section>
     <div class="container sched-homepage ">
         <div class="row gy-5">
@@ -30,7 +30,7 @@
                     <div class="card schedcard">
                         <a href="/viewpost/{{_id}}" class="post-title card-title">{{schedTitle}}</a>
                         <a href="/viewpost/{{_id}}" type="button" class="btn p-0" id="{{_id}}">
-                            <img class="sched-img card-img-top" src="{{postImg}}">
+                            <img class="sched-img card-img-top" src="/img/uploads/post_uploads/{{postImg}}">
                         </a>
                         <row class="edit-del-mysched-btns d-flex justify-content-center">
                             <col><a href="/editpost/{{_id}}" class="mysched-btn edit-mysched-btn"><i class="fas fa-edit"></i></a></col>
