@@ -6,6 +6,7 @@ const Posts = require("../models/PostModel.js");
 const Comments = require("../models/CommentModel.js");
 const defaultclasses = require("../models/DefaultClassModel.js");
 const Schedules = require("../models/ScheduleModel.js");
+const Feedback = require("../models/FeedbackModel.js");
 const app = express();
 const bcrypt = require("bcrypt");
 const validationResult = require("express-validator");
@@ -124,15 +125,13 @@ app.get("/contact", function (req, res) {
 
 app.post("/contact", function (req, res) {
 	var comments = req.body.comments;
-	db.insertOne (Feedback, {comments: comments}, function (result) {
-		if (result)
-			console.log("comment sent");
-		else
-			console.log("failed");
+	db.insertOne(Feedback, { feedback: comments }, function (result) {
+		if (result) console.log("comment sent");
+		else console.log("failed");
 	});
-	
+
 	res.redirect("home");
-})
+});
 
 app.get("/create", function (req, res) {
 	if (req.session.username) {
