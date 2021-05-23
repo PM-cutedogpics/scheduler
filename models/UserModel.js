@@ -18,6 +18,10 @@ var UserSchema = new mongoose.Schema({
 		required: true,
 	},
 	// TODO: ADD PROFILE IMAGE
+	profPic: {
+		type: String,
+		required: true,
+	},
 });
 
 module.exports = mongoose.model("User", UserSchema);

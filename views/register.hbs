@@ -10,7 +10,7 @@
   <body>
     {{> header flag=flag}}
     <div class="container">
-      <form class="row g-3 mt-1" method="POST" action="/register">
+      <form class="row g-3 mt-1" method="POST" action="/register" enctype="multipart/form-data">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Username <required>*</required></label>
           <input type="text" class="form-control" id="username" name="username" required>

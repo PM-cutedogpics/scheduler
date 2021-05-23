@@ -266,7 +266,7 @@ app.get("/edit_account", function (req, res) {
 	db.findOne(
 		User,
 		{ username: req.session.username },
-		"username desc email",
+		"username desc email profPic",
 		function (result) {
 			if (result) {
 				res.render("edit_account", result);
@@ -314,7 +314,7 @@ app.get("/manage_account", function (req, res) {
 	db.findOne(
 		User,
 		{ username: req.session.username },
-		"username desc email",
+		"username desc email profPic",
 		function (result) {
 			if (result) {
 				console.log(result);
@@ -376,11 +376,14 @@ app.get("/register", function (req, res) {
 	res.render("register", details);
 });
 
-app.post("/register", function (req, res) {
+app.post("/register", upload.single("dp") function (req, res) {
 	var username = req.body.username;
 	var email = req.body.email;
 	var desc = req.body.desc;
 	var password = req.body.password;
+	var filename;
+	if (req.file && req.file.filename) filename = req.file.filename;
+	else filename = "dummy.jpg";
 
 	bcrypt.hash(password, saltRounds, function (err, hash) {
 		var user = {
@@ -388,6 +391,7 @@ app.post("/register", function (req, res) {
 			email: email,
 			desc: desc,
 			password: hash,
+			profPic: filename,
 		};
 
 		db.insertOne(User, user, (result) => {
@@ -475,13 +479,12 @@ app.get("/my_schedules", function (req, res) {
 });
 
 app.get("/viewaccount", (req, res, next) => {
-	console.log("HOW MANY TIMES WILL U PRINT ME");
 	var username = req.query.username;
 	var details;
 	db.findOne(
 		User,
 		{ username: username },
-		"username email desc",
+		"username email desc profPic",
 		(result) => {
 			if (result != null) {
 				console.log("RENDERING ACCOUNT");
