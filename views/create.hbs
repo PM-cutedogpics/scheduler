@@ -41,7 +41,7 @@
             <input type="text" class="form-control" id="scheduleName" aria-describedby="emailHelp" value="">
           </div>
         </form>
-
+        <div id="errorClassName" class="form-text"></div>
         <h3>Class List</h3>
         <form id="manageClassesForm" name="manageClasses" method="post">
           <div class="card" style="max-height: 410px;">
@@ -125,12 +125,14 @@
                 <div class="modal-body">
                   <div class="card" style="max-height: 320px;">
                       <ul class="list-group list-group-flush" style="overflow:auto" id="createClassList">
-                        <li class="list-group-item" id="">
+                        <li class="list-group-item">
                           <form>
                             <label for="classCode" class="form-label">Class Code</label>
                             <input type="text" class="form-control" id="classCodeValue" aria-describedby="emailHelp" maxlength="7" minlength="7">
                             <div id="classCodeHelp" class="form-text">Must be 7 letters long</div>
                           </form>
+                        </li>
+                        <li class="list-group-item">
                           <label for="classDates" class="form-label mt-2">Class Date/s</label>
                           <div id="createCodeHelp" class="form-text">Choose at least one day</div>
                           <div class="form-check">
@@ -231,168 +233,152 @@
           </div>
     </nav>
     <div id="content" class="p-4 mr-5">
-      <div id="capture" class="p-4 p-md-5">
+      <div id="capture" class="p-4 p-md-5" style="min-width:800px;max-width: 800px"><b>
       <div class="row">
-        <!-- Row 1 -->
-        <div class="col-1"></div>
-        <div class="col border border-dark">Monday</div>
-        <div class="col border border-dark">Tuesday</div>
-        <div class="col border border-dark">Wednesday</div>
-        <div class="col border border-dark">Thursday</div>
-        <div class="col border border-dark">Friday</div>
-        <div class="col border border-dark">Saturday</div>
+        <div class="col-1" style="min-width:50px;max-width: 50px"></div>
+        <div class="col border border-dark" style="min-width:105px;max-width: 158px">Monday</div>
+        <div class="col border border-dark" style="min-width:105px;max-width: 158px">Tuesday</div>
+        <div class="col border border-dark" style="min-width:105px;max-width: 158px">Wednesday</div>
+        <div class="col border border-dark" style="min-width:105px;max-width: 158px">Thursday</div>
+        <div class="col border border-dark" style="min-width:105px;max-width: 158px">Friday</div>
+        <div class="col border border-dark" style="min-width:105px;max-width: 158px">Saturday</div>
       </div>
-      <div class="row">
-        <!-- Row 2 -->
-        <div class="col-1 border border-dark">07</div>
-        <div class="col border border-dark" id="M7"></div>
-        <div class="col border border-dark" id="T7"></div>
-        <div class="col border border-dark" id="W7"></div>
-        <div class="col border border-dark" id="H7"></div>
-        <div class="col border border-dark" id="F7"></div>
-        <div class="col border border-dark" id="S7"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">07</div>
+        <div class="col border border-dark" id="M7"  style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T7" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W7" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H7" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F7" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S7" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 3 -->
-        <div class="col-1 border border-dark">08</div>
-        <div class="col border border-dark" id="M8"></div>
-        <div class="col border border-dark" id="T8"></div>
-        <div class="col border border-dark" id="W8"></div>
-        <div class="col border border-dark" id="H8"></div>
-        <div class="col border border-dark" id="F8"></div>
-        <div class="col border border-dark" id="S8"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">08</div>
+        <div class="col border border-dark" id="M8" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T8" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W8" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H8" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F8" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S8" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 4 -->
-        <div class="col-1 border border-dark">09</div>
-        <div class="col border border-dark" id="M9"></div>
-        <div class="col border border-dark" id="T9"></div>
-        <div class="col border border-dark" id="W9"></div>
-        <div class="col border border-dark" id="H9"></div>
-        <div class="col border border-dark" id="F9"></div>
-        <div class="col border border-dark" id="S9"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">09</div>
+        <div class="col border border-dark" id="M9" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T9" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W9" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H9" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F9" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S9" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 5 -->
-        <div class="col-1 border border-dark">10</div>
-        <div class="col border border-dark" id="M10"></div>
-        <div class="col border border-dark" id="T10"></div>
-        <div class="col border border-dark" id="W10"></div>
-        <div class="col border border-dark" id="H10"></div>
-        <div class="col border border-dark" id="F10"></div>
-        <div class="col border border-dark" id="S10"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">10</div>
+        <div class="col border border-dark" id="M10" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T10" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W10" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H10" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F10" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S10" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 6 -->
-        <div class="col-1 border border-dark">11</div>
-        <div class="col border border-dark" id="M11"></div>
-        <div class="col border border-dark" id="T11"></div>
-        <div class="col border border-dark" id="W11"></div>
-        <div class="col border border-dark" id="H11"></div>
-        <div class="col border border-dark" id="F11"></div>
-        <div class="col border border-dark" id="S11"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">11</div>
+        <div class="col border border-dark" id="M11" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T11" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W11" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H11" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F11" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S11" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 7 -->
-        <div class="col-1 border border-dark">12</div>
-        <div class="col border border-dark" id="M12"></div>
-        <div class="col border border-dark" id="T12"></div>
-        <div class="col border border-dark" id="W12"></div>
-        <div class="col border border-dark" id="H12"></div>
-        <div class="col border border-dark" id="F12"></div>
-        <div class="col border border-dark" id="S12"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">12</div>
+        <div class="col border border-dark" id="M12" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T12" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W12" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H12" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F12" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S12" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 8 -->
-        <div class="col-1 border border-dark">13</div>
-        <div class="col border border-dark" id="M13"></div>
-        <div class="col border border-dark" id="T13"></div>
-        <div class="col border border-dark" id="W13"></div>
-        <div class="col border border-dark" id="H13"></div>
-        <div class="col border border-dark" id="F13"></div>
-        <div class="col border border-dark" id="S13"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">13</div>
+        <div class="col border border-dark" id="M13" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T13" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W13" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H13" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F13" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S13" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 9 -->
-        <div class="col-1 border border-dark">14</div>
-        <div class="col border border-dark" id="M14"></div>
-        <div class="col border border-dark" id="T14"></div>
-        <div class="col border border-dark" id="W14"></div>
-        <div class="col border border-dark" id="H14"></div>
-        <div class="col border border-dark" id="F14"></div>
-        <div class="col border border-dark" id="S14"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">14</div>
+        <div class="col border border-dark" id="M14" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T14" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W14" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H14" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F14" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S14" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 10 -->
-        <div class="col-1 border border-dark">15</div>
-        <div class="col border border-dark" id="M15"></div>
-        <div class="col border border-dark" id="T15"></div>
-        <div class="col border border-dark" id="W15"></div>
-        <div class="col border border-dark" id="H15"></div>
-        <div class="col border border-dark" id="F15"></div>
-        <div class="col border border-dark" id="S15"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">15</div>
+        <div class="col border border-dark" id="M15" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T15" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W15" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H15" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F15" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S15" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 11 -->
-        <div class="col-1 border border-dark">16</div>
-        <div class="col border border-dark" id="M16"></div>
-        <div class="col border border-dark" id="T16"></div>
-        <div class="col border border-dark" id="W16"></div>
-        <div class="col border border-dark" id="H16"></div>
-        <div class="col border border-dark" id="F16"></div>
-        <div class="col border border-dark" id="S16"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">16</div>
+        <div class="col border border-dark" id="M16" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T16" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W16" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H16" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F16" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S16" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 12 -->
-        <div class="col-1 border border-dark">17</div>
-        <div class="col border border-dark" id="M17"></div>
-        <div class="col border border-dark" id="T17"></div>
-        <div class="col border border-dark" id="W17"></div>
-        <div class="col border border-dark" id="H17"></div>
-        <div class="col border border-dark" id="F17"></div>
-        <div class="col border border-dark" id="S17"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">17</div>
+        <div class="col border border-dark" id="M17" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T17" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W17" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H17" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F17" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S17" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 13 -->
-        <div class="col-1 border border-dark">18</div>
-        <div class="col border border-dark" id="M18"></div>
-        <div class="col border border-dark" id="T18"></div>
-        <div class="col border border-dark" id="W18"></div>
-        <div class="col border border-dark" id="H18"></div>
-        <div class="col border border-dark" id="F18"></div>
-        <div class="col border border-dark" id="S18"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">18</div>
+        <div class="col border border-dark" id="M18" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T18" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W18" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H18" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F18" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S18" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 14 -->
-        <div class="col-1 border border-dark">19</div>
-        <div class="col border border-dark" id="M19"></div>
-        <div class="col border border-dark" id="T19"></div>
-        <div class="col border border-dark" id="W19"></div>
-        <div class="col border border-dark" id="H19"></div>
-        <div class="col border border-dark" id="F19"></div>
-        <div class="col border border-dark" id="S19"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">19</div>
+        <div class="col border border-dark" id="M19" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T19" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W19" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H19" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F19" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S19" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 14 -->
-        <div class="col-1 border border-dark">20</div>
-        <div class="col border border-dark" id="M20"></div>
-        <div class="col border border-dark" id="T20"></div>
-        <div class="col border border-dark" id="W20"></div>
-        <div class="col border border-dark" id="H20"></div>
-        <div class="col border border-dark" id="F20"></div>
-        <div class="col border border-dark" id="S20"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">20</div>
+        <div class="col border border-dark" id="M20" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T20" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W20" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H20" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F20" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S20" style="min-width:105px;max-width: 158px"></div>
         </div>
-      <div class="row">
-        <!-- Row 14 -->
-        <div class="col-1 border border-dark">21</div>
-        <div class="col border border-dark" id="M21"></div>
-        <div class="col border border-dark" id="T21"></div>
-        <div class="col border border-dark" id="W21"></div>
-        <div class="col border border-dark" id="H21"></div>
-        <div class="col border border-dark" id="F21"></div>
-        <div class="col border border-dark" id="S21"></div>
+      <div class="row" style="min-height:50px;max-height: 50px">
+        <div class="col-1 border border-dark" style="min-width:50px;max-width: 50px">21</div>
+        <div class="col border border-dark" id="M21" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="T21" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="W21" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="H21" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="F21" style="min-width:105px;max-width: 158px"></div>
+        <div class="col border border-dark" id="S21" style="min-width:105px;max-width: 158px"></div>
         </div>
-    </div>
+    </div></b>
     </div>
   </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>

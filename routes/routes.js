@@ -9,8 +9,14 @@ const Schedules = require("../models/ScheduleModel.js");
 const app = express();
 const bcrypt = require("bcrypt");
 const validationResult = require("express-validator");
+const hbs = require('handlebars');
+const exphbs = require('express-handlebars')
 const saltRounds = 10;
 // TODO: add in routes
+hbs.registerHelper("ifEquals", function(arg1, arg2, options) {
+    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+});
+
 app.get("/about", function (req, res) {
 	if (req.session.username) {
 		var details = {
@@ -240,25 +246,29 @@ app.get("/edit_account", function (req, res) {
 });
 
 app.post("/edit_account", function (req, res) {
-	var username = req.session.username;
-	var email = req.body.email;
-	var desc = req.body.desc;
-	db.updateOne(
-		User,
-		{ username: username },
-		{
-			$set: {
-				email: email,
-				desc: desc,
+	if (req.session.username){
+		var username = req.session.username;
+		var email = req.body.email;
+		var desc = req.body.desc;
+		db.updateOne(
+			User,
+			{ username: username },
+			{
+				$set: {
+					email: email,
+					desc: desc,
+				},
 			},
-		},
-		(result) => {
-			if (result) {
-				console.log("updated");
-				res.redirect("/manage_account");
-			} else console.log("failed");
-		}
-	);
+			(result) => {
+				if (result) {
+					console.log("updated");
+					res.redirect("/manage_account");
+				} else console.log("failed");
+			}
+		);
+	} else {
+		res.redirect("home");
+	}
 });
 
 app.get("/log_in", function (req, res) {
@@ -274,18 +284,22 @@ app.get("/log_in", function (req, res) {
 });
 
 app.get("/manage_account", function (req, res) {
-	var user;
-	db.findOne(
-		User,
-		{ username: req.session.username },
-		"username desc email",
-		function (result) {
-			if (result) {
-				console.log(result);
-				res.render("manage_account", result);
-			} else console.log("error managing account");
-		}
-	);
+	if (req.session.username){
+		var user;
+		db.findOne(
+			User,
+			{ username: req.session.username },
+			"username desc email",
+			function (result) {
+				if (result) {
+					console.log(result);
+					res.render("manage_account", result);
+				} else console.log("error managing account");
+			}
+		);
+	} else {
+		res.redirect("home");
+	}
 });
 
 app.post("/log_in", function (req, res) {
@@ -586,7 +600,6 @@ app.get("/home", (req, res) => {
 			} else console.log("error with db");
 		});
 	}
-
 	// console.log(posts.length);
 	// res.render("home", posts);
 });

@@ -219,14 +219,11 @@ function cancelDelete(){
 
 function saveCanvas(){
 	ToastyDownload();
-	// Insert Title to be used for download name
     html2canvas(document.querySelector("#capture"),{scrollY: -window.scrollY}).then(canvas => {
       	var a = document.createElement('a');
       	a.href = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
         a.download = $("#newScheduleName").val() + '.jpg';
         a.click();
-
-      	// window.location.href = image;
       }
     );
 }
@@ -234,41 +231,56 @@ function saveCanvas(){
 $(document).ready(() => {
 	var oldScheduleName = $("#scheduleName").val();
 
-	$('#scheduleName').blur(() => {
-		if ($("#scheduleName").val().length > 0) {
-			var newScheduleName = $("#scheduleName").val();
-			var currentUser = $("#currentUser").html();
-			console.log("Old: " + oldScheduleName);
-			console.log("New: " + newScheduleName);
-			$.get("/getScheduleName", { scheduleName: newScheduleName,
-			 username: currentUser},(result) => {
-				if(result.schedName == newScheduleName) {
-					console.log("Schedule name unavailable");
-	                $('#scheduleName').css('background-color', 'red');
-	                $('#save').prop('disabled', true);
-	            }
-	            else {
-	            	console.log("Schedule name available");
-	                $.get("/updateScheduleName", { newScheduleName: newScheduleName,
-			 		username: currentUser, oldScheduleName: oldScheduleName},(result) => {
-			 			if (result){
-			 				if (darkSwitch.checked)
-					 			$('#scheduleName').css('background-color', '#1a1a1b');
-					 		else 
-					 			$('#scheduleName').css('background-color', '#fff');
-		                	$('#save').prop('disabled', false);
-		                	oldScheduleName = $("#scheduleName").val();
-		                	console.log("Just updated oldScheduleName to " + oldScheduleName);
-			 			}
-			 		});
-	            }
-	        });
-	    }
-	    else if ($("#scheduleName").val().length == 0){
-	    	$('#scheduleName').css('background-color', 'red');
-			$('#save').prop('disabled', true);
-	    }
-	});
+	var includeList = document.getElementsByName("include");
+	console.log(includeList);
+	var checked = [];
+	for (var i = 0; i < includeList.length; i++)
+		if (document.getElementById(includeList[i].id).checked) 
+        	checked.push(includeList[i].id);
+    console.log(checked);
+    console.log(checked.length);
+    for (var k = 0; k < checked.length; k++ ){
+	    var id = "L1" + checked[k].substring(1);
+		console.log(id);
+		var label = document.getElementById(id).innerHTML;
+		var timeFrame = label.substring(label.length - 11, label.length);
+		var low = parseInt(timeFrame.substring(0, 2));
+		var high = parseInt(timeFrame.substring(6, 8));
+		if (timeFrame.substring(9, 11) == "00")
+			high = high - 1;
+		// Finding days
+		var label_cnt = 8;
+		var dates = [];
+		do {
+			var date_label = label.substring(label_cnt, label_cnt + 1);
+			if (date_label != ' ')
+				dates.push(date_label);
+			label_cnt = label_cnt + 1;
+		} while (date_label != ' ');
+		var subjectName = label.substring(0, 7);
+		// console.log(dates);
+		// Filling up the schedule
+		if (document.getElementById(checked[k]).checked) {
+			for (var i = low; i <= high; i++){
+				for (var j = 0; j < dates.length; j++){
+					var gridID = dates[j] + i;
+					// console.log("add: " + gridID);
+					var name = document.getElementById(gridID);
+					name.innerHTML = name.innerHTML + " " + subjectName;
+				}
+			}
+		}
+		else {
+			for (var i = low; i <= high; i++){
+				for (var j = 0; j < dates.length; j++){
+					var gridID = dates[j] + i;
+					// console.log("remove: " + gridID);
+					var name = document.getElementById(gridID);
+					name.innerHTML = name.innerHTML.replace(subjectName, "");
+				}
+			}
+		}
+    }
 
 	// Timepicker 
 	$('#startTime').timepicker({
@@ -316,6 +328,47 @@ $(document).ready(() => {
         show: true // added property here
     });
 });
+
+$('#scheduleName').blur(() => {
+	if ($("#scheduleName").val().length > 0) {
+		var newScheduleName = $("#scheduleName").val();
+		var currentUser = $("#currentUser").html();
+		console.log("Old: " + oldScheduleName);
+		console.log("New: " + newScheduleName);
+		if (newScheduleName != oldScheduleName){
+			$.get("/getScheduleName", { scheduleName: newScheduleName,
+			 username: currentUser},(result) => {
+				if(result.schedName == newScheduleName) {
+					console.log("Schedule name unavailable");
+	                $('#scheduleName').css('background-color', 'red');
+	                $('#saveSchedule').prop('disabled', true);
+	                $('#errorClassName').text('Shedule name not available');
+	            }
+	            else {
+	            	console.log("Schedule name available");
+	                $.get("/updateScheduleName", { newScheduleName: newScheduleName,
+			 		username: currentUser, oldScheduleName: oldScheduleName},(result) => {
+			 			if (result){
+			 				if (darkSwitch.checked)
+					 			$('#scheduleName').css('background-color', '#1a1a1b');
+					 		else 
+					 			$('#scheduleName').css('background-color', '#fff');
+		                	$('#saveSchedule').prop('disabled', false);
+		                	oldScheduleName = $("#scheduleName").val();
+		                	console.log("Just updated oldScheduleName to " + oldScheduleName);
+		                	$('#errorClassName').text('');
+			 			}
+			 		});
+	            }
+	        });
+		}
+    }
+    else if ($("#scheduleName").val().length == 0){
+    	$('#scheduleName').css('background-color', 'red');
+		$('#saveSchedule').prop('disabled', true);
+    }
+});
+
 
 var classIdCnt = 1000 + $("#classCnt").val();;
 // Checks and creates a custom class
@@ -435,10 +488,9 @@ $('#saveSchedule').click(function () {
 		classDetails.classId = includeList[i].id.substring(1,5);
 		classDetails.className = document.getElementById("L1" + 
 		includeList[i].id.substring(1)).innerHTML;
-		console.log("L1" + includeList[i].id.substring(1));
 		if (document.getElementById(includeList[i].id).checked)
-			classDetails.checked = true;
-		else classDetails.checked = false;
+			classDetails.checked = "checked";
+		else classDetails.checked = "";
 		classes.push(classDetails);
 		classCnt += 1;
 	}
@@ -449,10 +501,9 @@ $('#saveSchedule').click(function () {
 		classDetails.classId = addList[j].id.substring(1,5);
 		classDetails.className = document.getElementById("L2" + 
 		addList[j].id.substring(1)).innerHTML;
-		console.log("L2" + includeList[i].id.substring(1));
 		if (document.getElementById(addList[j].id).checked)
-			classDetails.checked = true;
-		else classDetails.checked = false;
+			classDetails.checked = "checked";
+		else classDetails.checked = "";
 		classes.push(classDetails);
 		classCnt += 1;
 	}
@@ -494,12 +545,4 @@ window.addEventListener("beforeunload", function (e) {
 
     (e || window.event).returnValue = confirmationMessage; //Gecko + IE
     return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-});
-
-Handlebars.registerHelper("ifEquals", function(a, b, options) {
-    if (a == b) {
-        return opts.fn(this);
-    } else {
-        return opts.inverse(this);
-    }
 });

@@ -222,8 +222,8 @@ function saveCanvas(){
 	// Insert Title to be used for download name
     html2canvas(document.querySelector("#capture"),{scrollY: -window.scrollY}).then(canvas => {
       	var a = document.createElement('a');
-      	a.href = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
-        a.download = $("#newScheduleName").val() + '.jpg';
+      	a.href = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+        a.download = $("#newScheduleName").val() + '.png';
         a.click();
 
       	// window.location.href = image;
@@ -287,33 +287,37 @@ $(document).ready(() => {
 			var currentUser = $("#currentUser").html();
 			console.log("Old: " + oldScheduleName);
 			console.log("New: " + newScheduleName);
-			$.get("/getScheduleName", { scheduleName: newScheduleName,
-			 username: currentUser},(result) => {
-				if(result.schedName == newScheduleName) {
-					console.log("Schedule name unavailable");
-	                $('#scheduleName').css('background-color', 'red');
-	                $('#save').prop('disabled', true);
-	            }
-	            else {
-	            	console.log("Schedule name available");
-	                $.get("/updateScheduleName", { newScheduleName: newScheduleName,
-			 		username: currentUser, oldScheduleName: oldScheduleName},(result) => {
-			 			if (result){
-			 				if (darkSwitch.checked)
-					 			$('#scheduleName').css('background-color', '#1a1a1b');
-					 		else 
-					 			$('#scheduleName').css('background-color', '#fff');
-		                	$('#save').prop('disabled', false);
-		                	oldScheduleName = $("#scheduleName").val();
-		                	console.log("Just updated oldScheduleName to " + oldScheduleName);
-			 			}
-			 		});
-	            }
-	        });
+			if (newScheduleName != oldScheduleName){
+				$.get("/getScheduleName", { scheduleName: newScheduleName,
+				 username: currentUser},(result) => {
+					if(result.schedName == newScheduleName) {
+						console.log("Schedule name unavailable");
+		                $('#scheduleName').css('background-color', 'red');
+		                $('#saveSchedule').prop('disabled', true);
+		                $('#errorClassName').text('Shedule name not available');
+		            }
+		            else {
+		            	console.log("Schedule name available");
+		                $.get("/updateScheduleName", { newScheduleName: newScheduleName,
+				 		username: currentUser, oldScheduleName: oldScheduleName},(result) => {
+				 			if (result){
+				 				if (darkSwitch.checked)
+						 			$('#scheduleName').css('background-color', '#1a1a1b');
+						 		else 
+						 			$('#scheduleName').css('background-color', '#fff');
+			                	$('#saveSchedule').prop('disabled', false);
+			                	oldScheduleName = $("#scheduleName").val();
+			                	console.log("Just updated oldScheduleName to " + oldScheduleName);
+			                	$('#errorClassName').text('');
+				 			}
+				 		});
+		            }
+		        });
+			}
 	    }
 	    else if ($("#scheduleName").val().length == 0){
 	    	$('#scheduleName').css('background-color', 'red');
-			$('#save').prop('disabled', true);
+			$('#saveSchedule').prop('disabled', true);
 	    }
 	});
 
