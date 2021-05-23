@@ -1,6 +1,8 @@
 # Scheduler #
 The difficulty to form schedules with the numerous data needed has been abstracted to make it easier for students. Scheduler aims to help the students find their satisfying schedules through our service. We let you create a schedule with just a few clicks.
 
+This serves as the final project for CCAPDEV Group 14.
+
 ## Authors ##
 * [Choi, Pete Fredrich](https://github.com/PM-cutedogpics)
 * [Go, Wilfred Jon](https://github.com/GodGacha)
