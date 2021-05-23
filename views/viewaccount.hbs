@@ -16,7 +16,7 @@
   <body>
     {{> header flag=flag}}
     <div class="container">
-      <img src="/img/user_icon1.jpg" class="img-thumbnail" alt="User Icon" width=200px height=200px>
+      <img src="/img/uploads/profile_uploads/{{user.profPic}}" class="img-thumbnail" alt="User Icon" name="User Icon"width=200px height=200px>
             <fieldset disabled>
       <form class="row g-3">
         <div class="col-md-6">
@@ -43,11 +43,11 @@
           <div class="row gy-5">
             {{#each result}}
               {{#if _id}}
-                  <div class="col-sm-6 col-lg-4 col-xl-3 d-flex justify-content-center">
+                  <div class="col-sm-6 col-lg-4 col-xl-4 d-flex justify-content-center">
                       <div class="card schedcard">
                           <a href="/viewpost/{{_id}}" class="post-title card-title">{{schedTitle}}</a>
                           <a href="/viewpost/{{_id}}" type="button" class="btn p-0" id="{{_id}}">
-                              <img class="sched-img card-img-top" src="{{postImg}}">
+                              <img class="sched-img card-img-top" src="/img/uploads/post_uploads/{{postImg}}">
                           </a>
                           {{#if ../same}}
                           <row class="edit-del-mysched-btns d-flex justify-content-center">

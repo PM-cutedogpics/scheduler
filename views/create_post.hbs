@@ -13,7 +13,7 @@
         <h1 style="padding-top: 4vh;">Create a Post</h1>
     </section>
     <div class="container">
-      <form class="row g-3 mt-1" method="POST" action="/create_post">
+      <form class="row g-3 mt-1" method="POST" action="/create_post" enctype="multipart/form-data">
         <div class="col-md-12">
           <label for="schedTitle-box" class="form-label">Schedule Title <required>*</required></label>
           <input type="text" class="form-control" id="schedTitle" name="schedTitle" required>
@@ -24,7 +24,7 @@
         </div>
         <div class="col-3 mb-3">
           <label for="formFileSm" class="form-label">Schedule Image</label>
-          <input class="form-control form-control-sm" id="formFileSm" type="file" name="postImg">
+          <input class="form-control form-control-sm" id="postImgUpload" type="file" name="postImg">
         </div>
         <div class="col-12">
           <button type="submit" class="btn btn-primary" id="submit" value="Post">Post</button>

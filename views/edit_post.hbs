@@ -14,13 +14,15 @@
     {{> header flag=flag}}
         <div class="post-template row justify-content-md-center">
             <div class="simg col-md-4 d-flex justify-content-center">
-                <img src="{{post.postImg}}" class="sched-img card-img-top" alt="{{post._id}}" id="{{post._id}}">
+                <img src="/img/uploads/post_uploads/{{post.postImg}}" class="sched-img card-img-top" alt="{{post._id}}" id="{{post._id}}">
             </div>
             <div class="col-md-8">
                 <div class="card pimg">
                     <div class="card-body">
                         <div class="container">
-                            <form class="row g-3 mt-1" method="POST" action="/save_edits">
+                            <form class="row g-3 mt-1" method="POST" action="/save_edits" enctype="multipart/form-data">
+                            <input type="text" class="field-editpost form-control" value="{{post._id}}" name="schedid" hidden>
+                            <input type="text" class="field-editpost form-control" value="{{post.postImg}}" name="oldPostImg" hidden>
                                 <div class="col-md-12">
                                     <label for="schedTitle-box" class="form-label">Schedule Title <required>*</required></label>
                                     <input type="text" class="field-editpost form-control" id="schedTitle" value="{{post.schedTitle}}" name="schedTitle" required>

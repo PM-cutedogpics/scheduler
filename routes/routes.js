@@ -6,17 +6,48 @@ const Posts = require("../models/PostModel.js");
 const Comments = require("../models/CommentModel.js");
 const defaultclasses = require("../models/DefaultClassModel.js");
 const Schedules = require("../models/ScheduleModel.js");
+const Feedback = require("../models/FeedbackModel.js");
 const app = express();
 const bcrypt = require("bcrypt");
 const validationResult = require("express-validator");
-const hbs = require('handlebars');
-const exphbs = require('express-handlebars')
 const saltRounds = 10;
-// TODO: add in routes
-hbs.registerHelper("ifEquals", function(arg1, arg2, options) {
-    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
-});
+const multer = require("multer");
+const mime = require("mime");
 
+var storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		console.log("choosing file destination");
+		if (req.body.schedTitle) cb(null, "public/img/uploads/post_uploads");
+		else cb(null, "public/img/uploads/profile_uploads");
+	},
+	filename: function (req, file, cb) {
+		if (req.body.schedTitle) {
+			// for post img
+			console.log("trying to make filename for postImg");
+			cb(
+				null,
+				req.body.schedTitle +
+					"-" +
+					Date.now() +
+					"." +
+					mime.extension(file.mimetype)
+			);
+		} else {
+			// for profile pictures
+			cb(
+				null,
+				req.body.username +
+					"-" +
+					Date.now() +
+					"." +
+					mime.extension(file.mimetype)
+			);
+		}
+	},
+});
+var upload = multer({ storage: storage });
+
+// TODO: add in routes
 app.get("/about", function (req, res) {
 	if (req.session.username) {
 		var details = {
@@ -92,6 +123,16 @@ app.get("/contact", function (req, res) {
 	res.render("contact", details);
 });
 
+app.post("/contact", function (req, res) {
+	var comments = req.body.comments;
+	db.insertOne(Feedback, { feedback: comments }, function (result) {
+		if (result) console.log("comment sent");
+		else console.log("failed");
+	});
+
+	res.redirect("home");
+});
+
 app.get("/create", function (req, res) {
 	if (req.session.username) {
 		var query = {
@@ -106,7 +147,7 @@ app.get("/create", function (req, res) {
 				for (var j = 0; j < result.length; j++) {
 					classList.push({
 						classId: result[j].classId,
-						className: result[j].className
+						className: result[j].className,
 					});
 				}
 				query.classList = classList;
@@ -236,7 +277,7 @@ app.get("/edit_account", function (req, res) {
 	db.findOne(
 		User,
 		{ username: req.session.username },
-		"username desc email",
+		"username desc email profPic",
 		function (result) {
 			if (result) {
 				res.render("edit_account", result);
@@ -246,29 +287,25 @@ app.get("/edit_account", function (req, res) {
 });
 
 app.post("/edit_account", function (req, res) {
-	if (req.session.username){
-		var username = req.session.username;
-		var email = req.body.email;
-		var desc = req.body.desc;
-		db.updateOne(
-			User,
-			{ username: username },
-			{
-				$set: {
-					email: email,
-					desc: desc,
-				},
+	var username = req.session.username;
+	var email = req.body.email;
+	var desc = req.body.desc;
+	db.updateOne(
+		User,
+		{ username: username },
+		{
+			$set: {
+				email: email,
+				desc: desc,
 			},
-			(result) => {
-				if (result) {
-					console.log("updated");
-					res.redirect("/manage_account");
-				} else console.log("failed");
-			}
-		);
-	} else {
-		res.redirect("home");
-	}
+		},
+		(result) => {
+			if (result) {
+				console.log("updated");
+				res.redirect("/manage_account");
+			} else console.log("failed");
+		}
+	);
 });
 
 app.get("/log_in", function (req, res) {
@@ -284,22 +321,18 @@ app.get("/log_in", function (req, res) {
 });
 
 app.get("/manage_account", function (req, res) {
-	if (req.session.username){
-		var user;
-		db.findOne(
-			User,
-			{ username: req.session.username },
-			"username desc email",
-			function (result) {
-				if (result) {
-					console.log(result);
-					res.render("manage_account", result);
-				} else console.log("error managing account");
-			}
-		);
-	} else {
-		res.redirect("home");
-	}
+	var user;
+	db.findOne(
+		User,
+		{ username: req.session.username },
+		"username desc email profPic",
+		function (result) {
+			if (result) {
+				console.log(result);
+				res.render("manage_account", result);
+			} else console.log("error managing account");
+		}
+	);
 });
 
 app.post("/log_in", function (req, res) {
@@ -354,11 +387,14 @@ app.get("/register", function (req, res) {
 	res.render("register", details);
 });
 
-app.post("/register", function (req, res) {
+app.post("/register", upload.single("dp"), function (req, res) {
 	var username = req.body.username;
 	var email = req.body.email;
 	var desc = req.body.desc;
 	var password = req.body.password;
+	var filename;
+	if (req.file && req.file.filename) filename = req.file.filename;
+	else filename = "dummy.jpg";
 
 	bcrypt.hash(password, saltRounds, function (err, hash) {
 		var user = {
@@ -366,6 +402,7 @@ app.post("/register", function (req, res) {
 			email: email,
 			desc: desc,
 			password: hash,
+			profPic: filename,
 		};
 
 		db.insertOne(User, user, (result) => {
@@ -398,8 +435,7 @@ app.get("/schedule/:scheduleId", (req, res) => {
 	var query = { _id: req.params.scheduleId };
 	console.log(query);
 	// find the post from the database with comments
-	var postdetails =
-		"username _id schedName classCnt classes";
+	var postdetails = "username _id schedName classCnt classes";
 	db.findOne(Schedules, query, postdetails, (result) => {
 		if (result != null) {
 			console.log("redirecting to selected scheduled");
@@ -410,11 +446,16 @@ app.get("/schedule/:scheduleId", (req, res) => {
 				schedId: result._id,
 				schedName: result.schedName,
 				classCnt: result.classCnt,
-				classes: result.classes
-			}
+				classes: result.classes,
+			};
 			console.log(result);
 			var details;
-			if (req.session.username) details = { flag: true, schedule: schedule, username: req.session.username};
+			if (req.session.username)
+				details = {
+					flag: true,
+					schedule: schedule,
+					username: req.session.username,
+				};
 			else details = { flag: false, post: post };
 			res.render("schedule", details);
 		} else {
@@ -449,13 +490,12 @@ app.get("/my_schedules", function (req, res) {
 });
 
 app.get("/viewaccount", (req, res, next) => {
-	console.log("HOW MANY TIMES WILL U PRINT ME");
 	var username = req.query.username;
 	var details;
 	db.findOne(
 		User,
 		{ username: username },
-		"username email desc",
+		"username email desc profPic",
 		(result) => {
 			if (result != null) {
 				console.log("RENDERING ACCOUNT");
@@ -600,6 +640,7 @@ app.get("/home", (req, res) => {
 			} else console.log("error with db");
 		});
 	}
+
 	// console.log(posts.length);
 	// res.render("home", posts);
 });
@@ -644,18 +685,19 @@ app.get("/viewpost/:postid", (req, res) => {
 						result.forEach((comment) => {
 							post.comments.push(comment);
 						});
-					}
+
+						var details;
+						if (req.session.username)
+							details = {
+								flag: true,
+								post: post,
+								username: req.session.username,
+							};
+						else details = { flag: false, post: post };
+						res.render("viewpost", details);
+					} else console.log("error with comments");
 				}
 			);
-			var details;
-			if (req.session.username)
-				details = {
-					flag: true,
-					post: post,
-					username: req.session.username,
-				};
-			else details = { flag: false, post: post };
-			res.render("viewpost", details);
 		} else {
 			res.render("error");
 			console.log("post not found");
@@ -1052,9 +1094,16 @@ app.get("/deletepost/:schedid", (req, res) => {
 	});
 });
 
-app.post("/save_edits", (req, res) => {
+app.post("/save_edits", upload.single("postImg"), (req, res) => {
+	console.log("SAVING EDITS ON POST");
+
 	var schedid = req.body.schedid;
 	console.log(schedid);
+
+	var filename;
+	if (req.file && req.file.filename) filename = req.file.filename;
+	else filename = req.body.oldPostImg;
+	console.log(filename);
 	db.updateOne(
 		Posts,
 		{ _id: schedid },
@@ -1062,28 +1111,40 @@ app.post("/save_edits", (req, res) => {
 			$set: {
 				schedTitle: req.body.schedTitle,
 				schedDesc: req.body.schedDesc,
+				postImg: filename,
 			},
 		},
-		(error) => {
-			if (!error) console.log("failed to update");
-			else res.redirect("/my_posts");
+		(result) => {
+			if (result) res.redirect("/my_posts");
+			else console.log("failed to update");
 		}
 	);
 });
 
 app.get("/create_post", (req, res) => {
-	res.render("create_post");
+	var details;
+	if (req.session.username) details = { flag: true };
+	else details = { flag: false };
+	res.render("create_post", details);
 });
 
-app.post("/create_post", (req, res) => {
+app.post("/create_post", upload.single("postImg"), (req, res) => {
+	console.log("CREATING POST");
+	var schedTitle = req.body.schedTitle;
+	var schedDesc = req.body.schedDesc;
+	var filename;
+	if (req.file && req.file.filename) filename = req.file.filename;
+	else filename = "dummy.jpg";
+
 	var postDetails = {
-		schedTitle: req.body.schedTitle,
+		schedTitle: schedTitle,
 		schedAuthor: req.session.username,
-		schedDesc: req.body.schedDesc,
-		postImg: "/img/example5.jpg", // use multer
+		schedDesc: schedDesc,
+		postImg: filename,
 		upqty: 0,
 		downqty: 0,
 	};
+
 	console.log("posting new post");
 	console.log(postDetails);
 	db.insertOne(Posts, postDetails, (result) => {

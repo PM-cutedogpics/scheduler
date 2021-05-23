@@ -10,7 +10,7 @@
   <body>
     {{> header flag=flag}}
     <div class="container">
-      <form class="row g-3 mt-1" method="POST" action="/register">
+      <form class="row g-3 mt-1" method="POST" action="/register" enctype="multipart/form-data">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Username <required>*</required></label>
           <input type="text" class="form-control" id="username" name="username" required>
@@ -24,12 +24,12 @@
           <input type="email" class="form-control" id="email" placeholder="scheduler@gmail.com" name="email" required> 
         </div>
         <div class="col-12">
-          <label for="inputAddress2" class="form-label">Description</label>
-          <input type="text" class="form-control" id="desc" placeholder="I'm a busy person" name="desc">
+          <label for="inputAddress2" class="form-label">Description<required>*</required></label>
+          <input type="text" class="form-control" id="desc" placeholder="I'm a busy person" name="desc" required>
         </div>
         <div class="col-3 mb-3">
-          <label for="formFileSm" class="form-label">Small file input example</label>
-          <input class="form-control form-control-sm" id="formFileSm" type="file" name="dp">
+          <label for="formFileSm" class="form-label">Upload Profile Image<required>*</required></label>
+          <input class="form-control form-control-sm" id="formFileSm" type="file" name="dp" required>
         </div>
         <div class="col-6">
           <p id="usernameError" class="error">{{usernameError}}</p>
