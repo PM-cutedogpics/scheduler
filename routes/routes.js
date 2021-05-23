@@ -1087,8 +1087,8 @@ app.post("/save_edits", upload.single("postImg"), (req, res) => {
 
 	var filename;
 	if (req.file && req.file.filename) filename = req.file.filename;
-	else filename = "dummy.jpg";
-
+	else filename = req.body.oldPostImg;
+	console.log(filename);
 	db.updateOne(
 		Posts,
 		{ _id: schedid },
@@ -1129,7 +1129,7 @@ app.post("/create_post", upload.single("postImg"), (req, res) => {
 		upqty: 0,
 		downqty: 0,
 	};
-	
+
 	console.log("posting new post");
 	console.log(postDetails);
 	db.insertOne(Posts, postDetails, (result) => {
