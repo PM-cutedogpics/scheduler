@@ -685,18 +685,19 @@ app.get("/viewpost/:postid", (req, res) => {
 						result.forEach((comment) => {
 							post.comments.push(comment);
 						});
-					}
+
+						var details;
+						if (req.session.username)
+							details = {
+								flag: true,
+								post: post,
+								username: req.session.username,
+							};
+						else details = { flag: false, post: post };
+						res.render("viewpost", details);
+					} else console.log("error with comments");
 				}
 			);
-			var details;
-			if (req.session.username)
-				details = {
-					flag: true,
-					post: post,
-					username: req.session.username,
-				};
-			else details = { flag: false, post: post };
-			res.render("viewpost", details);
 		} else {
 			res.render("error");
 			console.log("post not found");

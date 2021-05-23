@@ -9,7 +9,7 @@ $(document).ready(() => {
 			$("#upvote").addClass("activated");
 			$("#upvote").css("color", "red");
 
-			var schedid = $(".sched-img").attr("alt");
+			var schedid = $(".view-sched-img").attr("alt");
 			console.log("schedid = " + schedid);
 			// add an upvote to the counter
 			// var upvotes = parseInt($("#upqty").text()) + 1;
@@ -29,7 +29,7 @@ $(document).ready(() => {
 			$("#upvote").removeClass("activated");
 			$("#upvote").css("color", "#000");
 
-			var schedid = $(".sched-img").attr("alt");
+			var schedid = $(".view-sched-img").attr("alt");
 			console.log("schedid = " + schedid);
 			// subtract an upvote from the counter
 			// var upvotes = parseInt($("#upqty").text()) - 1;
@@ -55,7 +55,7 @@ $(document).ready(() => {
 			$("#upvote").addClass("activated");
 			$("#upvote").css("color", "red");
 
-			var schedid = $(".sched-img").attr("alt");
+			var schedid = $(".view-sched-img").attr("alt");
 			console.log("schedid = " + schedid);
 			// decrease downvote counter
 			// var downvotes = parseInt($("#downqty").text()) - 1;
@@ -86,7 +86,7 @@ $(document).ready(() => {
 			$("#downvote").addClass("activated");
 			$("#downvote").css("color", "blue");
 
-			var schedid = $(".sched-img").attr("alt");
+			var schedid = $(".view-sched-img").attr("alt");
 			console.log("schedid = " + schedid);
 			// add downvote counter
 			// var downvotes = parseInt($("#downqty").text()) + 1;
@@ -107,7 +107,7 @@ $(document).ready(() => {
 			$("#downvote").removeClass("activated");
 			$("#downvote").css("color", "#000");
 
-			var schedid = $(".sched-img").attr("alt");
+			var schedid = $(".view-sched-img").attr("alt");
 			console.log("schedid = " + schedid);
 			// subtract downvote counter
 			// var downvotes = parseInt($("#downqty").text()) - 1;
@@ -131,7 +131,7 @@ $(document).ready(() => {
 			$("#downvote").addClass("activated");
 			$("#downvote").css("color", "blue");
 			// TODO: get schedid to access in the db
-			var schedid = $(".sched-img").attr("alt");
+			var schedid = $(".view-sched-img").attr("alt");
 			console.log("schedid = " + schedid);
 			// subtract from upvote counter
 			// var upvotes = parseInt($("#upqty").text()) - 1;
@@ -160,7 +160,7 @@ $(document).ready(() => {
 			// TODO: CHECK IF USER IS IN SESSION
 			// get the author from the session and
 			// check whether user is logged in before commenting
-			var schedid = $(".sched-img").attr("alt");
+			var schedid = $(".view-sched-img").attr("alt");
 
 			$.get(
 				"/addComment",
